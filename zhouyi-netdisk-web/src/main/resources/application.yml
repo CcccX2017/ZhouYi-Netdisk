@@ -1,0 +1,62 @@
+# 项目相关配置
+zhouyi:
+  name: ZhouYi-Netdisk
+  version: 1.0
+  # 版本年份
+  copyRightYear: 2021
+  # 文件上传路径
+  profile: /Users/codex/Workspace/uploadPath/netdisk
+
+# 开发环境配置
+server:
+  # 服务器端口
+  port: 8080
+  servlet:
+    # 应用访问路径
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      # 最大线程数，默认值200
+      max: 800
+      # tomcat启动初始化的线程数，默认值25
+      min-spare: 30
+
+# spring
+spring:
+  # jsp路径
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  profiles:
+    active: druid
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      # 单个文件大小，10G
+      max-file-size: 10240MB
+      # 设置总上传的文件大小，1T
+      max-request-size: 1048576MB
+
+# mybatis配置
+mybatis:
+  type-aliases-package: cn.codex.netdisk.model.entity
+  mapper-locations: classpath*:mappers/*/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# PageHelper配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# 日志配置
+logging:
+  level:
+    cn.codex: debug
+    org.springframework: warn
+

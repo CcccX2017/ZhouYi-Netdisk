@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.friends.TbFriendsApplicationDao">
+
+    <resultMap type="cn.codex.netdisk.model.entity.TbFriendsApplication" id="TbFriendsApplicationMap">
+        <result property="applicant" column="applicant" jdbcType="VARCHAR"/>
+        <result property="respondent" column="respondent" jdbcType="VARCHAR"/>
+        <result property="messages" column="messages" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="isView" column="is_view" jdbcType="INTEGER"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        applicant, respondent, state, messages, is_view, created_time
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbFriendsApplicationMap">
+        select
+          applicant, respondent, messages, state, is_view, created_time
+        from tb_friends_application
+        where applicant = #{applicant}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbFriendsApplicationMap">
+        select
+          applicant, respondent, messages, state, is_view, created_time
+        from tb_friends_application
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbFriendsApplicationMap">
+        select
+        applicant, respondent, messages, state, is_view, created_time
+        from tb_friends_application
+        <where>
+            <if test="applicant != null and applicant != ''">
+                and applicant = #{applicant}
+            </if>
+            <if test="respondent != null and respondent != ''">
+                and respondent = #{respondent}
+            </if>
+            <if test="messages != null and messages != ''">
+                and messages = #{messages}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="isView != null">
+                and is_view = #{isView}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="applicant" useGeneratedKeys="true">
+        insert into tb_friends_application(messages, state, is_view, created_time)
+        values (#{messages}, #{state}, #{isView}, #{createdTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="applicant" useGeneratedKeys="true">
+        insert into tb_friends_application(messages, state, is_view, created_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.messages}, #{entity.state}, #{entity.isView}, #{entity.createdTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="cn.codex.netdisk.model.entity.TbFriendsApplication" >
+        insert into tb_friends_application
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="applicant != null" >
+                applicant,
+            </if>
+            <if test="respondent != null" >
+                respondent,
+            </if>
+            <if test="state != null" >
+                state,
+            </if>
+            <if test="messages != null" >
+                messages,
+            </if>
+            <if test="isView != null" >
+                is_view,
+            </if>
+            <if test="createdTime != null" >
+                created_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="applicant != null" >
+                #{applicant,jdbcType=VARCHAR},
+            </if>
+            <if test="respondent != null" >
+                #{respondent,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null" >
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="messages != null" >
+                #{messages,jdbcType=VARCHAR},
+            </if>
+            <if test="isView != null" >
+                #{isView,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null" >
+                #{created_time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update tb_friends_application
+        <set>
+            <if test="messages != null and messages != ''">
+                messages = #{messages},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="isView != null">
+                is_view = #{isView},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+        </set>
+        where applicant = #{applicant}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from tb_friends_application where applicant = #{applicant}
+    </delete>
+
+</mapper>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.codex</groupId>
+    <artifactId>ZhouYi-Netdisk</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <modules>
+        <module>zhouyi-netdisk-common</module>
+        <module>zhouyi-netdisk-apis</module>
+        <module>zhouyi-netdisk-model</module>
+        <module>zhouyi-netdisk-web</module>
+        <module>zhouyi-netdisk-service</module>
+        <module>zhouyi-netdisk-dao</module>
+        <module>zhouyi-netdisk-utils</module>
+        <module>zhouyi-netdisk-controller</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <druid.version>1.1.10</druid.version>
+        <guava.version>29.0-jre</guava.version>
+        <jackson.version>2.11.3</jackson.version>
+        <pagehelper.version>1.3.0</pagehelper.version>
+        <mybatis.boot.version>2.1.3</mybatis.boot.version>
+        <mybatis.plus.version>3.2.0</mybatis.plus.version>
+        <lombok.version>1.18.12</lombok.version>
+        <commons.io.version>2.6</commons.io.version>
+        <commons.fileupload.version>1.4</commons.fileupload.version>
+        <hutool.version>5.4.6</hutool.version>
+        <swagger.version>2.9.2</swagger.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot相关开始 -->
+
+            <!-- 阿里数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- PageHelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <!-- Mybatis Spring Boot -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.boot.version}</version>
+            </dependency>
+
+            <!-- Spring Boot相关结束 -->
+
+            <!-- Google Guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- Jackson Databind -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- 工具包 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons.fileupload.version}</version>
+            </dependency>
+
+            <!-- Hutool工具类定义开始 -->
+
+            <!-- 核心，包括Bean操作、日期、各种Util等 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- 加密解密模块，提供对称、非对称和摘要算法封装 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- 自动识别日志实现的日志门面 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-log</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- 功能更强大的Setting配置文件和Properties封装 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-setting</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- Hutool工具类定义结束 -->
+
+            <!-- swagger2 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
+            <!-- swagger2 ui -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
+            <!-- 管理项目依赖 -->
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-apis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.codex</groupId>
+                <artifactId>zhouyi-netdisk-controller</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</project>

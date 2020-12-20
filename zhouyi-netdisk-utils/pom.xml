@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ZhouYi-Netdisk</artifactId>
+        <groupId>cn.codex</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>zhouyi-netdisk-utils</artifactId>
+
+
+    <dependencies>
+        <!-- Hutool依赖开始 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
+        
+        <dependency>
+        	<groupId>cn.hutool</groupId>
+        	<artifactId>hutool-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-setting</artifactId>
+        </dependency>
+        <!-- Hutool依赖结束 -->
+
+        <!-- 获取文件编码格式 -->
+        <dependency>
+            <groupId>cpdetector</groupId>
+            <artifactId>cpdetector</artifactId>
+            <version>1.0.10</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/lib/cpdetector_1.0.10.jar</systemPath>
+        </dependency>
+
+        <!-- cpdetector内部会调用此jar包 -->
+        <dependency>
+            <groupId>org.mozilla.intl</groupId>
+            <artifactId>chardet</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/lib/chardet.jar</systemPath>
+        </dependency>
+
+        <!-- antlr -->
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+        </dependency>
+    </dependencies>
+</project>

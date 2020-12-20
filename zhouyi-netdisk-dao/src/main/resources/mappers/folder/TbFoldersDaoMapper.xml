@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.folder.TbFoldersDao">
+
+    <resultMap type="cn.codex.netdisk.model.entity.TbFolders" id="TbFoldersMap">
+        <result property="folderId" column="folder_id" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="folderName" column="folder_name" jdbcType="VARCHAR"/>
+        <result property="inRecycle" column="in_recycle" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        folder_id, parent_id, folder_name, in_recycle, username, created_time, updated_time
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbFoldersMap">
+        select
+          folder_id, parent_id, folder_name, in_recycle, username, created_time, updated_time
+        from tb_folders
+        where folder_id = #{folderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbFoldersMap">
+        select
+          folder_id, parent_id, folder_name, in_recycle, username, created_time, updated_time
+        from tb_folders
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbFoldersMap">
+        select
+        folder_id, parent_id, folder_name, in_recycle, username, created_time, updated_time
+        from tb_folders
+        <where>
+            <if test="folderId != null">
+                and folder_id = #{folderId}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="folderName != null and folderName != ''">
+                and folder_name = #{folderName}
+            </if>
+            <if test="inRecycle != null">
+                and in_recycle = #{inRecycle}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="folderId" useGeneratedKeys="true">
+        insert into tb_folders(parent_id, folder_name, in_recycle, username, created_time, updated_time)
+        values (#{parentId}, #{folderName}, #{inRecycle}, #{username}, now(), now())
+    </insert>
+
+    <insert id="insertBatch" keyProperty="folderId" useGeneratedKeys="true">
+        insert into tb_folders(parent_id, folder_name, in_recycle, username, created_time, updated_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.parentId}, #{entity.folderName}, #{entity.inRecycle}, #{entity.username}, now(), now())
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="cn.codex.netdisk.model.entity.TbFolders">
+        insert into tb_folders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="folderId != null">
+                folder_id,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="folderName != null">
+                folder_name,
+            </if>
+            <if test="inRecycle != null">
+                in_recycle,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="createdTime == null">
+                created_time,
+            </if>
+            <if test="updatedTime == null">
+                updated_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="folderId != null">
+                #{folderid,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="folderName != null">
+                #{folderName,jdbcType=VARCHAR},
+            </if>
+            <if test="inRecycle != null">
+                #{inRecycle,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime == null">
+                now(),
+            </if>
+            <if test="updatedTime == null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update tb_folders
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="folderName != null and folderName != ''">
+                folder_name = #{folderName},
+            </if>
+            <if test="inRecycle != null">
+                in_recycle = #{inRecycle},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime == null">
+                updated_time = now(),
+            </if>
+        </set>
+        where folder_id = #{folderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from tb_folders where folder_id = #{folderId}
+    </delete>
+
+</mapper>

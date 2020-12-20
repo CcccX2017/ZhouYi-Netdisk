@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.file.TbFilesDao">
+
+    <resultMap type="cn.codex.netdisk.model.entity.TbFiles" id="TbFilesMap">
+        <result property="fileId" column="file_id" jdbcType="INTEGER"/>
+        <result property="fileRealName" column="file_real_name" jdbcType="VARCHAR"/>
+        <result property="fileEncryptionName" column="file_encryption_name" jdbcType="VARCHAR"/>
+        <result property="fileStoragePath" column="file_storage_path" jdbcType="VARCHAR"/>
+        <result property="fileExtension" column="file_extension" jdbcType="VARCHAR"/>
+        <result property="fileShortUrl" column="file_short_url" jdbcType="VARCHAR"/>
+        <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="folderId" column="folder_id" jdbcType="INTEGER"/>
+        <result property="inRecycle" column="in_recycle" jdbcType="INTEGER"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        file_id, file_real_name, file_encryption_name, file_storage_path, file_extension,
+        file_short_url, file_size, username, folder_id, in_recycle, created_time, updated_time
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbFilesMap">
+        select
+          file_id, file_real_name, file_encryption_name, file_storage_path, file_extension, file_short_url, file_size, username, folder_id, in_recycle, created_time, updated_time
+        from tb_files
+        where file_id = #{fileId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbFilesMap">
+        select
+          file_id, file_real_name, file_encryption_name, file_storage_path, file_extension, file_short_url, file_size, username, folder_id, in_recycle, created_time, updated_time
+        from tb_files
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbFilesMap">
+        select
+        file_id, file_real_name, file_encryption_name, file_storage_path, file_extension, file_short_url, file_size,
+        username, folder_id, in_recycle, created_time, updated_time
+        from tb_files
+        <where>
+            <if test="fileId != null">
+                and file_id = #{fileId}
+            </if>
+            <if test="fileRealName != null and fileRealName != ''">
+                and file_real_name = #{fileRealName}
+            </if>
+            <if test="fileEncryptionName != null and fileEncryptionName != ''">
+                and file_encryption_name = #{fileEncryptionName}
+            </if>
+            <if test="fileStoragePath != null and fileStoragePath != ''">
+                and file_storage_path = #{fileStoragePath}
+            </if>
+            <if test="fileExtension != null and fileExtension != ''">
+                and file_extension = #{fileExtension}
+            </if>
+            <if test="fileShortUrl != null and fileShortUrl != ''">
+                and file_short_url = #{fileShortUrl}
+            </if>
+            <if test="fileSize != null">
+                and file_size = #{fileSize}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="folderId != null">
+                and folder_id = #{folderId}
+            </if>
+            <if test="inRecycle != null">
+                and in_recycle = #{inRecycle}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="fileId" useGeneratedKeys="true">
+        insert into tb_files(file_real_name, file_encryption_name, file_storage_path, file_extension, file_short_url, file_size, username, folder_id, in_recycle, created_time, updated_time)
+        values (#{fileRealName}, #{fileEncryptionName}, #{fileStoragePath}, #{fileExtension}, #{fileShortUrl},
+        #{fileSize}, #{username}, #{folderId}, #{inRecycle}, now(), now())
+    </insert>
+
+    <insert id="insertBatch" keyProperty="fileId" useGeneratedKeys="true">
+        insert into tb_files(file_real_name, file_encryption_name, file_storage_path, file_extension,
+        file_short_url, file_size, username, folder_id, in_recycle, created_time, updated_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.fileRealName}, #{entity.fileEncryptionName}, #{entity.fileStoragePath}, #{entity.fileExtension},
+            #{entity.fileShortUrl}, #{entity.fileSize}, #{entity.username}, #{entity.folderId}, #{entity.inRecycle},
+            now(), now())
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="cn.codex.netdisk.model.entity.TbFiles" >
+        insert into tb_files
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fileTd != null" >
+                file_id,
+            </if>
+            <if test="fileRealName != null" >
+                file_real_name,
+            </if>
+            <if test="fileEncryptionName != null" >
+                file_encryption_name,
+            </if>
+            <if test="fileStoragePath != null" >
+                file_storage_path,
+            </if>
+            <if test="fileExtension != null" >
+                file_extension,
+            </if>
+            <if test="fileShortUrl != null" >
+                file_short_url,
+            </if>
+            <if test="fileSize != null" >
+                file_size,
+            </if>
+            <if test="username != null" >
+                username,
+            </if>
+            <if test="folderId != null" >
+                folder_id,
+            </if>
+            <if test="inRecycle != null" >
+                in_recycle,
+            </if>
+            <if test="createdTime == null" >
+                created_time,
+            </if>
+            <if test="updatedTime == null" >
+                updated_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fileId != null" >
+                #{fileid,jdbcType=BIGINT},
+            </if>
+            <if test="fileRealName != null" >
+                #{fileRealName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileEncryptionName != null" >
+                #{fileEncryptionName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileStoragePath != null" >
+                #{fileStoragePath,jdbcType=VARCHAR},
+            </if>
+            <if test="fileExtension != null" >
+                #{fileExtension,jdbcType=VARCHAR},
+            </if>
+            <if test="fileShortUrl != null" >
+                #{fileShortUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null" >
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="folderId != null" >
+                #{folderId,jdbcType=INTEGER},
+            </if>
+            <if test="inRecycle != null" >
+                #{inRecycle,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime == null" >
+                now(),
+            </if>
+            <if test="updatedTime == null" >
+                now(),
+            </if>
+        </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update tb_files
+        <set>
+            <if test="fileRealName != null and fileRealName != ''">
+                file_real_name = #{fileRealName},
+            </if>
+            <if test="fileEncryptionName != null and fileEncryptionName != ''">
+                file_encryption_name = #{fileEncryptionName},
+            </if>
+            <if test="fileStoragePath != null and fileStoragePath != ''">
+                file_storage_path = #{fileStoragePath},
+            </if>
+            <if test="fileExtension != null and fileExtension != ''">
+                file_extension = #{fileExtension},
+            </if>
+            <if test="fileShortUrl != null and fileShortUrl != ''">
+                file_short_url = #{fileShortUrl},
+            </if>
+            <if test="fileSize != null">
+                file_size = #{fileSize},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="folderId != null">
+                folder_id = #{folderId},
+            </if>
+            <if test="inRecycle != null">
+                in_recycle = #{inRecycle},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime == null">
+                updated_time = now(),
+            </if>
+        </set>
+        where file_id = #{fileId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from tb_files where file_id = #{fileId}
+    </delete>
+
+</mapper>
