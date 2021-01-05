@@ -59,4 +59,3 @@ logging:
   level:
     cn.codex: debug
     org.springframework: warn
-

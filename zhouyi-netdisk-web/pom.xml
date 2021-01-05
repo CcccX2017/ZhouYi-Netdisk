@@ -35,6 +35,14 @@
             <groupId>cn.codex</groupId>
             <artifactId>zhouyi-netdisk-controller</artifactId>
         </dependency>
+
+        <!-- Devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -67,6 +75,13 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <attach>false</attach>
+                    <fork>true</fork>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
