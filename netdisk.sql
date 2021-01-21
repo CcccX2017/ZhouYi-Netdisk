@@ -1,6 +1,6 @@
 /*
-SQLyog Trial v13.1.7 (64 bit)
-MySQL - 5.7.30 : Database - netdisk
+SQLyog Community v13.1.6 (64 bit)
+MySQL - 8.0.12 : Database - netdisk
 *********************************************************************
 */
 
@@ -45,8 +45,8 @@ CREATE TABLE `tb_files` (
 DROP TABLE IF EXISTS `tb_folders`;
 
 CREATE TABLE `tb_folders` (
-  `folder_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '目录id',
-  `parent_id` int(11) NOT NULL COMMENT '上级目录id',
+  `folder_id` bigint(20) NOT NULL COMMENT '目录id',
+  `parent_id` bigint(20) NOT NULL COMMENT '上级目录id',
   `folder_name` varchar(32) DEFAULT NULL COMMENT '文件夹名',
   `is_deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除（0-未删除，1-已删除）',
   `creator` varchar(64) DEFAULT NULL COMMENT '创建者',
@@ -54,7 +54,7 @@ CREATE TABLE `tb_folders` (
   `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`folder_id`),
   KEY `creator` (`creator`)
-) ENGINE=InnoDB AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='目录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='目录表';
 
 /*Data for the table `tb_folders` */
 
