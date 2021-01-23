@@ -12,28 +12,22 @@
     <artifactId>zhouyi-netdisk-dao</artifactId>
 
     <dependencies>
-        <!-- mybatis plus依赖 -->
+        <!-- 项目依赖 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <groupId>cn.codex</groupId>
+            <artifactId>zhouyi-netdisk-model</artifactId>
         </dependency>
 
-        <!-- mysql连接驱动 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <!-- druid数据库连接池 -->
+        <!-- Druid连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- 项目依赖 -->
+        <!-- mysql 连接驱动 -->
         <dependency>
-            <groupId>cn.codex</groupId>
-            <artifactId>zhouyi-netdisk-model</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
 </project>

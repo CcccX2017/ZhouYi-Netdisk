@@ -10,13 +10,13 @@
     <version>1.0</version>
     <modules>
         <module>zhouyi-netdisk-common</module>
-        <module>zhouyi-netdisk-apis</module>
+        <module>zhouyi-netdisk-api</module>
         <module>zhouyi-netdisk-model</module>
-        <module>zhouyi-netdisk-web</module>
+        <module>zhouyi-netdisk-portal</module>
         <module>zhouyi-netdisk-service</module>
         <module>zhouyi-netdisk-dao</module>
-        <module>zhouyi-netdisk-utils</module>
-        <module>zhouyi-netdisk-controller</module>
+        <module>zhouyi-netdisk-backend</module>
+        <module>zhouyi-netdisk-generator</module>
     </modules>
 
     <parent>
@@ -32,11 +32,10 @@
         <druid.version>1.1.10</druid.version>
         <guava.version>29.0-jre</guava.version>
         <jackson.version>2.11.3</jackson.version>
-        <mybatis.plus.version>3.4.2</mybatis.plus.version>
-        <lombok.version>1.18.12</lombok.version>
+        <mybatis.plus.version>3.4.1</mybatis.plus.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
-        <hutool.version>5.4.6</hutool.version>
+        <hutool.version>5.5.7</hutool.version>
         <swagger.version>2.9.2</swagger.version>
         <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
     </properties>
@@ -56,6 +55,13 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+
+            <!-- mybatis plus generator -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
                 <version>${mybatis.plus.version}</version>
             </dependency>
 
@@ -137,7 +143,7 @@
             <!-- 管理项目依赖 -->
             <dependency>
                 <groupId>cn.codex</groupId>
-                <artifactId>zhouyi-netdisk-apis</artifactId>
+                <artifactId>zhouyi-netdisk-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -164,35 +170,8 @@
                 <artifactId>zhouyi-netdisk-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>cn.codex</groupId>
-                <artifactId>zhouyi-netdisk-utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.codex</groupId>
-                <artifactId>zhouyi-netdisk-controller</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>
@@ -204,6 +183,7 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>

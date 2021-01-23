@@ -8,24 +8,18 @@
 
 【父项目下分8个公共子项目】：
 
-- zhouyi-netdisk-api：整个项目暴露的接口的定义项目，按每个功能模块进行子包拆分。
-- zhouyi-netdisk-common：是整个工程的配置核心，包括所有集成第三方框架的配置定义。除此之外还包括项目每个模块及整个项目的常量定义。
-- zhouyi-netdisk-dao：是整个项目的数据交互层，存放Mapper文件以及对应的XML文件并按每个功能模块进行子包拆分。
-- zhouyi-netdisk-model：项目中用到的Entity、Vo等定义的工程。
-- zhouyi-netdisk-service：项目服务代码实现工程，存放服务接口以及实现类，按每个功能模块进行子包拆分。
-- zhouyi-netdisk-utils：工程公用工具类项目，包含加密/解密、Date、JSON等工具类。
-- zhouyi-netdisk-controller：工程Controller实现项目
-- zhouyi-netdisk-web：工程前端页面以及SpringBoot启动类入口实现项目。前端页面采用jsp页面实现。
-
-# 开发环境说明
-
-- JDK 1.8
-- Intellij Idea
-- Tomcat 8.5
-- Git
-- Maven
+- zhouyi-netdisk-api：整个项目暴露的接口的定义以及Controller实现的项目。
+- zhouyi-netdisk-common：是整个工程的配置核心，包括所有集成第三方框架的配置定义、数据库实体类、工具类等。除此之外还包括项目每个模块及整个项目的常量定义。
+- zhouyi-netdisk-dao：是整个项目的数据交互层，存放Mapper文件以及对应的XML文件。
+- zhouyi-netdisk-model：项目中用到的Entity、Pojo、Vo等定义的工程。
+- zhouyi-netdisk-service：项目服务代码实现工程，存放服务接口以及实现类。为api模块提供服务。
+- zhouyi-netdisk-portal：项目门户网站项目，供用户使用。
+- zhouyi-netdisk-backend：项目后台管理项目，供网站维护人员使用，具体功能正在规划中。。。
+- zhouyi-netdisk-generator：Mybatis Plus逆向工程，生成entity、dao、controller、service等。
 
 # 内置功能
+
+一、门户网站（zhouyi-netdisk-portal）
 
 1. 个人信息管理：查看订单信息、查看个人信息、修改个人信息、修改密码
 2. 文件资源管理：上传文件、下载文件、收藏文件、移动文件、复制文件、重命名文件、删除文件、在线预览
@@ -33,7 +27,11 @@
 4. 文件夹管理：新建文件夹、移动文件夹、复制文件夹、重命名文件夹、删除文件夹
 5. 分享管理：好友分享、公共分享、URL分享
 6. 好友管理：添加好友、删除好友、好友备注
-7. 持续更新中。。。
+7. 持续更新中...
+
+二、后台管理系统
+
+​	正在规划中...	
 
 
 
