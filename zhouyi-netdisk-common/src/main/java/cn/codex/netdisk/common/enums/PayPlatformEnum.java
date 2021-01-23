@@ -13,7 +13,12 @@ public enum PayPlatformEnum {
     /**
      * 微信
      */
-    WXPAY(2, "微信");
+    WXPAY(2, "微信"),
+
+    /**
+     * 银联
+     */
+    UNIONPAY(3, "银联");
 
     PayPlatformEnum(int code, String value) {
         this.code = code;
