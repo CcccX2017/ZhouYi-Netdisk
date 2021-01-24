@@ -6,16 +6,21 @@
 
 工程父项目为ZhouYi-Netdisk，并通过继承方式继承Spring Boot。
 
-【父项目下分8个公共子项目】：
+【父项目下分5个公共子项目】：
 
-- zhouyi-netdisk-api：整个项目暴露的接口的定义以及Controller实现的项目。
 - zhouyi-netdisk-common：是整个工程的配置核心，包括所有集成第三方框架的配置定义、数据库实体类、工具类等。除此之外还包括项目每个模块及整个项目的常量定义。
 - zhouyi-netdisk-dao：是整个项目的数据交互层，存放Mapper文件以及对应的XML文件。
 - zhouyi-netdisk-model：项目中用到的Entity、Pojo、Vo等定义的工程。
 - zhouyi-netdisk-service：项目服务代码实现工程，存放服务接口以及实现类。为api模块提供服务。
-- zhouyi-netdisk-portal：项目门户网站项目，供用户使用。
-- zhouyi-netdisk-backend：项目后台管理项目，供网站维护人员使用，具体功能正在规划中。。。
 - zhouyi-netdisk-generator：Mybatis Plus逆向工程，生成entity、dao、controller、service等。
+
+【门户网站】
+
+- zhouyi-netdisk-portal：项目门户网站项目，供用户使用。
+
+【后台管理系统】
+
+- zhouyi-netdisk-backend：项目后台管理项目，供网站维护人员使用，具体功能正在规划中。。。
 
 # 内置功能
 

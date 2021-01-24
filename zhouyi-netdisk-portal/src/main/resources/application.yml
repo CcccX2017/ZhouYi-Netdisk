@@ -1,6 +1,6 @@
 # 项目相关配置
 zhouyi:
-  name: ZhouYi-Netdisk
+  name: netdisk-portal
   version: 1.0
   # 版本年份
   copyRightYear: 2021
@@ -10,7 +10,7 @@ zhouyi:
 # 开发环境配置
 server:
   # 服务器端口
-  port: 8080
+  port: 80
   servlet:
     # 应用访问路径
     context-path: /
@@ -24,11 +24,6 @@ server:
 
 # spring
 spring:
-  # jsp路径
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
   profiles:
     active: druid
   # 文件上传配置
@@ -40,8 +35,8 @@ spring:
       # 设置总上传的文件大小，1T
       max-request-size: 1048576MB
 
-# mybatis配置
-mybatis:
+# mybatis plus配置
+mybatis-plus:
   type-aliases-package: cn.codex.netdisk.model.entity
   mapper-locations: classpath*:mappers/*/*.xml
   configuration:

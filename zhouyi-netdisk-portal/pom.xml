@@ -15,7 +15,7 @@
         <!-- 项目依赖 -->
         <dependency>
             <groupId>cn.codex</groupId>
-            <artifactId>zhouyi-netdisk-api</artifactId>
+            <artifactId>zhouyi-netdisk-service</artifactId>
         </dependency>
 
         <!-- swagger第三方ui依赖 -->

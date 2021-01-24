@@ -10,7 +10,6 @@
     <version>1.0</version>
     <modules>
         <module>zhouyi-netdisk-common</module>
-        <module>zhouyi-netdisk-api</module>
         <module>zhouyi-netdisk-model</module>
         <module>zhouyi-netdisk-portal</module>
         <module>zhouyi-netdisk-service</module>
@@ -141,12 +140,6 @@
             </dependency>
 
             <!-- 管理项目依赖 -->
-            <dependency>
-                <groupId>cn.codex</groupId>
-                <artifactId>zhouyi-netdisk-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>cn.codex</groupId>
                 <artifactId>zhouyi-netdisk-common</artifactId>
