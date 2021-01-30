@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.FoldersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Folders">
+        <id column="folder_id" property="folderId" />
+        <result column="parent_id" property="parentId" />
+        <result column="folder_name" property="folderName" />
+        <result column="is_hidden" property="hidden" />
+        <result column="is_deleted" property="deleted" />
+        <result column="creator" property="creator" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        folder_id, parent_id, folder_name, is_hidden, is_deleted, creator, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

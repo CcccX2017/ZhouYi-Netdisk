@@ -23,12 +23,6 @@
             <artifactId>zhouyi-netdisk-common</artifactId>
         </dependency>
 
-        <!-- SpringBoot相关依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>

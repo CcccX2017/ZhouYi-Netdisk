@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.UrlShareMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.UrlShare">
+        <id column="id" property="id" />
+        <result column="file_id_group" property="fileIdGroup" />
+        <result column="share_title" property="shareTitle" />
+        <result column="link" property="link" />
+        <result column="short_url" property="shortUrl" />
+        <result column="file_key" property="fileKey" />
+        <result column="viewed_count" property="viewedCount" />
+        <result column="saved_count" property="savedCount" />
+        <result column="download_count" property="downloadCount" />
+        <result column="share_type" property="shareType" />
+        <result column="username" property="username" />
+        <result column="is_permanent" property="permanent" />
+        <result column="share_status" property="shareStatus" />
+        <result column="failure_time" property="failureTime" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, file_id_group, share_title, link, short_url, file_key, viewed_count, saved_count, download_count, share_type, username, is_permanent, share_status, failure_time, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

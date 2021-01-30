@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.FilesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Files">
+        <id column="file_id" property="fileId" />
+        <result column="real_name" property="realName" />
+        <result column="encryption_name" property="encryptionName" />
+        <result column="storage_path" property="storagePath" />
+        <result column="extension" property="extension" />
+        <result column="short_url" property="shortUrl" />
+        <result column="size" property="size" />
+        <result column="folder_id" property="folderId" />
+        <result column="is_hidden" property="hidden" />
+        <result column="is_deleted" property="deleted" />
+        <result column="creator" property="creator" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        file_id, real_name, encryption_name, storage_path, extension, short_url, size, folder_id, is_hidden, is_deleted, creator, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

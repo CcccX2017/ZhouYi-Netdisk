@@ -1,16 +1,15 @@
 # 项目相关配置
-zhouyi:
+portal:
+  author: codex
   name: netdisk-portal
   version: 1.0
-  # 版本年份
-  copyRightYear: 2021
   # 文件上传路径
   profile: /Users/codex/Workspace/uploadPath/netdisk
 
 # 开发环境配置
 server:
   # 服务器端口
-  port: 80
+  port: 9001
   servlet:
     # 应用访问路径
     context-path: /
@@ -54,3 +53,10 @@ logging:
   level:
     cn.codex: debug
     org.springframework: warn
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求的统一前缀
+  pathMapping: portal

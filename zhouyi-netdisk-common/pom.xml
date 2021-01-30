@@ -12,10 +12,11 @@
     <artifactId>zhouyi-netdisk-common</artifactId>
 
     <dependencies>
-        <!-- JSON依赖 -->
+
+        <!-- SpringBoot相关依赖 -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- hutool依赖开始 -->

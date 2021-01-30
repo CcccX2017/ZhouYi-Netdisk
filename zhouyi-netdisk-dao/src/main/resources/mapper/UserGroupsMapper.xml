@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.UserGroupsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.UserGroups">
+        <id column="group_id" property="groupId" />
+        <result column="group_name" property="groupName" />
+        <result column="parent_id" property="parentId" />
+        <result column="max_storage_space" property="maxStorageSpace" />
+        <result column="max_file_size" property="maxFileSize" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        group_id, group_name, parent_id, max_storage_space, max_file_size, gmt_create, gmt_modified
+    </sql>
+
+</mapper>
