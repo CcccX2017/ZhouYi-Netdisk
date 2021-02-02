@@ -1,7 +1,7 @@
 package cn.codex.netdisk.service.impl;
 
-import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.dao.FriendsMapper;
+import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.service.IFriendsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

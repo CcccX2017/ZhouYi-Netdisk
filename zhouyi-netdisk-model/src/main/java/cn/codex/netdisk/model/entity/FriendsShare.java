@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -51,5 +51,21 @@ public class FriendsShare implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String ID = "id";
+
+    public static final String FILE_ID_GROUP = "file_id_group";
+
+    public static final String SHARE_TITLE = "share_title";
+
+    public static final String DISTRIBUTORS = "distributors";
+
+    public static final String RECEIVER = "receiver";
+
+    public static final String IS_VIEWED = "is_viewed";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }

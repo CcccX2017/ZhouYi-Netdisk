@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -87,5 +87,45 @@ public class User implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String USER_ID = "user_id";
+
+    public static final String GROUP_ID = "group_id";
+
+    public static final String USERNAME = "username";
+
+    public static final String PASSWORD = "password";
+
+    public static final String SALT = "salt";
+
+    public static final String STATUS = "status";
+
+    public static final String NICKNAME = "nickname";
+
+    public static final String AVATAR = "avatar";
+
+    public static final String REAL_NAME = "real_name";
+
+    public static final String PHONE = "phone";
+
+    public static final String EMAIL = "email";
+
+    public static final String SEX = "sex";
+
+    public static final String BIRTHDAY = "birthday";
+
+    public static final String USED_STORAGE_SPACE = "used_storage_space";
+
+    public static final String IS_DATA_PERFECT = "is_data_perfect";
+
+    public static final String EXPIRATION_TIME = "expiration_time";
+
+    public static final String LOGIN_IP = "login_ip";
+
+    public static final String LOGIN_DATE = "login_date";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }

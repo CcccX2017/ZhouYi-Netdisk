@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -68,5 +68,31 @@ public class Files implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String FILE_ID = "file_id";
+
+    public static final String REAL_NAME = "real_name";
+
+    public static final String ENCRYPTION_NAME = "encryption_name";
+
+    public static final String STORAGE_PATH = "storage_path";
+
+    public static final String EXTENSION = "extension";
+
+    public static final String SHORT_URL = "short_url";
+
+    public static final String SIZE = "size";
+
+    public static final String FOLDER_ID = "folder_id";
+
+    public static final String IS_HIDDEN = "is_hidden";
+
+    public static final String IS_DELETED = "is_deleted";
+
+    public static final String CREATOR = "creator";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }

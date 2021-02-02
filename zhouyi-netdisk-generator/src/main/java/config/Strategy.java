@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
  * @since 2021-01-27
  */
 public class Strategy {
-    public static StrategyConfig getStrategyConfig(){
+    public static StrategyConfig getStrategyConfig() {
         StrategyConfig sc = new StrategyConfig();
         sc.setNaming(NamingStrategy.underline_to_camel);
         sc.setColumnNaming(NamingStrategy.underline_to_camel);
@@ -20,6 +20,8 @@ public class Strategy {
                 "tb_user_groups");
         sc.setLogicDeleteFieldName("is_deleted");
         sc.setRestControllerStyle(true);
+        // 生成实体类常量
+        sc.setEntityColumnConstant(true);
 
         return sc;
     }

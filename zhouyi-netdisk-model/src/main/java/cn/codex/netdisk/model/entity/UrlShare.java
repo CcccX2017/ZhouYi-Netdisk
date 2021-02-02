@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -75,5 +75,37 @@ public class UrlShare implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String ID = "id";
+
+    public static final String FILE_ID_GROUP = "file_id_group";
+
+    public static final String SHARE_TITLE = "share_title";
+
+    public static final String LINK = "link";
+
+    public static final String SHORT_URL = "short_url";
+
+    public static final String FILE_KEY = "file_key";
+
+    public static final String VIEWED_COUNT = "viewed_count";
+
+    public static final String SAVED_COUNT = "saved_count";
+
+    public static final String DOWNLOAD_COUNT = "download_count";
+
+    public static final String SHARE_TYPE = "share_type";
+
+    public static final String USERNAME = "username";
+
+    public static final String IS_PERMANENT = "is_permanent";
+
+    public static final String SHARE_STATUS = "share_status";
+
+    public static final String FAILURE_TIME = "failure_time";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }

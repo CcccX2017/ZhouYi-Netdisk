@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -55,5 +55,23 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String ORDER_NO = "order_no";
+
+    public static final String USERNAME = "username";
+
+    public static final String PAYMENT_AMOUNT = "payment_amount";
+
+    public static final String PAYMENT_METHOD_ID = "payment_method_id";
+
+    public static final String STATUS = "status";
+
+    public static final String GROUP_ID = "group_id";
+
+    public static final String PAYMENT_TIME = "payment_time";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }

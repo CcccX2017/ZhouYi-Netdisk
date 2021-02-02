@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-01-28
+ * @since 2021-02-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -48,5 +48,19 @@ public class UserGroups implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+
+    public static final String GROUP_ID = "group_id";
+
+    public static final String GROUP_NAME = "group_name";
+
+    public static final String PARENT_ID = "parent_id";
+
+    public static final String MAX_STORAGE_SPACE = "max_storage_space";
+
+    public static final String MAX_FILE_SIZE = "max_file_size";
+
+    public static final String GMT_CREATE = "gmt_create";
+
+    public static final String GMT_MODIFIED = "gmt_modified";
 
 }
