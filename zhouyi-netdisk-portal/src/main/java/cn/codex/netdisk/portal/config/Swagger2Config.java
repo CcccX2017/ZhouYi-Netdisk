@@ -36,17 +36,12 @@ public class Swagger2Config {
     @Value("${swagger.enabled}")
     private boolean enabled;
 
-    /**
-     * 请求的统一前缀
-     */
-    @Value("${swagger.pathMapping}")
-    private String pathMapping;
-
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 // 是否启用Swagger
                 .enable(enabled)
+                .groupName("门户网站")
                 // 用来创建该API的基本信息
                 .apiInfo(apiInfo())
                 // 设置哪些接口暴露给Swagger展示
@@ -56,8 +51,7 @@ public class Swagger2Config {
                 // 扫描指定包中的swagger注解
                 // .apis(RequestHandlerSelectors.basePackage("cn.codex.server.controller"))
                 .paths(PathSelectors.any())
-                .build()
-                .pathMapping(pathMapping);
+                .build();
                 /*.securityContexts(securityContexts())
                 .securitySchemes(securitySchemes());*/
     }
