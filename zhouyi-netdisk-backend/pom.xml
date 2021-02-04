@@ -23,12 +23,6 @@
             <artifactId>zhouyi-netdisk-service</artifactId>
         </dependency>
 
-        <!-- swagger第三方ui依赖 -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>swagger-bootstrap-ui</artifactId>
-        </dependency>
-
         <!-- 热部署 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

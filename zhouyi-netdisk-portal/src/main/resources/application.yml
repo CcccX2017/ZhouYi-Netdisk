@@ -60,3 +60,6 @@ swagger:
   enabled: true
   # 请求的统一前缀
   pathMapping: portal
+
+knife4j:
+  enable: true

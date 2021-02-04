@@ -35,8 +35,7 @@
         <commons.io.version>2.6</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <hutool.version>5.5.7</hutool.version>
-        <swagger.version>2.9.2</swagger.version>
-        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
+        <knife4j.version>2.0.4</knife4j.version>
     </properties>
 
     <dependencyManagement>
@@ -125,18 +124,11 @@
 
             <!-- Hutool工具类定义结束 -->
 
-            <!-- swagger2 -->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-
-            <!-- swagger bootstrap ui -->
+            <!-- knife4j swagger依赖 -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>swagger-bootstrap-ui</artifactId>
-                <version>${swagger.bootstrap.ui.version}</version>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
 
             <!-- 管理项目依赖 -->
