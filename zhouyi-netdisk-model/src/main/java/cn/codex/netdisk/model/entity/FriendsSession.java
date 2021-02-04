@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +17,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -37,9 +38,11 @@ public class FriendsSession implements Serializable {
     private String friend;
 
     @ApiModelProperty(value = "是否显示(0-不显示，1-显示，默认1,对应username)")
+    @TableField("is_visited_by_user")
     private Boolean visitedByUser;
 
     @ApiModelProperty(value = "是否显示(0-不显示，1-显示，默认1，对应friend)")
+    @TableField("is_visited_by_friend")
     private Boolean visitedByFriend;
 
     @ApiModelProperty(value = "创建时间")

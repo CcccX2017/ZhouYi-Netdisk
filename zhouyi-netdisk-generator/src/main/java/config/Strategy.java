@@ -14,7 +14,6 @@ public class Strategy {
         sc.setColumnNaming(NamingStrategy.underline_to_camel);
         sc.setEntityLombokModel(true);
         sc.setTablePrefix("tb_");
-        sc.setFieldPrefix("is_");
         sc.setInclude("tb_files", "tb_folders", "tb_friends", "tb_friends_application", "tb_friends_session",
                 "tb_friends_share", "tb_order", "tb_pay_info", "tb_payment_method", "tb_url_share", "tb_user",
                 "tb_user_groups");
@@ -22,6 +21,8 @@ public class Strategy {
         sc.setRestControllerStyle(true);
         // 生成实体类常量
         sc.setEntityColumnConstant(true);
+        // 移除字段的is_前缀
+        sc.setEntityBooleanColumnRemoveIsPrefix(true);
 
         return sc;
     }

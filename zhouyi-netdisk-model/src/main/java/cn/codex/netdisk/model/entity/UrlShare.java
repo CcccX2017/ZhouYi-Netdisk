@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +17,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -61,6 +62,7 @@ public class UrlShare implements Serializable {
     private String username;
 
     @ApiModelProperty(value = "是否永久(0-永久 1-非永久)")
+    @TableField("is_permanent")
     private Boolean permanent;
 
     @ApiModelProperty(value = "分享状态(0-有效，1-失效， 2-已删除)")

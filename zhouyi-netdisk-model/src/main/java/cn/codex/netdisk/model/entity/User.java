@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +17,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -70,7 +71,8 @@ public class User implements Serializable {
     private Long usedStorageSpace;
 
     @ApiModelProperty(value = "资料是否完善（0-未完善，1-已完善）")
-    private Integer dataPerfect;
+    @TableField("is_data_perfect")
+    private Boolean dataPerfect;
 
     @ApiModelProperty(value = "会员过期时间")
     private Date expirationTime;

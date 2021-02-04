@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author codex
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -53,9 +54,11 @@ public class Files implements Serializable {
     private Integer folderId;
 
     @ApiModelProperty(value = "是否隐藏（0-未隐藏，1-隐藏）")
+    @TableField("is_hidden")
     private Boolean hidden;
 
     @ApiModelProperty(value = "是否已删除（0-未删除，1-已删除）")
+    @TableField("is_deleted")
     @TableLogic
     private Boolean deleted;
 
