@@ -21,21 +21,22 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.4.2</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <druid.version>1.1.10</druid.version>
+        <druid.version>1.1.22</druid.version>
         <guava.version>29.0-jre</guava.version>
         <jackson.version>2.11.3</jackson.version>
         <mybatis.plus.version>3.4.1</mybatis.plus.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <hutool.version>5.5.7</hutool.version>
-        <knife4j.version>2.0.4</knife4j.version>
+        <knife4j.version>2.0.8</knife4j.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -155,6 +156,14 @@
                 <artifactId>zhouyi-netdisk-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- jwt 依赖 -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

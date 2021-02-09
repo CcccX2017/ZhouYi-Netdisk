@@ -33,11 +33,6 @@ public class Const {
      */
     public static final String VIRTUAL_DIRECTORY = "/rs/";
 
-    /**
-     * 域名
-     */
-    public static final String DOMAIN_NAME = "http://localhost:8080";
-
     public static final String CUSTOMER = "普通用户";
 
     public static final String REGULAR_MEMBERS = "普通会员";

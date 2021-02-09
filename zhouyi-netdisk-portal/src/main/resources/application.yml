@@ -24,7 +24,11 @@ server:
 # spring
 spring:
   profiles:
-    active: druid
+    active:
+      - druid
+      - redis
+      - mp
+#    include: druid,redis,mp
   # 文件上传配置
   servlet:
     multipart:
@@ -33,13 +37,6 @@ spring:
       max-file-size: 10240MB
       # 设置总上传的文件大小，1T
       max-request-size: 1048576MB
-
-# mybatis plus配置
-mybatis-plus:
-  type-aliases-package: cn.codex.netdisk.model.entity
-  mapper-locations: classpath*:mappers/*/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
 
 # PageHelper配置
 #pagehelper:
@@ -60,4 +57,11 @@ swagger:
   enabled: true
 
 knife4j:
+  # 开启增强配置
   enable: true
+  # 开启生产环境屏蔽
+  production: false
+  setting:
+    enableFooter: false
+    enableFooterCustom: true
+    footerCustomContent: Copyright© 2021 舟意网盘

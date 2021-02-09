@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
+ * 服务器响应类
+ *
  * @author CodeX
  * @since 2020-11-03 22:36:50
  */

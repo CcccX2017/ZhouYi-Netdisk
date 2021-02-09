@@ -1,4 +1,4 @@
-package cn.codex.netdisk.common.config;
+package cn.codex.netdisk.portal.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

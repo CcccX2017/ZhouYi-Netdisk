@@ -1,7 +1,7 @@
 package cn.codex.netdisk.portal.config;
 
-import cn.codex.netdisk.common.config.PortalConfig;
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +10,14 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Swagger2配置类
@@ -23,12 +26,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @since 2021-01-30
  */
 @Configuration
-@EnableSwagger2
-@EnableKnife4j
+@EnableSwagger2WebMvc
 public class Swagger2Config {
 
     @Autowired
     private PortalConfig portalConfig;
+
+    private final OpenApiExtensionResolver openApiExtensionResolver;
+
+    @Autowired
+    public Swagger2Config(OpenApiExtensionResolver openApiExtensionResolver) {
+        this.openApiExtensionResolver = openApiExtensionResolver;
+    }
 
     /**
      * 是否开启swagger
@@ -51,9 +60,10 @@ public class Swagger2Config {
                 // 扫描指定包中的swagger注解
                 // .apis(RequestHandlerSelectors.basePackage("cn.codex.server.controller"))
                 .paths(PathSelectors.any())
-                .build();
-                /*.securityContexts(securityContexts())
-                .securitySchemes(securitySchemes());*/
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(securitySchemes())
+                .extensions(openApiExtensionResolver.buildSettingExtensions());
     }
 
     private ApiInfo apiInfo() {
@@ -63,5 +73,37 @@ public class Swagger2Config {
                 .contact(new Contact(portalConfig.getAuthor(), "http://localhost:9001/doc.html", null))
                 .version(portalConfig.getVersion())
                 .build();
+    }
+
+    private List<? extends SecurityScheme> securitySchemes() {
+        List<ApiKey> apiKeys = new ArrayList<>();
+
+        ApiKey apiKey = new ApiKey("Authorization", "Authorization", "Header");
+        apiKeys.add(apiKey);
+
+        return apiKeys;
+    }
+
+    private List<SecurityContext> securityContexts() {
+        // 设置需要登录认证的路径
+        List<SecurityContext> result = new ArrayList<>();
+        result.add(getContextByPath());
+        return result;
+    }
+
+    private SecurityContext getContextByPath() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        List<SecurityReference> result = new ArrayList<>();
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        result.add(new SecurityReference("Authorization", authorizationScopes));
+        return result;
     }
 }
