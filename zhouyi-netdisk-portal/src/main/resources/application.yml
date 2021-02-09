@@ -28,7 +28,7 @@ spring:
       - druid
       - redis
       - mp
-#    include: druid,redis,mp
+  #    include: druid,redis,mp
   # 文件上传配置
   servlet:
     multipart:
@@ -65,3 +65,13 @@ knife4j:
     enableFooter: false
     enableFooterCustom: true
     footerCustomContent: Copyright© 2021 舟意网盘
+
+jwt:
+  # jwt存储的请求头
+  tokenHeader: Authorization
+  # jwt 加解密使用的密钥
+  secret: zhouyi-netdisk-portal-secret
+  # jwt的超期限时间（60 * 60 * 24 * 7）7天
+  expiration: 604800
+  # jwt负载中拿到开头
+  tokenHead: Bearer

@@ -23,7 +23,9 @@ public enum ResponseCode {
     /**
      * 参数错误
      */
-    ILLEGAL_ARGUMENT(2, "ILLEGAL_ARGUMENT");
+    ILLEGAL_ARGUMENT(2, "ILLEGAL_ARGUMENT"),
+
+    NO_PERMISSION(3, "权限不足，请联系管理员");
 
     private final int code;
     private final String desc;

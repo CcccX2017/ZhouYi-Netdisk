@@ -1,6 +1,5 @@
 package cn.codex.netdisk.portal;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2020-11-18 15:17:39
  */
 @SpringBootApplication(scanBasePackages = "cn.codex.netdisk")
-@MapperScan("cn.codex.netdisk.dao")
 public class PortalApplication {
     public static void main(String[] args) {
         SpringApplication.run(PortalApplication.class, args);

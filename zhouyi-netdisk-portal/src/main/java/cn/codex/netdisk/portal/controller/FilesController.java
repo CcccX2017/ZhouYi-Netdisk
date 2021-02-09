@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -31,14 +32,10 @@ public class FilesController {
     @Autowired
     private IFilesService filesService;
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
     @ApiOperation("查询所有")
     @GetMapping("/")
     public ServerResponse<List<Files>> findAll() {
         return ServerResponse.createBySuccess(filesService.list());
     }
-
 }
 

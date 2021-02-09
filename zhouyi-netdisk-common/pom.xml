@@ -82,6 +82,12 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
+        <!-- jwt 依赖 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+
         <!-- mybatis plus 依赖 -->
         <dependency>
             <groupId>com.baomidou</groupId>

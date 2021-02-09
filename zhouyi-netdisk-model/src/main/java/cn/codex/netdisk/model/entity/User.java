@@ -2,9 +2,12 @@ package cn.codex.netdisk.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_user")
-@ApiModel(value="User对象", description="用户表")
+@ApiModel(value = "User对象", description = "用户表")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -89,6 +92,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+    @ApiModelProperty(value = "用户组")
+    @TableField(exist = false)
+    private UserGroups userGroups;
 
     public static final String USER_ID = "user_id";
 
@@ -129,5 +135,4 @@ public class User implements Serializable {
     public static final String GMT_CREATE = "gmt_create";
 
     public static final String GMT_MODIFIED = "gmt_modified";
-
 }

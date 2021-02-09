@@ -2,9 +2,13 @@ package cn.codex.netdisk.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_user_groups")
-@ApiModel(value="UserGroups对象", description="用户组表")
+@ApiModel(value = "UserGroups对象", description = "用户组表")
 public class UserGroups implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +33,9 @@ public class UserGroups implements Serializable {
     @ApiModelProperty(value = "用户组id")
     @TableId(value = "group_id", type = IdType.AUTO)
     private Integer groupId;
+
+    @ApiModelProperty(value = "权限名称")
+    private String authName;
 
     @ApiModelProperty(value = "组名称")
     private String groupName;
@@ -48,8 +55,9 @@ public class UserGroups implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
-
     public static final String GROUP_ID = "group_id";
+
+    public static final String AUTH_NAME = "auth_name";
 
     public static final String GROUP_NAME = "group_name";
 
