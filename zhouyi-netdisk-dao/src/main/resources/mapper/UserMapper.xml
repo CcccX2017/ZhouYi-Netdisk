@@ -1,34 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.UserMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.User">
-        <id column="user_id" property="userId" />
-        <result column="group_id" property="groupId" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="salt" property="salt" />
-        <result column="status" property="status" />
-        <result column="nickname" property="nickname" />
-        <result column="avatar" property="avatar" />
-        <result column="real_name" property="realName" />
-        <result column="phone" property="phone" />
-        <result column="email" property="email" />
-        <result column="sex" property="sex" />
-        <result column="birthday" property="birthday" />
-        <result column="used_storage_space" property="usedStorageSpace" />
-        <result column="is_data_perfect" property="dataPerfect" />
-        <result column="expiration_time" property="expirationTime" />
-        <result column="login_ip" property="loginIp" />
-        <result column="login_date" property="loginDate" />
-        <result column="gmt_create" property="gmtCreate" />
-        <result column="gmt_modified" property="gmtModified" />
+        <id column="user_id" property="userId"/>
+        <result column="group_id" property="groupId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="status" property="status"/>
+        <result column="nickname" property="nickname"/>
+        <result column="avatar" property="avatar"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="used_storage_space" property="usedStorageSpace"/>
+        <result column="is_data_perfect" property="dataPerfect"/>
+        <result column="expiration_time" property="expirationTime"/>
+        <result column="login_ip" property="loginIp"/>
+        <result column="login_date" property="loginDate"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <resultMap id="UserInfoWithGroupInfo" type="cn.codex.netdisk.model.entity.User" extends="BaseResultMap">
+        <association property="userGroups" javaType="cn.codex.netdisk.model.entity.UserGroups">
+            <result column="group_name" property="groupName"/>
+            <result column="max_storage_space" property="maxStorageSpace"/>
+            <result column="max_file_size" property="maxFileSize"/>
+        </association>
     </resultMap>
 
     <!-- 通用查询结果列 -->
+    <!--suppress SqlResolve -->
     <sql id="Base_Column_List">
-        user_id, group_id, username, password, salt, status, nickname, avatar, real_name, phone, email, sex, birthday, used_storage_space, is_data_perfect, expiration_time, login_ip, login_date, gmt_create, gmt_modified
+        user_id,
+        group_id,
+        username,
+        password,
+        salt,
+        status,
+        nickname,
+        avatar,
+        real_name,
+        phone,
+        email,
+        sex,
+        birthday,
+        used_storage_space,
+        is_data_perfect,
+        expiration_time,
+        login_ip,
+        login_date,
+        gmt_create,
+        gmt_modified
     </sql>
 
+    <!--suppress SqlResolve -->
+    <sql id="Alias_Column_List">
+        u.user_id,
+        u.group_id,
+        u.username,
+        u.password,
+        u.salt,
+        u.status,
+        u.nickname,
+        u.avatar,
+        u.real_name,
+        u.phone,
+        u.email,
+        u.sex,
+        u.birthday,
+        u.used_storage_space,
+        u.is_data_perfect,
+        u.expiration_time,
+        u.login_ip,
+        u.login_date,
+        u.gmt_create,
+        u.gmt_modified
+    </sql>
+
+    <select id="selectByUsername" resultMap="UserInfoWithGroupInfo">
+        select <include refid="Alias_Column_List"/>,
+            ug.group_name,
+            ug.max_storage_space,
+            ug.max_file_size
+            from tb_user u,
+                 tb_user_groups ug
+            where u.group_id = ug.group_id
+              and u.username = #{username}
+    </select>
 </mapper>

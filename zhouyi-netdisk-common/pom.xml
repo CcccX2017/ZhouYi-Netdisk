@@ -45,6 +45,12 @@
             <artifactId>hutool-setting</artifactId>
         </dependency>
 
+        <!-- 图片验证码实现 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+        </dependency>
+
         <!-- hutool依赖结束 -->
 
         <!-- 获取文件编码格式 -->

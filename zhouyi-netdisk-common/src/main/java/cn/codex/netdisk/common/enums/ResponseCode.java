@@ -8,12 +8,14 @@ public enum ResponseCode {
     /**
      * 成功
      */
-    SUCCESS(0, "SUCCESS"),
+    SUCCESS(200, "SUCCESS"),
 
     /**
      * 错误
      */
-    ERROR(1, "ERROR"),
+    ERROR(500, "ERROR"),
+
+    NOT_FOUND(404, "资源，服务未找到"),
 
     /**
      * 用户未登录，请登录
@@ -23,9 +25,9 @@ public enum ResponseCode {
     /**
      * 参数错误
      */
-    ILLEGAL_ARGUMENT(2, "ILLEGAL_ARGUMENT"),
+    ILLEGAL_ARGUMENT(2, "参数错误"),
 
-    NO_PERMISSION(3, "权限不足，请联系管理员");
+    NO_PERMISSION(403, "权限不足，请联系管理员");
 
     private final int code;
     private final String desc;

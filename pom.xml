@@ -123,6 +123,13 @@
                 <version>${hutool.version}</version>
             </dependency>
 
+            <!-- 图片验证码实现 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-captcha</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
             <!-- Hutool工具类定义结束 -->
 
             <!-- knife4j swagger依赖 -->

@@ -7,27 +7,6 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
-
-    /**
-     * 用户名
-     */
-    public static final String USERNAME = "username";
-
-    /**
-     * 密码
-     */
-    public static final String PASSWORD = "password";
-
-    /**
-     * 邮箱
-     */
-    public static final String EMAIL = "email";
-
-    /**
-     * 用户信息
-     */
-    public static final String USERINFO = "userInfo";
-
     /**
      * 虚拟目录
      */
@@ -40,16 +19,32 @@ public class Const {
     public static final String SUPER_MEMBERS = "超级会员";
 
     /**
-     * 默认分页页码
+     * 验证码key
      */
-    public static final int PAGE_NUM = 1;
-    /**
-     * 默认分页条数
-     */
-    public static final int PAGE_SIZE = 15;
+    public static final String CAPTCHA_KEY = "captcha_key:";
 
     /**
-     * 需要登录
+     * 验证码有效期（分钟）
      */
-    public static final int NEED_LOGIN = 10;
+    public static final Integer CAPTCHA_EXPIRATION = 2;
+
+    /**
+     * 验证码错误或失效，请重新输入
+     */
+    public static final String CAPTCHA_ERROR = "验证码错误或失效，请重新输入";
+
+    /**
+     * 用户信息key
+     */
+    public static final String LOGINUSER_KEY = "login_";
+
+    /**
+     * 用户名或密码错误
+     */
+    public static final String USERNAME_PASSWORD_ERROR = "用户名或密码错误";
+
+    /**
+     * 登录成功
+     */
+    public static final String LOGIN_SUCCESS = "登录成功";
 }

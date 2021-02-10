@@ -36,7 +36,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/portal/**")
-                .excludePathPatterns("/portal/user/login", "/portal/user/logout");
+                .excludePathPatterns("/portal/user/login", "/portal/user/logout", "/captcha");
         registry.addInterceptor(restUrlInterceptor()).addPathPatterns("/backend/**");
     }
 }

@@ -1,6 +1,6 @@
 # mybatis plus配置
 mybatis-plus:
   type-aliases-package: cn.codex.netdisk.model.entity
-  mapper-locations: classpath*:mappers/*/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true

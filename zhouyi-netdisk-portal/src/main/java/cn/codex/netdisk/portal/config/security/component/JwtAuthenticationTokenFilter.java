@@ -1,5 +1,6 @@
 package cn.codex.netdisk.portal.config.security.component;
 
+import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.service.IUserService;
@@ -49,7 +50,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // token存在用户名
             if (!Strings.isNullOrEmpty(username)) {
-                User user = redisUtil.getObject(username);
+                User user = redisUtil.getObject(Const.LOGINUSER_KEY + username);
                 // 用户未登录
                 if (user == null) {
                     // 登录
@@ -57,8 +58,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     if (jwtTokenUtil.validateToken(authToken, user)) {
                         user.setPassword("");
                         user.setSalt("");
-                        // 将用户信息缓存到redis中
-                        redisUtil.setObject(username, user);
+                        // 将登录的用户信息缓存到redis中
+                        redisUtil.setObject(Const.LOGINUSER_KEY + username, user);
                     }
                 }
             }

@@ -36,9 +36,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        PrintWriter out = null;
-        try {
-            out = response.getWriter();
+        try (PrintWriter out = response.getWriter()) {
             String authHeader = request.getHeader(tokenHeader);
             // 有token值
             if (null != authHeader && authHeader.startsWith(tokenHead)) {
@@ -67,10 +65,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 }
