@@ -130,6 +130,14 @@
                 <version>${hutool.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-extra</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+
+
             <!-- Hutool工具类定义结束 -->
 
             <!-- knife4j swagger依赖 -->

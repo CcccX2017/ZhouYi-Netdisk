@@ -71,7 +71,7 @@ jwt:
   tokenHeader: Authorization
   # jwt 加解密使用的密钥
   secret: zhouyi-netdisk-portal-secret
-  # jwt的超期限时间（60 * 60 * 24 * 7）7天
-  expiration: 604800
+  # jwt的超期限时间（30分钟)
+  expiration: 30
   # jwt负载中拿到开头
   tokenHead: Bearer

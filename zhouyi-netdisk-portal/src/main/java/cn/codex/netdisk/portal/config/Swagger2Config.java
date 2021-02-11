@@ -1,6 +1,5 @@
 package cn.codex.netdisk.portal.config;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +27,23 @@ import java.util.List;
 @Configuration
 @EnableSwagger2WebMvc
 public class Swagger2Config {
-
+    
     @Autowired
     private PortalConfig portalConfig;
-
+    
     private final OpenApiExtensionResolver openApiExtensionResolver;
-
+    
     @Autowired
     public Swagger2Config(OpenApiExtensionResolver openApiExtensionResolver) {
         this.openApiExtensionResolver = openApiExtensionResolver;
     }
-
+    
     /**
      * 是否开启swagger
      */
     @Value("${swagger.enabled}")
     private boolean enabled;
-
+    
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -65,7 +64,7 @@ public class Swagger2Config {
                 .securitySchemes(securitySchemes())
                 .extensions(openApiExtensionResolver.buildSettingExtensions());
     }
-
+    
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("舟意网盘接口文档 - 门户网站")
@@ -74,30 +73,31 @@ public class Swagger2Config {
                 .version(portalConfig.getVersion())
                 .build();
     }
-
+    
     private List<? extends SecurityScheme> securitySchemes() {
         List<ApiKey> apiKeys = new ArrayList<>();
-
+        
         ApiKey apiKey = new ApiKey("Authorization", "Authorization", "Header");
         apiKeys.add(apiKey);
-
+        
         return apiKeys;
     }
-
+    
     private List<SecurityContext> securityContexts() {
         // 设置需要登录认证的路径
         List<SecurityContext> result = new ArrayList<>();
         result.add(getContextByPath());
         return result;
     }
-
+    
     private SecurityContext getContextByPath() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("^(?!auth).*$"))
+//                .forPaths(PathSelectors.regex("^(?!/portal/user/login|/portal/user/register|/captcha).*$"))
+                .forPaths(PathSelectors.regex("^(?!/login|/register|/captcha).*$"))
                 .build();
     }
-
+    
     private List<SecurityReference> defaultAuth() {
         List<SecurityReference> result = new ArrayList<>();
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");

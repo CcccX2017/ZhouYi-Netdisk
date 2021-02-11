@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2021-02-10
  */
 @RestController
-@Api(tags = "验证码(CaptchaController)")
+@Api(tags = "验证码")
 public class CaptchaController {
     
     @Autowired
@@ -42,8 +42,8 @@ public class CaptchaController {
         redisUtil.setObject(Const.CAPTCHA_KEY + uuid, lineCaptcha.getCode(), Const.CAPTCHA_EXPIRATION,
                 TimeUnit.MINUTES);
         
-        map.put("img", lineCaptcha.getImageBase64());
         map.put("uuid", uuid);
+        map.put("img", lineCaptcha.getImageBase64());
         
         return ServerResponse.createBySuccess(map);
     }

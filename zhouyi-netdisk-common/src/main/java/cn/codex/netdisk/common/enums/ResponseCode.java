@@ -14,20 +14,31 @@ public enum ResponseCode {
      * 错误
      */
     ERROR(500, "ERROR"),
-
+    
+    /**
+     * 404 资源，服务未找到
+     */
     NOT_FOUND(404, "资源，服务未找到"),
 
     /**
-     * 用户未登录，请登录
+     * 10 用户未登录，请登录
      */
     NEED_LOGIN(10, "用户未登录，请登录"),
 
     /**
-     * 参数错误
+     * 2 参数错误
      */
     ILLEGAL_ARGUMENT(2, "参数错误"),
-
-    NO_PERMISSION(403, "权限不足，请联系管理员");
+    
+    /**
+     * 401 未授权
+     */
+    UNAUTHORIZED(401, "未授权"),
+    
+    /**
+     * 403 权限不足，请联系管理员
+     */
+    FORBIDDEN(403, "权限不足，请联系管理员");
 
     private final int code;
     private final String desc;

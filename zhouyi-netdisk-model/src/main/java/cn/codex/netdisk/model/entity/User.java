@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -135,4 +137,9 @@ public class User implements Serializable {
     public static final String GMT_CREATE = "gmt_create";
 
     public static final String GMT_MODIFIED = "gmt_modified";
+    
+    @JsonIgnore
+    public String getSalt() {
+        return salt;
+    }
 }

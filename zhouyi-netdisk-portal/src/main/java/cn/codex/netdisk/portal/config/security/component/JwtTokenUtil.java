@@ -1,15 +1,22 @@
 package cn.codex.netdisk.portal.config.security.component;
 
-import cn.codex.netdisk.model.entity.User;
+import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.utils.RedisUtil;
+import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.extra.servlet.ServletUtil;
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Jwt工具类
@@ -17,144 +24,167 @@ import java.util.Map;
  * @author codex
  * @since 2021-02-09
  */
-@SuppressWarnings("all")
 @Component
 public class JwtTokenUtil {
-
-    private static final String CLAIM_KEY_USERNAME = "sub";
-    private static final String CLAIM_KEY_CREATED = "created";
+    
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+    
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
+    
     @Value("${jwt.secret}")
     private String secret;
+    
     @Value("${jwt.expiration}")
     private Long expiration;
-
+    
+    @Autowired
+    private RedisUtil redisUtil;
+    
+    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    
     /**
-     * 根据用户信息生成token
+     * 获取登录用户信息
      *
-     * @param user
-     * @return
+     * @return 登录用户信息
      */
-    public String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, user.getUsername());
-        claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
-    }
-
-    /**
-     * 从token中获取登录用户名
-     *
-     * @param token
-     * @return
-     */
-    public String getUserNameFromToken(String token) {
-        String username;
-        try {
+    public LoginUser getLoginUser(HttpServletRequest request) {
+        String token = getToken(request);
+        
+        if (!Strings.isNullOrEmpty(token)) {
             Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
+            String uuid = (String) claims.get(Const.LOGIN_USER_KEY);
+            return redisUtil.getObject(getTokenKey(uuid));
         }
-
-        return username;
+        
+        return null;
     }
-
+    
     /**
-     * 验证token是否有效
+     * 更新用户信息
      *
-     * @param token
-     * @param user
-     * @return
+     * @param loginUser 登录用户权限信息
      */
-    public boolean validateToken(String token, User user) {
-        String username = getUserNameFromToken(token);
-        return username.equals(user.getUsername()) && !isTokenExpired(token);
+    public void updateLoginUser(LoginUser loginUser) {
+        if (loginUser != null && !Strings.isNullOrEmpty(loginUser.getToken())) {
+            refreshToken(loginUser);
+        }
     }
-
+    
     /**
-     * 判断token是否可以被刷新
+     * 删除登录用户信息
      *
-     * @param token
-     * @return
+     * @param uuid 用户token
      */
-    public boolean canRefresh(String token) {
-        return !isTokenExpired(token);
+    public void delLoginUser(String uuid) {
+        if (!Strings.isNullOrEmpty(uuid)) {
+            redisUtil.deleteObject(getTokenKey(uuid));
+        }
     }
-
+    
     /**
-     * 刷新token
+     * 生成token
      *
-     * @param token
-     * @return
+     * @param loginUser 登录用户权限信息
+     * @return token
      */
-    public String refreshToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        claims.put(CLAIM_KEY_CREATED, new Date());
+    public String generateToken(LoginUser loginUser) {
+        String uuid = IdUtil.fastUUID();
+        loginUser.setToken(uuid);
+        setUserAgent(loginUser);
+        refreshToken(loginUser);
+        
+        Map<String, Object> claims = Maps.newHashMap();
+        claims.put(Const.LOGIN_USER_KEY, uuid);
+        
         return generateToken(claims);
     }
-
+    
     /**
-     * 判断token是否失效
+     * 验证token是否有效，相差不足20分钟自动刷新redis缓存
      *
-     * @param token
-     * @return
+     * @param loginUser 登录用户权限信息
      */
-    private boolean isTokenExpired(String token) {
-        Date date = getExpiredDateFromToken(token);
-        return date.before(new Date());
-    }
-
-    /**
-     * 从token中获取过期时间
-     *
-     * @param token
-     * @return
-     */
-    private Date getExpiredDateFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        return claims.getExpiration();
-    }
-
-    /**
-     * 从token中获取荷载re
-     *
-     * @param token
-     * @return
-     */
-    private Claims getClaimsFromToken(String token) {
-        Claims claims = null;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void validateToken(LoginUser loginUser) {
+        long expireTime = loginUser.getExpireTime();
+        long currentTime = System.currentTimeMillis();
+        
+        if (expireTime - currentTime <= MILLIS_MINUTE_TEN) {
+            refreshToken(loginUser);
         }
-        return claims;
+        
     }
-
+    
     /**
-     * 根据荷载生成 JWT TOKEN
+     * 生成token
      *
-     * @param claims
-     * @return
+     * @param claims 荷载
+     * @return token
      */
     private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
-
+    
     /**
-     * 生成token失效时间
+     * 刷新token
      *
-     * @return
+     * @param loginUser 登录用户权限信息
      */
-    private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
+    private void refreshToken(LoginUser loginUser) {
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expiration * 60 * 1000);
+        // 将loginUser缓存到redis中
+        redisUtil.setObject(getTokenKey(loginUser.getToken()), loginUser, expiration, TimeUnit.MINUTES);
     }
-
+    
+    /**
+     * 设置用户登录ip
+     *
+     * @param loginUser 登录用户权限信息
+     */
+    private void setUserAgent(LoginUser loginUser) {
+        String clientIP = ServletUtil.getClientIP(cn.codex.netdisk.common.utils.ServletUtil.getRequest());
+        loginUser.setIpAddr(clientIP);
+    }
+    
+    /**
+     * 根据token获取荷载
+     *
+     * @param token token
+     * @return 荷载
+     */
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    
+    /**
+     * 获取token
+     *
+     * @return token
+     */
+    private String getToken(HttpServletRequest request) {
+        String authToken = request.getHeader(tokenHeader);
+        if (!Strings.isNullOrEmpty(authToken) && authToken.startsWith(tokenHead)) {
+            authToken = authToken.substring(tokenHead.length() + 1);
+        }
+        
+        return authToken;
+    }
+    
+    /**
+     * 通过uuid获取redis中存储的key
+     *
+     * @param uuid 唯一标识
+     * @return redis中存储的key
+     */
+    private String getTokenKey(String uuid) {
+        return Const.LOGIN_TOKEN_KEY + uuid;
+    }
 }
