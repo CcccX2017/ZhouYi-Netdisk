@@ -28,8 +28,8 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     
-    @Value("${jwt.tokenHeader")
-    private String tokenHeader;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
     
     
     @ApiOperation(value = "登录并返回token")
@@ -39,8 +39,8 @@ public class LoginController {
         String token = loginService.login(loginDto);
         
         Map<String, Object> map = Maps.newHashMap();
+        map.put("tokenHead", tokenHead);
         map.put("token", token);
-        map.put("tokenHeader", tokenHeader);
         
         return ServerResponse.createBySuccess(Const.LOGIN_SUCCESS, map);
     }

@@ -4,6 +4,7 @@ import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -61,4 +62,5 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return ServerResponse.createByErrorMessage(e.getMessage());
     }
+    
 }

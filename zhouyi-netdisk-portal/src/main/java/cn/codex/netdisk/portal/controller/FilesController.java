@@ -2,19 +2,15 @@ package cn.codex.netdisk.portal.controller;
 
 
 import cn.codex.netdisk.common.dtos.ServerResponse;
-import cn.codex.netdisk.model.entity.Files;
 import cn.codex.netdisk.service.IFilesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * <p>
@@ -26,16 +22,17 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/portal/files")
-@Api(tags = "文件资源管理(FilesController)")
+@Api(tags = "文件资源管理")
 public class FilesController {
 
     @Autowired
     private IFilesService filesService;
 
-    @ApiOperation("查询所有")
+    @ApiOperation(value = "查询所有文件")
     @GetMapping("/")
-    public ServerResponse<List<Files>> findAll() {
+    public ServerResponse findAll(){
         return ServerResponse.createBySuccess(filesService.list());
     }
+    
 }
 

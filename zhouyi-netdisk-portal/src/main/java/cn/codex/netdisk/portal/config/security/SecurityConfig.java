@@ -1,8 +1,8 @@
 package cn.codex.netdisk.portal.config.security;
 
 import cn.codex.netdisk.portal.config.security.component.JwtAuthenticationTokenFilter;
+import cn.codex.netdisk.portal.config.security.component.RestAuthenticationEntryPoint;
 import cn.codex.netdisk.portal.service.impl.LogoutSuccessHandlerImpl;
-import cn.codex.netdisk.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
     private CorsFilter corsFilter;
+    
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     
     /**
      * 解决无法注入AuthenticationManager的问题
@@ -74,6 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 基于jwt不需要csrf
         http.csrf().disable()
+                // 认证失败处理类
+                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
                 .sessionManagement()
                 // 基于token不需要session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -104,4 +110,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
     }
+    
+    /*
+        处理不抛出UsernameNotFoundException的问题
+        @Bean
+        public DaoAuthenticationProvider daoAuthenticationProvider(){
+            DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+            provider.setHideUserNotFoundExceptions(false);
+            provider.setUserDetailsService(userDetailsService);
+            provider.setPasswordEncoder(bCryptPasswordEncoder());
+            return provider;
+        }
+     */
 }

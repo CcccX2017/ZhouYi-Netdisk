@@ -94,6 +94,7 @@ public class LoginUser implements UserDetails {
     }
     
     @Override
+    @JsonIgnore
     public String getUsername() {
         return user.getUsername();
     }

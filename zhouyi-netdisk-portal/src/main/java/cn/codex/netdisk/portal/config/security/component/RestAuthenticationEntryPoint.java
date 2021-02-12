@@ -31,7 +31,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         
         PrintWriter writer = response.getWriter();
         
-        String message = "请求访问：{0}，认证失败，无法访问，请联系管理员";
+        String message = "请求访问：{0}，认证失败，无法访问";
         message = MessageFormat.format(message, request.getRequestURI());
         writer.write(new ObjectMapper().writeValueAsString(ServerResponse.createByErrorCodeMeaage(ResponseCode.UNAUTHORIZED.getCode(), message)));
         

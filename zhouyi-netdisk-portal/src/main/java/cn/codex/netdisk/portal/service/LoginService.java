@@ -54,6 +54,10 @@ public class LoginService {
         if (!loginDto.getCode().equalsIgnoreCase(captcha)) {
             throw new CaptchaException(Const.CAPTCHA_ERROR);
         }
+        
+        // 验证码正确，删除redis中缓存的验证码
+        redisUtil.deleteObject(captchaKey);
+        
         Authentication authentication = null;
         try {
             authentication =
