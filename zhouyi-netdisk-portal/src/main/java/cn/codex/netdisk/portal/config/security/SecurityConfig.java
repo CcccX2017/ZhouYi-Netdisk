@@ -57,10 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
-                "/login",
-                "/logout",
-                "/register",
-                "/captcha",
+                "/portal/login",
+                "/portal/logout",
+                "/portal/register",
+                "/portal/captcha",
                 "/**/**.css",
                 "/**/**.js",
                 "/**/**.html",

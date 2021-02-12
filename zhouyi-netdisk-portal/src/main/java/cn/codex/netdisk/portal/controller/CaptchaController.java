@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -22,15 +23,15 @@ import java.util.concurrent.TimeUnit;
  * @author codex
  * @since 2021-02-10
  */
-@RestController
 @Api(tags = "验证码")
+@RestController
 public class CaptchaController {
     
     @Autowired
     private RedisUtil redisUtil;
     
     @ApiOperation("生成验证码")
-    @GetMapping("/captcha")
+    @GetMapping("/portal/captcha")
     public ServerResponse<Map<String, Object>> createCaptcha() {
         
         Map<String, Object> map = Maps.newHashMap();
