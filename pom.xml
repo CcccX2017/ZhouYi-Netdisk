@@ -29,12 +29,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <druid.version>1.1.22</druid.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>30.1-jre</guava.version>
         <jackson.version>2.11.3</jackson.version>
         <mybatis.plus.version>3.4.1</mybatis.plus.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
-        <hutool.version>5.5.7</hutool.version>
+        <hutool.version>5.5.8</hutool.version>
         <knife4j.version>2.0.8</knife4j.version>
         <jwt.version>0.9.1</jwt.version>
     </properties>
@@ -94,39 +94,9 @@
             </dependency>
 
             <!-- Hutool工具类定义开始 -->
-
-            <!-- 核心，包括Bean操作、日期、各种Util等 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- 加密解密模块，提供对称、非对称和摘要算法封装 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-crypto</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- 自动识别日志实现的日志门面 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-log</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- 功能更强大的Setting配置文件和Properties封装 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-setting</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- 图片验证码实现 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-captcha</artifactId>
+                <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
@@ -135,9 +105,6 @@
                 <artifactId>hutool-extra</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
-
-
-
             <!-- Hutool工具类定义结束 -->
 
             <!-- knife4j swagger依赖 -->

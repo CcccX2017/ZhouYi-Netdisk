@@ -20,42 +20,15 @@
         </dependency>
 
         <!-- hutool依赖开始 -->
-
-        <!-- 核心，包括Bean操作、日期、各种Util等 -->
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-        </dependency>
-
-        <!-- 加密解密模块，提供对称、非对称和摘要算法封装 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-crypto</artifactId>
-        </dependency>
-
-        <!-- 自动识别日志实现的日志门面 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-log</artifactId>
-        </dependency>
-
-        <!-- 功能更强大的Setting配置文件和Properties封装 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-setting</artifactId>
-        </dependency>
-
-        <!-- 图片验证码实现 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-captcha</artifactId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
         </dependency>
-
         <!-- hutool依赖结束 -->
 
         <!-- 获取文件编码格式 -->
