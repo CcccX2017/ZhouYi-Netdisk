@@ -40,6 +40,9 @@ spring:
   devtools:
     restart:
       enabled: true
+  output:
+    ansi:
+      enabled: always
 # PageHelper配置
 #pagehelper:
 #  helper-dialect: mysql

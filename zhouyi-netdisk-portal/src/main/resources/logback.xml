@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
     <!-- 日志存放路径 -->
 	<property name="log.path" value="/Users/codex/Workspace/logs/netdisk/portal" />
     <!-- 日志输出格式 -->
@@ -8,7 +10,7 @@
 	<!-- 控制台输出 -->
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>${log.pattern}</pattern>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
 		</encoder>
 	</appender>
@@ -24,7 +26,7 @@
 			<maxHistory>60</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>${log.pattern}</pattern>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -47,7 +49,7 @@
 			<maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>${log.pattern}</pattern>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -70,7 +72,7 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>${log.pattern}</pattern>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>

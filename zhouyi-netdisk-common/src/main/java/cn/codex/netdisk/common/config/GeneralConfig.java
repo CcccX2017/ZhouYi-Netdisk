@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Collections;
+
 /**
  * 通用配置
  *
@@ -23,6 +25,8 @@ public class GeneralConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+        
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
         // 设置访问源地址
         config.addAllowedOrigin("*");
         // 设置访问源请求头
