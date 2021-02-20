@@ -1,18 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : localhost
- Source Server Type    : MySQL
- Source Server Version : 80023
- Source Host           : localhost:3306
- Source Schema         : netdisk
-
- Target Server Type    : MySQL
- Target Server Version : 80023
- File Encoding         : 65001
-
- Date: 10/02/2021 00:54:49
-*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -268,7 +253,7 @@ CREATE TABLE `tb_user` (
   `username` varchar(64) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(60) NOT NULL COMMENT '用户密码',
   `salt` varchar(30) NOT NULL COMMENT '盐',
-  `status` tinyint(1) DEFAULT '0' COMMENT '账号状态（0-启用 1-停用）',
+  `status` tinyint(1) DEFAULT '1' COMMENT '账号状态（0-停用 1-启用）',
   `nickname` varchar(12) NOT NULL COMMENT '用户昵称',
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像URL',
   `real_name` varchar(32) DEFAULT NULL COMMENT '真实姓名',
@@ -285,12 +270,6 @@ CREATE TABLE `tb_user` (
   `gmt_modified` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户表';
-
--- ----------------------------
--- Records of tb_user
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for tb_user_groups
@@ -312,9 +291,9 @@ CREATE TABLE `tb_user_groups` (
 -- Records of tb_user_groups
 -- ----------------------------
 BEGIN;
-INSERT INTO `tb_user_groups` VALUES (1001, 'portal', '普通用户', 0, 21474836480, 3221225472, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
-INSERT INTO `tb_user_groups` VALUES (1002, 'portal', '普通会员', 0, 2199023255552, 5368709120, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
-INSERT INTO `tb_user_groups` VALUES (1003, 'portal', '超级会员', 0, 5497558138880, 10737418240, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
+INSERT INTO `tb_user_groups` VALUES (1001, 'ROLE_PORTAL', '普通用户', 0, 21474836480, 3221225472, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
+INSERT INTO `tb_user_groups` VALUES (1002, 'ROLE_PORTAL', '普通会员', 0, 2199023255552, 5368709120, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
+INSERT INTO `tb_user_groups` VALUES (1003, 'ROLE_PORTAL', '超级会员', 0, 5497558138880, 10737418240, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -1,10 +1,6 @@
 package cn.codex.netdisk.portal.controller;
 
-import cn.codex.netdisk.portal.config.security.component.JwtTokenUtil;
-import cn.codex.netdisk.service.IUserService;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 /**

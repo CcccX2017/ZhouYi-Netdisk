@@ -1,10 +1,11 @@
-package cn.codex.netdisk.portal.config.security.component;
+package cn.codex.netdisk.portal.utils;
 
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.HtmlUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
@@ -147,8 +148,9 @@ public class JwtTokenUtil {
      * @param loginUser 登录用户权限信息
      */
     private void setUserAgent(LoginUser loginUser) {
-        String clientIP = ServletUtil.getClientIP(cn.codex.netdisk.common.utils.ServletUtil.getRequest());
-        loginUser.setIpAddr(clientIP);
+        String clientIp = ServletUtil.getClientIP(cn.codex.netdisk.common.utils.ServletUtil.getRequest());
+        
+        loginUser.setIpAddr("0:0:0:0:0:0:0:1".equals(clientIp) ? "127.0.0.1" : HtmlUtil.cleanHtmlTag(clientIp));
     }
     
     /**
