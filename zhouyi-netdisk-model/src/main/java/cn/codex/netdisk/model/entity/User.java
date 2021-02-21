@@ -1,12 +1,8 @@
 package cn.codex.netdisk.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
 
@@ -48,7 +44,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "盐")
     private String salt;
 
-    @ApiModelProperty(value = "账号状态（0-启用 1-停用）")
+    @ApiModelProperty(value = "账号状态（0-停用 1-启用）")
     private Boolean status;
 
     @ApiModelProperty(value = "用户昵称")
@@ -89,9 +85,11 @@ public class User implements Serializable {
     private Date loginDate;
 
     @ApiModelProperty(value = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @ApiModelProperty(value = "更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @ApiModelProperty(value = "用户组")

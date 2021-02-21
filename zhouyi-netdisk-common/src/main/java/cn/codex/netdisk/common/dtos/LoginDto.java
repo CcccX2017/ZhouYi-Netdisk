@@ -1,12 +1,16 @@
 package cn.codex.netdisk.common.dtos;
 
+import java.io.Serializable;
+
 /**
  * 用户登录对象
  *
  * @author codex
  * @since 2021-02-11
  */
-public class LoginDto {
+public class LoginDto implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     /**
      * 用户名
      */

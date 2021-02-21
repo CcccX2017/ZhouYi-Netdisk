@@ -3,6 +3,7 @@ package cn.codex.netdisk.portal.controller;
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.portal.dtos.RegisterDto;
 import cn.codex.netdisk.portal.service.LoginService;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -33,7 +34,6 @@ public class LoginController {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
     
-    
     @ApiOperation(value = "登录并返回token")
     @PostMapping("/login")
     public ServerResponse<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
@@ -45,5 +45,11 @@ public class LoginController {
         map.put("token", token);
         
         return ServerResponse.createBySuccess(Const.LOGIN_SUCCESS, map);
+    }
+    
+    @ApiOperation(value = "用户注册")
+    @PostMapping("/register")
+    public ServerResponse<String> register(@RequestBody RegisterDto registerDto){
+        return loginService.register(registerDto);
     }
 }

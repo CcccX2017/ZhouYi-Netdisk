@@ -1,21 +1,33 @@
 package cn.codex.netdisk.portal.service;
 
+import java.util.Date;
+
+import cn.codex.netdisk.model.entity.UserGroups;
+
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
+import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.exception.CaptchaException;
 import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.exception.UserPasswordNotMatchException;
 import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
+import cn.codex.netdisk.portal.dtos.RegisterDto;
 import cn.codex.netdisk.portal.utils.JwtTokenUtil;
 import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.digest.BCrypt;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +40,7 @@ import javax.annotation.Resource;
  * @since 2021-02-12
  */
 @Component
+@Transactional(rollbackFor = Exception.class)
 public class LoginService {
     
     @Autowired
@@ -42,28 +55,18 @@ public class LoginService {
     @Autowired
     private UserMapper userMapper;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     /**
      * 用户登录并返回token
      *
      * @param loginDto 用户登录对象
      * @return token
      */
-    @Transactional(rollbackFor = Exception.class)
     public String login(LoginDto loginDto) {
-        
-        String captchaKey = Const.CAPTCHA_KEY + loginDto.getUuid();
-        String captcha = redisUtil.getObject(captchaKey);
-        
-        if (captcha == null) {
-            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
-        }
-        
-        if (!loginDto.getCode().equalsIgnoreCase(captcha)) {
-            throw new CaptchaException(Const.CAPTCHA_ERROR);
-        }
-        
-        // 验证码正确，删除redis中缓存的验证码
-        redisUtil.deleteObject(captchaKey);
+        // 校验验证码
+        validCode(loginDto.getUuid(), loginDto.getCode());
         
         Authentication authentication = null;
         try {
@@ -90,5 +93,77 @@ public class LoginService {
         userMapper.updateById(user);
         
         return token;
+    }
+    
+    /**
+     * 用户注册
+     *
+     * @param registerDto 用户登录对象
+     * @return 注册结果
+     */
+    public ServerResponse<String> register(RegisterDto registerDto) {
+        // 校验验证码
+        validCode(registerDto.getUuid(), registerDto.getCode());
+        
+        // 校验必填项是否为空
+        if (Strings.isNullOrEmpty(registerDto.getUsername())) {
+            return ServerResponse.createByErrorMessage("请输入用户名");
+        }
+        if (Strings.isNullOrEmpty(registerDto.getPassword())) {
+            return ServerResponse.createByErrorMessage("请输入密码");
+        }
+        if (Strings.isNullOrEmpty(registerDto.getNickname())) {
+            return ServerResponse.createByErrorMessage("请输入用户昵称");
+        }
+        // 验证昵称是否已被使用
+        Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.NICKNAME, registerDto.getNickname()));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("该昵称已被使用，请重新输入");
+        }
+        
+        // 注册用户
+        User user = new User();
+        user.setGroupId(1001);
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setSalt(BCrypt.gensalt());
+        user.setStatus(true);
+        user.setNickname(registerDto.getNickname());
+        user.setAvatar("");
+        user.setRealName("");
+        user.setPhone("");
+        user.setEmail("");
+        // 默认未知
+        user.setSex("2");
+        user.setUsedStorageSpace(0L);
+        user.setDataPerfect(false);
+        
+        int resultCount = userMapper.insert(user);
+        
+        return resultCount > 0
+                ? ServerResponse.createBySuccessMessage("注册成功")
+                : ServerResponse.createByErrorMessage("注册失败");
+    }
+    
+    /**
+     * 验证码验证通用方法
+     *
+     * @param uuid 验证码唯一标识
+     * @param code 验证码
+     */
+    private void validCode(String uuid, String code) {
+        String captchaKey = Const.CAPTCHA_KEY + uuid;
+        String captcha = redisUtil.getObject(captchaKey);
+        
+        if (captcha == null) {
+            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
+        }
+        
+        if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException(Const.CAPTCHA_ERROR);
+        }
+        
+        // 验证码正确，删除redis中缓存的验证码
+        redisUtil.deleteObject(captchaKey);
     }
 }
