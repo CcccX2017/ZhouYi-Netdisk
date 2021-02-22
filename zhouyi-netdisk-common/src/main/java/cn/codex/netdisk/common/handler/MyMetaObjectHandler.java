@@ -17,12 +17,12 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "gmt_create", Date::new, Date.class);
-        this.strictInsertFill(metaObject, "gmt_modified", Date::new, Date.class);
+        this.setFieldValByName("gmtCreate", new Date(), metaObject);
+        this.setFieldValByName("gmtModified", new Date(), metaObject);
     }
     
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "gmt_modified", Date::new, Date.class);
+        this.setFieldValByName("gmtModified", new Date(), metaObject);
     }
 }
