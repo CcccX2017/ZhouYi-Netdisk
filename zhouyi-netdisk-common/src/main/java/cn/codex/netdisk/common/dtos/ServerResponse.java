@@ -3,6 +3,8 @@ package cn.codex.netdisk.common.dtos;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -13,9 +15,13 @@ import java.io.Serializable;
  * @since 2020-11-03 22:36:50
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(value = "ServerResponse", description = "服务器响应类")
 public class ServerResponse<T> implements Serializable {
+    @ApiModelProperty(value = "响应码")
     private final int status;
+    @ApiModelProperty(value = "响应消息", position = 1)
     private String msg;
+    @ApiModelProperty(value = "响应数据", position = 2)
     private T data;
 
     private ServerResponse(int status) {

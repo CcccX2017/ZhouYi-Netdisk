@@ -1,5 +1,8 @@
 package cn.codex.netdisk.common.dtos;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -8,27 +11,20 @@ import java.io.Serializable;
  * @author codex
  * @since 2021-02-11
  */
+@ApiModel(value = "用户登录对象", description = "用户登录对象")
 public class LoginDto implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 用户名
-     */
+    @ApiModelProperty(value = "用户名")
     private String username;
     
-    /**
-     * 用户密码
-     */
+    @ApiModelProperty(value = "用户密码", position = 1)
     private String password;
     
-    /**
-     * 验证码
-     */
+    @ApiModelProperty(value = "验证码", position = 2)
     private String code;
     
-    /**
-     * 唯一标识
-     */
+    @ApiModelProperty(value = "验证码唯一标识", position = 3)
     private String uuid = "";
     
     public String getUsername() {
