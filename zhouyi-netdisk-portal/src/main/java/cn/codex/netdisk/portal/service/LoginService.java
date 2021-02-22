@@ -1,9 +1,5 @@
 package cn.codex.netdisk.portal.service;
 
-import java.util.Date;
-
-import cn.codex.netdisk.model.entity.UserGroups;
-
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
@@ -14,10 +10,9 @@ import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
-import cn.codex.netdisk.portal.utils.JwtTokenUtil;
 import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.codex.netdisk.portal.utils.JwtTokenUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
@@ -26,12 +21,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录、注册、用户信息服务类
@@ -42,22 +37,22 @@ import javax.annotation.Resource;
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class LoginService {
-    
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    
+
     @Autowired
     private RedisUtil redisUtil;
-    
+
     @Resource
     private AuthenticationManager authenticationManager;
-    
+
     @Autowired
     private UserMapper userMapper;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     /**
      * 用户登录并返回token
      *
@@ -67,7 +62,7 @@ public class LoginService {
     public String login(LoginDto loginDto) {
         // 校验验证码
         validCode(loginDto.getUuid(), loginDto.getCode());
-        
+
         Authentication authentication = null;
         try {
             authentication =
@@ -80,21 +75,21 @@ public class LoginService {
                 throw new CustomException(e.getMessage());
             }
         }
-        
+
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         // 生成token
         String token = jwtTokenUtil.generateToken(loginUser);
-        
+
         // 更新登录ip和最后登录时间
         User user = new User();
         user.setUserId(loginUser.getUser().getUserId());
         user.setLoginIp(loginUser.getIpAddr());
         user.setLoginDate(DateUtil.date(loginUser.getLoginTime()));
         userMapper.updateById(user);
-        
+
         return token;
     }
-    
+
     /**
      * 用户注册
      *
@@ -104,7 +99,7 @@ public class LoginService {
     public ServerResponse<String> register(RegisterDto registerDto) {
         // 校验验证码
         validCode(registerDto.getUuid(), registerDto.getCode());
-        
+
         // 校验必填项是否为空
         if (Strings.isNullOrEmpty(registerDto.getUsername())) {
             return ServerResponse.createByErrorMessage("请输入用户名");
@@ -120,7 +115,7 @@ public class LoginService {
         if (count > 0) {
             return ServerResponse.createByErrorMessage("该昵称已被使用，请重新输入");
         }
-        
+
         // 注册用户
         User user = new User();
         user.setGroupId(1001);
@@ -137,14 +132,14 @@ public class LoginService {
         user.setSex("2");
         user.setUsedStorageSpace(0L);
         user.setDataPerfect(false);
-        
+
         int resultCount = userMapper.insert(user);
-        
+
         return resultCount > 0
                 ? ServerResponse.createBySuccessMessage("注册成功")
                 : ServerResponse.createByErrorMessage("注册失败");
     }
-    
+
     /**
      * 验证码验证通用方法
      *
@@ -154,16 +149,33 @@ public class LoginService {
     private void validCode(String uuid, String code) {
         String captchaKey = Const.CAPTCHA_KEY + uuid;
         String captcha = redisUtil.getObject(captchaKey);
-        
+
         if (captcha == null) {
             throw new CaptchaException(Const.CAPTCHA_EXPIRE);
         }
-        
+
         if (!code.equalsIgnoreCase(captcha)) {
             throw new CaptchaException(Const.CAPTCHA_ERROR);
         }
-        
+
         // 验证码正确，删除redis中缓存的验证码
         redisUtil.deleteObject(captchaKey);
+    }
+
+    /**
+     * 获取登录用户信息
+     *
+     * @return 登录用户信息
+     */
+    public ServerResponse<LoginUser> getLoginUserInfo(HttpServletRequest request) {
+        LoginUser loginUser = jwtTokenUtil.getLoginUser(request);
+        if (loginUser == null) {
+            return ServerResponse.createByErrorMessage("尚未登录，请登录");
+        }
+
+        loginUser.setToken(null);
+        loginUser.getUser().setPassword(null);
+
+        return ServerResponse.createBySuccess(loginUser);
     }
 }

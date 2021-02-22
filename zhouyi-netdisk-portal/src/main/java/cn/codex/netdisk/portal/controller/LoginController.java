@@ -4,17 +4,18 @@ import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
+import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.codex.netdisk.portal.service.LoginService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -33,7 +34,8 @@ public class LoginController {
     
     @Value("${jwt.tokenHead}")
     private String tokenHead;
-    
+
+    @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录并返回token")
     @PostMapping("/login")
     public ServerResponse<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
@@ -46,10 +48,25 @@ public class LoginController {
         
         return ServerResponse.createBySuccess(Const.LOGIN_SUCCESS, map);
     }
-    
+
+    @ApiOperationSupport(order = 2)
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
     public ServerResponse<String> register(@RequestBody RegisterDto registerDto){
         return loginService.register(registerDto);
+    }
+
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "忘记密码")
+    @PostMapping("/forgot")
+    public ServerResponse<String> forgot(){
+        return null;
+    }
+
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "获取登录用户信息")
+    @GetMapping("/getLoginUserInfo")
+    public ServerResponse<LoginUser> getLoginUserInfo(HttpServletRequest request){
+        return loginService.getLoginUserInfo(request);
     }
 }

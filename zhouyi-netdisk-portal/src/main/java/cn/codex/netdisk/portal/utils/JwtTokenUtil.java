@@ -173,11 +173,12 @@ public class JwtTokenUtil {
      */
     private String getToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
-        if (!Strings.isNullOrEmpty(authToken) && authToken.startsWith(tokenHead)) {
-            authToken = authToken.substring(tokenHead.length() + 1);
+
+        if (Strings.isNullOrEmpty(authToken) || !authToken.startsWith(tokenHead)) {
+            return null;
         }
-        
-        return authToken;
+
+        return authToken.substring(tokenHead.length() + 1);
     }
     
     /**
