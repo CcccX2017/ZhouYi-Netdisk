@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/portal/login",
                 "/portal/logout",
                 "/portal/register",
+                "/portal/forgot",
                 "/portal/captcha",
                 "/**/**.css",
                 "/**/**.js",

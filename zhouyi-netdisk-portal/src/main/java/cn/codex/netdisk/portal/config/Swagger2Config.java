@@ -94,7 +94,7 @@ public class Swagger2Config {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
 //                .forPaths(PathSelectors.regex("^(?!/portal/user/login|/portal/user/register|/captcha).*$"))
-                .forPaths(PathSelectors.regex("^/portal(?!/login|/register|/captcha).*$"))
+                .forPaths(PathSelectors.regex("^/portal(?!/login|/register|/forgot|/captcha).*$"))
                 .build();
     }
     

@@ -24,7 +24,7 @@ import java.util.Map;
  * @author codex
  * @since 2021-02-12
  */
-@Api(tags = "登录、注册、用户信息")
+@Api(tags = "登录、注册、忘记密码、用户信息")
 @RestController
 @RequestMapping("/portal")
 public class LoginController {
@@ -65,7 +65,7 @@ public class LoginController {
 
     @ApiOperationSupport(order = 4)
     @ApiOperation(value = "获取登录用户信息")
-    @GetMapping("/getLoginUserInfo")
+    @GetMapping("/userInfo")
     public ServerResponse<LoginUser> getLoginUserInfo(HttpServletRequest request){
         return loginService.getLoginUserInfo(request);
     }
