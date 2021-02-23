@@ -219,6 +219,6 @@ public class LoginService {
         }
         
         // 验证码正确，删除redis中缓存的验证码
-//        redisUtil.deleteObject(captchaKey);
+        redisUtil.deleteObject(captchaKey);
     }
 }

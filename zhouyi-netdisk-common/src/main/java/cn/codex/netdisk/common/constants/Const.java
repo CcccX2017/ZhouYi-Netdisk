@@ -26,7 +26,7 @@ public class Const {
     /**
      * 验证码有效期（分钟）
      */
-    public static final Integer CAPTCHA_EXPIRATION = 10;
+    public static final Integer CAPTCHA_EXPIRATION = 2;
     
     /**
      * 验证码错误
