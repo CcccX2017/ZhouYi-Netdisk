@@ -17,7 +17,8 @@ public class RegexUtil {
      * @return true - 正确, false - 错误
      */
     public static boolean isEmail(String email) {
-        String pattern = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
+        String pattern = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)" +
+                "+[\\w](?:[\\w-]*[\\w])?";
         return ReUtil.isMatch(pattern, email);
     }
     
