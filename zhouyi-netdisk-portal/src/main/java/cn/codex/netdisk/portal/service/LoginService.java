@@ -38,22 +38,22 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class LoginService {
-
+    
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
+    
     @Autowired
     private RedisUtil redisUtil;
-
+    
     @Resource
     private AuthenticationManager authenticationManager;
-
+    
     @Autowired
     private UserMapper userMapper;
-
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    
     /**
      * 用户登录并返回token
      *
@@ -63,7 +63,7 @@ public class LoginService {
     public String login(LoginDto loginDto) {
         // 校验验证码
         validCode(loginDto.getUuid(), loginDto.getCode());
-
+        
         Authentication authentication = null;
         try {
             authentication =
@@ -76,21 +76,21 @@ public class LoginService {
                 throw new CustomException(e.getMessage());
             }
         }
-
+        
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         // 生成token
         String token = jwtTokenUtil.generateToken(loginUser);
-
+        
         // 更新登录ip和最后登录时间
         User user = new User();
         user.setUserId(loginUser.getUser().getUserId());
         user.setLoginIp(loginUser.getIpAddr());
         user.setLoginDate(DateUtil.date(loginUser.getLoginTime()));
         userMapper.updateById(user);
-
+        
         return token;
     }
-
+    
     /**
      * 用户注册
      *
@@ -98,39 +98,16 @@ public class LoginService {
      * @return 注册结果
      */
     public ServerResponse<String> register(RegisterDto registerDto) {
-
+        
         // 校验验证码
         validCode(registerDto.getUuid(), registerDto.getCode());
-
-        // 校验必填项是否为空
-        if (Strings.isNullOrEmpty(registerDto.getUsername())) {
-            return ServerResponse.createByErrorMessage("请输入用户名");
+        
+        // 验证数据准确性
+        ServerResponse<String> responseServer = verifyData(registerDto);
+        if (responseServer != null) {
+            return responseServer;
         }
-        if (Strings.isNullOrEmpty(registerDto.getPassword())) {
-            return ServerResponse.createByErrorMessage("请输入密码");
-        }
-        if (Strings.isNullOrEmpty(registerDto.getNickname())) {
-            return ServerResponse.createByErrorMessage("请输入用户昵称");
-        }
-        // 验证昵称是否已被使用
-        Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.NICKNAME, registerDto.getNickname()));
-        if (count > 0) {
-            return ServerResponse.createByErrorMessage("该昵称已被使用，请重新输入");
-        }
-
-        if (Strings.isNullOrEmpty(registerDto.getEmail())) {
-            return ServerResponse.createByErrorMessage("请输入邮箱");
-        }
-        // 校验邮箱是否合法
-        if (!RegexUtil.isEmail(registerDto.getEmail())){
-            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
-        }
-        // 判断邮箱是否被使用
-        count = userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, registerDto.getEmail()));
-        if (count > 0) {
-            return ServerResponse.createByErrorMessage("该邮箱已被使用，请重新输入");
-        }
-
+        
         // 注册用户
         User user = new User();
         user.setGroupId(1001);
@@ -142,41 +119,19 @@ public class LoginService {
         user.setAvatar("");
         user.setRealName("");
         user.setPhone("");
-        user.setEmail("");
+        user.setEmail(registerDto.getEmail());
         // 默认未知
         user.setSex("2");
         user.setUsedStorageSpace(0L);
         user.setDataPerfect(false);
-
+        
         int resultCount = userMapper.insert(user);
-
+        
         return resultCount > 0
                 ? ServerResponse.createBySuccessMessage("注册成功")
                 : ServerResponse.createByErrorMessage("注册失败");
     }
-
-    /**
-     * 验证码验证通用方法
-     *
-     * @param uuid 验证码唯一标识
-     * @param code 验证码
-     */
-    private void validCode(String uuid, String code) {
-        String captchaKey = Const.CAPTCHA_KEY + uuid;
-        String captcha = redisUtil.getObject(captchaKey);
-
-        if (captcha == null) {
-            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
-        }
-
-        if (!code.equalsIgnoreCase(captcha)) {
-            throw new CaptchaException(Const.CAPTCHA_ERROR);
-        }
-
-        // 验证码正确，删除redis中缓存的验证码
-        redisUtil.deleteObject(captchaKey);
-    }
-
+    
     /**
      * 获取登录用户信息
      *
@@ -187,10 +142,83 @@ public class LoginService {
         if (loginUser == null) {
             return ServerResponse.createByErrorMessage("尚未登录，请登录");
         }
-
+        
         loginUser.setToken(null);
         loginUser.getUser().setPassword(null);
-
+        
         return ServerResponse.createBySuccess(loginUser);
+    }
+    
+    /**
+     * 验证数据准确性
+     */
+    private ServerResponse<String> verifyData(RegisterDto registerDto) {
+        
+        if (Strings.isNullOrEmpty(registerDto.getUsername())) {
+            return ServerResponse.createByErrorMessage("请输入用户名");
+        }
+        // 验证用户名是否合法
+        if (!RegexUtil.isAccountLegal(registerDto.getUsername())) {
+            return ServerResponse.createByErrorMessage("用户名须以英文字母开头长度为5-16位的英文/数字/下划线'_'");
+        }
+        // 验证用户名是否已存在
+        Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, registerDto.getUsername()));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("该用户名已存在，请更换新用户名");
+        }
+        
+        if (Strings.isNullOrEmpty(registerDto.getPassword())) {
+            return ServerResponse.createByErrorMessage("请输入密码");
+        }
+        
+        if (Strings.isNullOrEmpty(registerDto.getNickname())) {
+            return ServerResponse.createByErrorMessage("请输入用户昵称");
+        }
+        // 验证昵称是否合法
+        if (!RegexUtil.isNicknameLegal(registerDto.getNickname())) {
+            return ServerResponse.createByErrorMessage("用户昵称只能是长度为5-12位的中英文/数字/下划线'_'");
+        }
+        // 验证昵称是否已被使用
+        count = userMapper.selectCount(new QueryWrapper<User>().eq(User.NICKNAME, registerDto.getNickname()));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("该昵称已被使用，请更换新昵称");
+        }
+        
+        if (Strings.isNullOrEmpty(registerDto.getEmail())) {
+            return ServerResponse.createByErrorMessage("请输入邮箱");
+        }
+        // 校验邮箱是否合法
+        if (!RegexUtil.isEmail(registerDto.getEmail())) {
+            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
+        }
+        // 判断邮箱是否被使用
+        count = userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, registerDto.getEmail()));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("该邮箱已被使用，请更换新邮箱");
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 验证码验证通用方法
+     *
+     * @param uuid 验证码唯一标识
+     * @param code 验证码
+     */
+    private void validCode(String uuid, String code) {
+        String captchaKey = Const.CAPTCHA_KEY + uuid;
+        String captcha = redisUtil.getObject(captchaKey);
+        
+        if (captcha == null) {
+            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
+        }
+        
+        if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException(Const.CAPTCHA_ERROR);
+        }
+        
+        // 验证码正确，删除redis中缓存的验证码
+//        redisUtil.deleteObject(captchaKey);
     }
 }
