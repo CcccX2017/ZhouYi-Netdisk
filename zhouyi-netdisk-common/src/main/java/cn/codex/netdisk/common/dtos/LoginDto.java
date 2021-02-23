@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author codex
  * @since 2021-02-11
  */
-@ApiModel(value = "用户登录对象", description = "用户登录对象")
+@ApiModel(value = "用户登录对象", description = "LoginDto")
 public class LoginDto implements Serializable {
     private static final long serialVersionUID = 1L;
     

@@ -28,9 +28,12 @@ public class RegisterDto implements Serializable {
     @ApiModelProperty(value = "用户昵称", position = 2)
     private String nickname;
 
-    @ApiModelProperty(value = "验证码", position = 3)
+    @ApiModelProperty(value = "邮箱地址", position = 3)
+    private String email;
+
+    @ApiModelProperty(value = "验证码", position = 4)
     private String code;
 
-    @ApiModelProperty(value = "验证码唯一标识", position = 4)
+    @ApiModelProperty(value = "验证码唯一标识", position = 5)
     private String uuid;
 }

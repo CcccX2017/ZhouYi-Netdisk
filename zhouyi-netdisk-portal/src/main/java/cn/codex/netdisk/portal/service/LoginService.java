@@ -7,6 +7,7 @@ import cn.codex.netdisk.common.exception.CaptchaException;
 import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.exception.UserPasswordNotMatchException;
 import cn.codex.netdisk.common.utils.RedisUtil;
+import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
@@ -97,6 +98,7 @@ public class LoginService {
      * @return 注册结果
      */
     public ServerResponse<String> register(RegisterDto registerDto) {
+
         // 校验验证码
         validCode(registerDto.getUuid(), registerDto.getCode());
 
@@ -114,6 +116,19 @@ public class LoginService {
         Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.NICKNAME, registerDto.getNickname()));
         if (count > 0) {
             return ServerResponse.createByErrorMessage("该昵称已被使用，请重新输入");
+        }
+
+        if (Strings.isNullOrEmpty(registerDto.getEmail())) {
+            return ServerResponse.createByErrorMessage("请输入邮箱");
+        }
+        // 校验邮箱是否合法
+        if (!RegexUtil.isEmail(registerDto.getEmail())){
+            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
+        }
+        // 判断邮箱是否被使用
+        count = userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, registerDto.getEmail()));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("该邮箱已被使用，请重新输入");
         }
 
         // 注册用户
