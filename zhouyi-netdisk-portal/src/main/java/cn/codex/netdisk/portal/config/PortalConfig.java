@@ -21,6 +21,10 @@ public class PortalConfig {
      */
     private String name;
     /**
+     * 系统中文名
+     */
+    private String nameZh;
+    /**
      * 版本号
      */
     private String version;
@@ -60,7 +64,15 @@ public class PortalConfig {
     public void setAuthor(String author) {
         this.author = author;
     }
-
+    
+    public String getNameZh() {
+        return nameZh;
+    }
+    
+    public void setNameZh(String nameZh) {
+        this.nameZh = nameZh;
+    }
+    
     /**
      * 获取文件上传路径
      */

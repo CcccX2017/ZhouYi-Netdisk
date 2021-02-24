@@ -40,3 +40,4 @@ rebel.xml
 
 #yml ignore
 application-redis.yml
+application.yml

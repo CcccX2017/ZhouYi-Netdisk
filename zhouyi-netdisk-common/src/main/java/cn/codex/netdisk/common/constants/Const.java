@@ -29,6 +29,16 @@ public class Const {
     public static final Integer CAPTCHA_EXPIRATION = 2;
     
     /**
+     * 找回密码验证码key
+     */
+    public static final String FORGOT_KEY = "forgot_key_";
+    
+    /**
+     * 找回密码验证码有效期（分钟）
+     */
+    public static final Integer FORGOT_CAPTCHA_EXPIRATION = 5;
+    
+    /**
      * 验证码错误
      */
     public static final String CAPTCHA_ERROR = "验证码错误";

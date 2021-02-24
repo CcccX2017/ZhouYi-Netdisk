@@ -24,7 +24,7 @@ import java.util.Map;
  * @author codex
  * @since 2021-02-12
  */
-@Api(tags = "登录、注册、忘记密码、用户信息")
+@Api(tags = "登录、注册、用户信息")
 @RestController
 @RequestMapping("/portal")
 public class LoginController {
@@ -54,13 +54,6 @@ public class LoginController {
     @PostMapping("/register")
     public ServerResponse<String> register(@RequestBody RegisterDto registerDto){
         return loginService.register(registerDto);
-    }
-
-    @ApiOperationSupport(order = 3)
-    @ApiOperation(value = "忘记密码")
-    @PostMapping("/forgot")
-    public ServerResponse<String> forgot(){
-        return null;
     }
 
     @ApiOperationSupport(order = 4)

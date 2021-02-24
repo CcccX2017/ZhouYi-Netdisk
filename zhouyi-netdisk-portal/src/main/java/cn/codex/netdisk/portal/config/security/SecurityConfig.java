@@ -57,10 +57,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
+                "/error",
                 "/portal/login",
                 "/portal/logout",
                 "/portal/register",
                 "/portal/forgot",
+                "/portal/sendCode",
                 "/portal/captcha",
                 "/**/**.css",
                 "/**/**.js",
