@@ -37,12 +37,24 @@ spring:
       max-file-size: 10240MB
       # 设置总上传的文件大小，1T
       max-request-size: 1048576MB
-  devtools:
-    restart:
-      enabled: true
+  # 邮件配置
+  mail:
+    # 邮件服务器地址
+    host: 你的邮箱服务器地址
+    # 协议
+    protocol: smtp
+    # 编码格式
+    default-encoding: UTF-8
+    # 授权码
+    password: 你的授权码
+    # 发送者邮箱地址
+    username: 发送者邮箱地址
+    # 端口
+    port: 25
   output:
     ansi:
       enabled: always
+
 # PageHelper配置
 #pagehelper:
 #  helper-dialect: mysql
