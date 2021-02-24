@@ -2,6 +2,7 @@
 portal:
   author: codex
   name: netdisk-portal
+  nameZh: 舟意网盘
   version: 1.0
   # 文件上传路径
   profile: /Users/codex/Workspace/uploadPath/netdisk
