@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/portal/user")
-@Api(tags = "个人信息管理(UserController)")
+@Api(tags = "个人信息管理")
 public class UserController {
 
 }

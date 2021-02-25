@@ -3,6 +3,7 @@ package cn.codex.netdisk.portal.controller;
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
 import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.codex.netdisk.portal.service.LoginService;
@@ -59,7 +60,7 @@ public class LoginController {
     @ApiOperationSupport(order = 4)
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/userInfo")
-    public ServerResponse<LoginUser> getLoginUserInfo(HttpServletRequest request){
+    public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request){
         return loginService.getLoginUserInfo(request);
     }
 }

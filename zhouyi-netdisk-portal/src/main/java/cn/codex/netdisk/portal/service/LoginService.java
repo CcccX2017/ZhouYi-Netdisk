@@ -10,6 +10,7 @@ import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
+import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
 import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.codex.netdisk.portal.utils.JwtTokenUtil;
@@ -17,6 +18,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -137,16 +139,22 @@ public class LoginService {
      *
      * @return 登录用户信息
      */
-    public ServerResponse<LoginUser> getLoginUserInfo(HttpServletRequest request) {
+    public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request) {
         LoginUser loginUser = jwtTokenUtil.getLoginUser(request);
         if (loginUser == null) {
             return ServerResponse.createByErrorMessage("尚未登录，请登录");
         }
         
-        loginUser.setToken(null);
         loginUser.getUser().setPassword(null);
+    
+        UserVo userVo = new UserVo();
         
-        return ServerResponse.createBySuccess(loginUser);
+        BeanUtils.copyProperties(loginUser.getUser(), userVo);
+        userVo.setGroupName(loginUser.getUser().getUserGroups().getGroupName());
+        userVo.setMaxFileSize(loginUser.getUser().getUserGroups().getMaxFileSize());
+        userVo.setMaxStorageSpace(loginUser.getUser().getUserGroups().getMaxStorageSpace());
+        
+        return ServerResponse.createBySuccess(userVo);
     }
     
     /**

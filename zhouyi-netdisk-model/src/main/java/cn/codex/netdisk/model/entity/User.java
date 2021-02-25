@@ -6,6 +6,7 @@ import java.util.Date;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -76,20 +77,24 @@ public class User implements Serializable {
     private Boolean dataPerfect;
 
     @ApiModelProperty(value = "会员过期时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
     private Date expirationTime;
 
     @ApiModelProperty(value = "最后登录ip")
     private String loginIp;
 
     @ApiModelProperty(value = "最后登录时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
     private Date loginDate;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
     private Date gmtCreate;
 
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
     private Date gmtModified;
 
     @ApiModelProperty(value = "用户组")
