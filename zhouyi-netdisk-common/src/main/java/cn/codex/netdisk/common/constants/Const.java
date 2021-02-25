@@ -7,6 +7,10 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
+    
+    public static final String UPDATE_SUCCESS = "更新成功";
+    public static final String UPDATE_ERROR = "更新失败";
+    
     /**
      * 虚拟目录
      */
@@ -67,12 +71,12 @@ public class Const {
      * 登录成功
      */
     public static final String LOGIN_SUCCESS = "登录成功";
-
+    
     /**
      * 密码最小长度
      */
     public static final int PASSWORD_MIN_LENGTH = 6;
-
+    
     /**
      * 密码最大长度
      */

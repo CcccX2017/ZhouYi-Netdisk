@@ -1,6 +1,12 @@
 package cn.codex.netdisk.portal.controller;
 
+import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.model.entity.User;
+import cn.codex.netdisk.service.IUserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,6 +21,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/portal/user")
 @Api(tags = "个人信息管理")
 public class UserController {
-
+    
+    @Autowired
+    private IUserService userService;
+    
+    @ApiOperation("更新个人信息")
+    @PutMapping("/")
+    public ServerResponse<String> update(@RequestBody User user){
+        user.setUsername(null);
+        user.setPassword(null);
+        user.setSalt(null);
+        return userService.updateById(user)
+                ? ServerResponse.createBySuccessMessage(Const.UPDATE_SUCCESS)
+                : ServerResponse.createByErrorMessage(Const.UPDATE_ERROR);
+    }
+    
 }
 
