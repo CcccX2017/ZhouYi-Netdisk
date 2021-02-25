@@ -170,6 +170,9 @@ public class LoginService {
         if (Strings.isNullOrEmpty(registerDto.getPassword())) {
             return ServerResponse.createByErrorMessage("请输入密码");
         }
+        if (registerDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || registerDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH){
+            return ServerResponse.createByErrorMessage("密码长度为6-16位");
+        }
         
         if (Strings.isNullOrEmpty(registerDto.getNickname())) {
             return ServerResponse.createByErrorMessage("请输入用户昵称");

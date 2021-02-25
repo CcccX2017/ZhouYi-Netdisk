@@ -37,7 +37,7 @@ public class ForgotController {
     @ApiOperation(value = "重置密码")
     @PostMapping("/forgot")
     public ServerResponse<String> forgot(@RequestBody ForgotDto forgotDto) {
-        return null;
+        return forgotService.resetPassword(forgotDto);
     }
     
 }
