@@ -91,18 +91,25 @@ public class ForgotService {
             String code = RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER + RandomUtil.BASE_CHAR.toUpperCase(), 4);
             helper.setText("【" + portalConfig.getNameZh() + "】您用于找回密码的验证码为：<b>" + code + "</b>，有效期" + Const.FORGOT_CAPTCHA_EXPIRATION +
                     "分钟，<b style='color:red;'>如非本人操作，请忽略该邮件内容，并尽快修改密码确保账号安全。</b>", true);
+
+            String uuid = IdUtil.simpleUUID();
+            try {
+                // 将验证码存入redis服务器中，并返回唯一标识
+                redisUtil.setObject(Const.FORGOT_KEY + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+            }catch (Exception ex){
+                log.error("发送给 {} 的邮件发送失败=========> {}", email, ex.getMessage());
+                return ServerResponse.createByErrorMessage("验证码发送失败，请重试");
+            }
+
             // 发送邮件
             javaMailSender.send(message);
-            
-            // 将验证码存入redis服务器中，并返回唯一标识
-            String uuid = IdUtil.simpleUUID();
-            redisUtil.setObject(Const.FORGOT_KEY + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+
             log.info("发送给 {} 的邮件发送成功", email);
             return ServerResponse.createBySuccess("验证码已发送到该邮箱，请注意查收", uuid);
         } catch (Exception e) {
             log.error("发送给 {} 的邮件发送失败=========> {}", email, e.getMessage());
         }
         
-        return ServerResponse.createBySuccessMessage("验证码发送失败，请重试");
+        return ServerResponse.createByErrorMessage("验证码发送失败，请重试");
     }
 }
