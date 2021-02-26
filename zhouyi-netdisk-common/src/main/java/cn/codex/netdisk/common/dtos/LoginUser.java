@@ -1,4 +1,4 @@
-package cn.codex.netdisk.portal.pojo;
+package cn.codex.netdisk.common.dtos;
 
 import cn.codex.netdisk.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -2,7 +2,7 @@ package cn.codex.netdisk.portal.utils;
 
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.CustomException;
-import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.codex.netdisk.common.dtos.LoginUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

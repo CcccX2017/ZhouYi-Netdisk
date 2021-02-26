@@ -1,8 +1,7 @@
 package cn.codex.netdisk.portal.service.impl;
 
-import cn.codex.netdisk.common.enums.UserStatus;
 import cn.codex.netdisk.model.entity.User;
-import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.service.IUserService;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;

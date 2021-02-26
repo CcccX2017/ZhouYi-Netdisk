@@ -1,8 +1,7 @@
-package cn.codex.netdisk.portal.utils;
+package cn.codex.netdisk.common.utils;
 
 import cn.codex.netdisk.common.constants.Const;
-import cn.codex.netdisk.common.utils.RedisUtil;
-import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HtmlUtil;

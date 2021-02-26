@@ -2,23 +2,21 @@ package cn.codex.netdisk.portal.service;
 
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
+import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.exception.CaptchaException;
 import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.exception.UserPasswordNotMatchException;
+import cn.codex.netdisk.common.utils.JwtTokenUtil;
 import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
-import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
-import cn.codex.netdisk.portal.pojo.LoginUser;
-import cn.codex.netdisk.portal.utils.JwtTokenUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录、注册、用户信息服务类
@@ -132,29 +129,6 @@ public class LoginService {
         return resultCount > 0
                 ? ServerResponse.createBySuccessMessage("注册成功")
                 : ServerResponse.createByErrorMessage("注册失败");
-    }
-    
-    /**
-     * 获取登录用户信息
-     *
-     * @return 登录用户信息
-     */
-    public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request) {
-        LoginUser loginUser = jwtTokenUtil.getLoginUser(request);
-        if (loginUser == null) {
-            return ServerResponse.createByErrorMessage("尚未登录，请登录");
-        }
-        
-        loginUser.getUser().setPassword(null);
-    
-        UserVo userVo = new UserVo();
-        
-        BeanUtils.copyProperties(loginUser.getUser(), userVo);
-        userVo.setGroupName(loginUser.getUser().getUserGroups().getGroupName());
-        userVo.setMaxFileSize(loginUser.getUser().getUserGroups().getMaxFileSize());
-        userVo.setMaxStorageSpace(loginUser.getUser().getUserGroups().getMaxStorageSpace());
-        
-        return ServerResponse.createBySuccess(userVo);
     }
     
     /**

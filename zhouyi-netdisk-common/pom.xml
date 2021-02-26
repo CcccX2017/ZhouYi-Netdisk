@@ -13,6 +13,13 @@
 
     <dependencies>
 
+        <!-- 项目依赖 -->
+        <dependency>
+            <groupId>cn.codex</groupId>
+            <artifactId>zhouyi-netdisk-model</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- SpringBoot相关依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,11 +91,21 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- knife4j依赖 -->
+        <!-- guava -->
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <optional>true</optional>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!-- 工具包 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
         </dependency>
 
     </dependencies>

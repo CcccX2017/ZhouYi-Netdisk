@@ -3,9 +3,7 @@ package cn.codex.netdisk.portal.controller;
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
-import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
-import cn.codex.netdisk.portal.pojo.LoginUser;
 import cn.codex.netdisk.portal.service.LoginService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.google.common.collect.Maps;
@@ -13,10 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -25,7 +24,7 @@ import java.util.Map;
  * @author codex
  * @since 2021-02-12
  */
-@Api(tags = "登录、注册、用户信息")
+@Api(tags = "登录、注册")
 @RestController
 @RequestMapping("/portal")
 public class LoginController {
@@ -55,12 +54,5 @@ public class LoginController {
     @PostMapping("/register")
     public ServerResponse<String> register(@RequestBody RegisterDto registerDto){
         return loginService.register(registerDto);
-    }
-
-    @ApiOperationSupport(order = 4)
-    @ApiOperation(value = "获取登录用户信息")
-    @GetMapping("/userInfo")
-    public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request){
-        return loginService.getLoginUserInfo(request);
     }
 }

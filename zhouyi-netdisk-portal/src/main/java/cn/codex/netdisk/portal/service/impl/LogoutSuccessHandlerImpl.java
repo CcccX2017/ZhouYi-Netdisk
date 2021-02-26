@@ -1,8 +1,8 @@
 package cn.codex.netdisk.portal.service.impl;
 
 import cn.codex.netdisk.common.dtos.ServerResponse;
-import cn.codex.netdisk.portal.utils.JwtTokenUtil;
-import cn.codex.netdisk.portal.pojo.LoginUser;
+import cn.codex.netdisk.common.utils.JwtTokenUtil;
+import cn.codex.netdisk.common.dtos.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
