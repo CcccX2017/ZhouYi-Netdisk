@@ -40,6 +40,7 @@ public class UserController {
         user.setUsername(null);
         user.setPassword(null);
         user.setSalt(null);
+        user.setEmail(null);
         return userService.updateById(user)
                 ? ServerResponse.createBySuccessMessage(Const.UPDATE_SUCCESS)
                 : ServerResponse.createByErrorMessage(Const.UPDATE_ERROR);
