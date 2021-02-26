@@ -1,6 +1,7 @@
 package cn.codex.netdisk.portal.service;
 
 import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
@@ -109,7 +110,7 @@ public class LoginService {
         
         // 注册用户
         User user = new User();
-        user.setGroupId(1001);
+        user.setGroupId(Const.DEFAULT_GROUP_ID);
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setSalt(BCrypt.gensalt());
@@ -120,15 +121,15 @@ public class LoginService {
         user.setPhone("");
         user.setEmail(registerDto.getEmail());
         // 默认未知
-        user.setSex("2");
+        user.setSex(Const.DEFAULT_SEX);
         user.setUsedStorageSpace(0L);
         user.setDataPerfect(false);
         
         int resultCount = userMapper.insert(user);
         
         return resultCount > 0
-                ? ServerResponse.createBySuccessMessage("注册成功")
-                : ServerResponse.createByErrorMessage("注册失败");
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.REGISTER_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.REGISTER_ERROR);
     }
     
     /**
@@ -137,49 +138,49 @@ public class LoginService {
     private ServerResponse<String> verifyData(RegisterDto registerDto) {
         
         if (Strings.isNullOrEmpty(registerDto.getUsername())) {
-            return ServerResponse.createByErrorMessage("请输入用户名");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_EMPTY);
         }
         // 验证用户名是否合法
         if (!RegexUtil.isAccountLegal(registerDto.getUsername())) {
-            return ServerResponse.createByErrorMessage("用户名须以英文字母开头长度为5-16位的英文/数字/下划线'_'");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_ILLEGAL);
         }
         // 验证用户名是否已存在
         Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, registerDto.getUsername()));
         if (count > 0) {
-            return ServerResponse.createByErrorMessage("该用户名已存在，请更换新用户名");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_EXIST);
         }
         
         if (Strings.isNullOrEmpty(registerDto.getPassword())) {
-            return ServerResponse.createByErrorMessage("请输入密码");
+            return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_EMPTY);
         }
         if (registerDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || registerDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH){
-            return ServerResponse.createByErrorMessage("密码长度为6-16位");
+            return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_ILLEGAL);
         }
         
         if (Strings.isNullOrEmpty(registerDto.getNickname())) {
-            return ServerResponse.createByErrorMessage("请输入用户昵称");
+            return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_EMPTY);
         }
         // 验证昵称是否合法
         if (!RegexUtil.isNicknameLegal(registerDto.getNickname())) {
-            return ServerResponse.createByErrorMessage("用户昵称只能是长度为5-12位的中英文/数字/下划线'_'");
+            return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_ILLEGAL);
         }
         // 验证昵称是否已被使用
         count = userMapper.selectCount(new QueryWrapper<User>().eq(User.NICKNAME, registerDto.getNickname()));
         if (count > 0) {
-            return ServerResponse.createByErrorMessage("该昵称已被使用，请更换新昵称");
+            return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_EXIST);
         }
         
         if (Strings.isNullOrEmpty(registerDto.getEmail())) {
-            return ServerResponse.createByErrorMessage("请输入邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_EMPTY);
         }
         // 校验邮箱是否合法
         if (!RegexUtil.isEmail(registerDto.getEmail())) {
-            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ILLEGAL);
         }
         // 判断邮箱是否被使用
         count = userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, registerDto.getEmail()));
         if (count > 0) {
-            return ServerResponse.createByErrorMessage("该邮箱已被使用，请更换新邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_EXIST);
         }
         
         return null;
@@ -196,11 +197,11 @@ public class LoginService {
         String captcha = redisUtil.getObject(captchaKey);
         
         if (captcha == null) {
-            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
+            throw new CaptchaException(ReturnMessage.CAPTCHA_EXPIRE);
         }
         
         if (!code.equalsIgnoreCase(captcha)) {
-            throw new CaptchaException(Const.CAPTCHA_ERROR);
+            throw new CaptchaException(ReturnMessage.CAPTCHA_ERROR);
         }
         
         // 验证码正确，删除redis中缓存的验证码

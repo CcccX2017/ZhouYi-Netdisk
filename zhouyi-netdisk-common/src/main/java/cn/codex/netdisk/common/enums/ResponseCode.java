@@ -23,7 +23,7 @@ public enum ResponseCode {
     /**
      * 10 用户未登录，请登录
      */
-    NEED_LOGIN(10, "用户未登录，请登录"),
+    NEED_LOGIN(10, "尚未登录，请登录"),
 
     /**
      * 2 参数错误

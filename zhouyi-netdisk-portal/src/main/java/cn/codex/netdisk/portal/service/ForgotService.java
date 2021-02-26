@@ -1,6 +1,7 @@
 package cn.codex.netdisk.portal.service;
 
 import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.CaptchaException;
@@ -63,23 +64,23 @@ public class ForgotService {
     public ServerResponse<String> sendEmailCode(String username, String email) {
 
         if (Strings.isNullOrEmpty(username)) {
-            return ServerResponse.createByErrorMessage("请输入用户名");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_EMPTY);
         }
         if (!RegexUtil.isAccountLegal(username)) {
-            return ServerResponse.createByErrorMessage("用户名须以英文字母开头长度为5-16位的英文/数字/下划线'_'");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_ILLEGAL);
         }
         if (userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, username)) == 0) {
-            return ServerResponse.createByErrorMessage("用户名不存在");
+            return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_NOT_EXIST);
         }
 
         if (Strings.isNullOrEmpty(email)) {
-            return ServerResponse.createByErrorMessage("请输入邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_EMPTY);
         }
         if (!RegexUtil.isEmail(email)) {
-            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ILLEGAL);
         }
         if (userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, email)) == 0) {
-            return ServerResponse.createByErrorMessage("绑定的邮箱不正确");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ERROR);
         }
 
         try {
@@ -103,19 +104,19 @@ public class ForgotService {
                 redisUtil.setObject(Const.FORGOT_KEY + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
             } catch (Exception ex) {
                 log.error("发送给 {} 的邮件发送失败=========> {}", email, ex.getMessage());
-                return ServerResponse.createByErrorMessage("验证码发送失败，请重试");
+                return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);
             }
 
             // 发送邮件
             javaMailSender.send(message);
 
             log.info("发送给 {} 的邮件发送成功", email);
-            return ServerResponse.createBySuccess("验证码已发送到该邮箱，请注意查收", uuid);
+            return ServerResponse.createBySuccess(ReturnMessage.CAPTCHA_SEND_SUCCESS, uuid);
         } catch (Exception e) {
             log.error("发送给 {} 的邮件发送失败=========> {}", email, e.getMessage());
         }
 
-        return ServerResponse.createByErrorMessage("验证码发送失败，请重试");
+        return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);
     }
 
     /**
@@ -130,34 +131,34 @@ public class ForgotService {
         }
 
         if (Strings.isNullOrEmpty(forgotDto.getEmail())) {
-            return ServerResponse.createByErrorMessage("请输入邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_EMPTY);
         }
         if (!RegexUtil.isEmail(forgotDto.getEmail())) {
-            return ServerResponse.createByErrorMessage("请输入正确的邮箱");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ILLEGAL);
         }
         if (userMapper.selectCount(new QueryWrapper<User>().eq(User.EMAIL, forgotDto.getEmail())) == 0) {
-            return ServerResponse.createByErrorMessage("绑定的邮箱不正确");
+            return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ERROR);
         }
 
         String captchaKey = Const.FORGOT_KEY + forgotDto.getUuid();
         String captcha = redisUtil.getObject(captchaKey);
 
         if (captcha == null) {
-            throw new CaptchaException(Const.CAPTCHA_EXPIRE);
+            throw new CaptchaException(ReturnMessage.CAPTCHA_EXPIRE);
         }
 
         if (!forgotDto.getCode().equalsIgnoreCase(captcha)) {
-            throw new CaptchaException(Const.CAPTCHA_ERROR);
+            throw new CaptchaException(ReturnMessage.CAPTCHA_ERROR);
         }
 
         // 验证码正确，删除redis中缓存的验证码
         redisUtil.deleteObject(captchaKey);
 
-        if (Strings.isNullOrEmpty(forgotDto.getPassword())){
-            return ServerResponse.createByErrorMessage("请输入密码");
+        if (Strings.isNullOrEmpty(forgotDto.getPassword())) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_EMPTY);
         }
-        if (forgotDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || forgotDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH){
-            return ServerResponse.createByErrorMessage("密码长度为6-16位");
+        if (forgotDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || forgotDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_ILLEGAL);
         }
 
         // 修改用户密码
@@ -165,7 +166,7 @@ public class ForgotService {
                 forgotDto.getEmail()));
 
         return resultCount > 0
-                ? ServerResponse.createBySuccessMessage("修改密码成功")
-                : ServerResponse.createByErrorMessage("修改密码失败");
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.UPDATE_PASSWORD_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.UPDATE_PASSWORD_ERROR);
     }
 }

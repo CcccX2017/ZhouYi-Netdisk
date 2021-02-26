@@ -1,6 +1,6 @@
 package cn.codex.netdisk.portal.controller;
 
-import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
@@ -46,7 +46,7 @@ public class LoginController {
         map.put("tokenHead", tokenHead);
         map.put("token", token);
         
-        return ServerResponse.createBySuccess(Const.LOGIN_SUCCESS, map);
+        return ServerResponse.createBySuccess(ReturnMessage.LOGIN_SUCCESS, map);
     }
 
     @ApiOperationSupport(order = 2)

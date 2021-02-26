@@ -1,6 +1,6 @@
 package cn.codex.netdisk.common.exception;
 
-import cn.codex.netdisk.common.constants.Const;
+import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.enums.ResponseCode;
 
 /**
@@ -12,6 +12,6 @@ import cn.codex.netdisk.common.enums.ResponseCode;
 public class UserPasswordNotMatchException extends CustomException{
     
     public UserPasswordNotMatchException() {
-        super(ResponseCode.ERROR.getCode(), Const.USERNAME_PASSWORD_ERROR);
+        super(ResponseCode.ERROR.getCode(), ReturnMessage.USERNAME_PASSWORD_ERROR);
     }
 }

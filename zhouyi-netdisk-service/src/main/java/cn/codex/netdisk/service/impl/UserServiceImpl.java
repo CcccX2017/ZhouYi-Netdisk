@@ -2,6 +2,7 @@ package cn.codex.netdisk.service.impl;
 
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.JwtTokenUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
@@ -51,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request) {
         LoginUser loginUser = jwtTokenUtil.getLoginUser(request);
         if (loginUser == null) {
-            return ServerResponse.createByErrorMessage("尚未登录，请登录");
+            return ServerResponse.createByErrorMessage(ResponseCode.NEED_LOGIN.getDesc());
         }
 
         loginUser.getUser().setPassword(null);

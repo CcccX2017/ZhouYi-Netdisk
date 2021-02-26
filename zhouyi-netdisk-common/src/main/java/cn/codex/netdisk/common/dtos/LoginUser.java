@@ -122,4 +122,15 @@ public class LoginUser implements UserDetails {
     public boolean isEnabled() {
         return user.getStatus();
     }
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "token='" + token + '\'' +
+                ", loginTime=" + loginTime +
+                ", expireTime=" + expireTime +
+                ", user=" + user +
+                ", ipAddr='" + ipAddr + '\'' +
+                '}';
+    }
 }

@@ -7,10 +7,15 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
-    
-    public static final String UPDATE_SUCCESS = "更新成功";
-    public static final String UPDATE_ERROR = "更新失败";
-    
+    /**
+     * 普通用户
+     */
+    public static final int DEFAULT_GROUP_ID = 1001;
+    /**
+     * 未知性别
+     */
+    public static final String DEFAULT_SEX = "2";
+
     /**
      * 虚拟目录
      */
@@ -41,17 +46,7 @@ public class Const {
      * 找回密码验证码有效期（分钟）
      */
     public static final Integer FORGOT_CAPTCHA_EXPIRATION = 5;
-    
-    /**
-     * 验证码错误
-     */
-    public static final String CAPTCHA_ERROR = "验证码错误";
-    
-    /**
-     * 验证码已失效
-     */
-    public static final String CAPTCHA_EXPIRE = "验证码已失效";
-    
+
     /**
      * 用户信息key
      */
@@ -61,17 +56,7 @@ public class Const {
      * 登录用户token key
      */
     public static final String LOGIN_TOKEN_KEY = "login_token_";
-    
-    /**
-     * 用户名或密码错误
-     */
-    public static final String USERNAME_PASSWORD_ERROR = "用户名不存在或密码错误";
-    
-    /**
-     * 登录成功
-     */
-    public static final String LOGIN_SUCCESS = "登录成功";
-    
+
     /**
      * 密码最小长度
      */
