@@ -50,7 +50,6 @@ public class ForgotService {
 
     @Autowired
     private PortalConfig portalConfig;
-
     @Autowired
     private UserMapper userMapper;
 

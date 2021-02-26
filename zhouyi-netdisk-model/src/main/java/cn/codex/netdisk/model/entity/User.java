@@ -1,17 +1,15 @@
 package cn.codex.netdisk.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.util.Date;
-
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -67,6 +65,7 @@ public class User implements Serializable {
     private String sex;
 
     @ApiModelProperty(value = "生日")
+    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date birthday;
 
     @ApiModelProperty(value = "已用存储空间")
@@ -77,24 +76,24 @@ public class User implements Serializable {
     private Boolean dataPerfect;
 
     @ApiModelProperty(value = "会员过期时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date expirationTime;
 
     @ApiModelProperty(value = "最后登录ip")
     private String loginIp;
 
     @ApiModelProperty(value = "最后登录时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date loginDate;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date gmtCreate;
 
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date gmtModified;
 
     @ApiModelProperty(value = "用户组")

@@ -43,7 +43,8 @@ public class UserVo implements Serializable {
     private String email;
     
     @ApiModelProperty(value = "生日")
-    private String birthday;
+    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai", timezone = "GMT+8")
+    private Date birthday;
     
     @ApiModelProperty(value = "性别（0-男 1-女 2-未知）")
     private String sex;
@@ -55,7 +56,7 @@ public class UserVo implements Serializable {
     private boolean dataPerfect;
     
     @ApiModelProperty(value = "会员过期时间")
-    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date expirationTime;
     
     @ApiModelProperty(value = "用户组id")

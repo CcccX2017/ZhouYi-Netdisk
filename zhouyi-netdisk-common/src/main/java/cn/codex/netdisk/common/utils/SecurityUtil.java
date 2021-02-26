@@ -1,4 +1,4 @@
-package cn.codex.netdisk.portal.utils;
+package cn.codex.netdisk.common.utils;
 
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.CustomException;

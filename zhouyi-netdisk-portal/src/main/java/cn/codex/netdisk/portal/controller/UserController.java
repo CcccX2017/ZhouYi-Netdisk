@@ -8,7 +8,7 @@ import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.dtos.UpdateUserInfoDto;
-import cn.codex.netdisk.portal.utils.SecurityUtil;
+import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
@@ -64,17 +64,16 @@ public class UserController {
 
         User user = new User();
         BeanUtils.copyProperties(updateUserInfoDto, user);
-
         boolean update = userService.updateById(user);
         if (update){
-            // 更新security和redis中的用户信息
+            // redis中的用户信息
             LoginUser loginUser = SecurityUtil.getLoginUser();
             loginUser.setUser(userService.selectUserByUsername(loginUser.getUsername()));
             jwtTokenUtil.updateLoginUser(loginUser);
-            System.out.println(loginUser);
             return ServerResponse.createBySuccess(ReturnMessage.UPDATE_SUCCESS);
         }
         return ServerResponse.createByErrorMessage(ReturnMessage.UPDATE_ERROR);
     }
+
 }
 

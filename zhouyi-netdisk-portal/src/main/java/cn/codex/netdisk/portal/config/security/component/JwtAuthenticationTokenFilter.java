@@ -2,7 +2,7 @@ package cn.codex.netdisk.portal.config.security.component;
 
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.utils.JwtTokenUtil;
-import cn.codex.netdisk.portal.utils.SecurityUtil;
+import cn.codex.netdisk.common.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
