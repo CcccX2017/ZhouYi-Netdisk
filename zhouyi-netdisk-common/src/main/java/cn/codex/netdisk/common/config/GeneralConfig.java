@@ -1,12 +1,15 @@
 package cn.codex.netdisk.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Collections;
+import java.util.TimeZone;
 
 /**
  * 通用配置
@@ -38,5 +41,10 @@ public class GeneralConfig {
         return new CorsFilter(source);
     }
     
-    
+    @Bean
+    public ObjectMapper jacksonObjectMapperCustomization(){
+        return new Jackson2ObjectMapperBuilder()
+                .timeZone(TimeZone.getDefault())
+                .build();
+    }
 }

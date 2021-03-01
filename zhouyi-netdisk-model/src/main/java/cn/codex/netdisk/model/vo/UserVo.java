@@ -56,9 +56,9 @@ public class UserVo implements Serializable {
     private boolean dataPerfect;
     
     @ApiModelProperty(value = "会员过期时间")
-    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", locale = "Asia/Shanghai")
     private Date expirationTime;
-    
+
     @ApiModelProperty(value = "用户组id")
     private Integer groupId;
     

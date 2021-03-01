@@ -76,7 +76,7 @@ public class User implements Serializable {
     private Boolean dataPerfect;
 
     @ApiModelProperty(value = "会员过期时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", locale = "Asia/Shanghai", timezone = "GMT+8")
     private Date expirationTime;
 
     @ApiModelProperty(value = "最后登录ip")
