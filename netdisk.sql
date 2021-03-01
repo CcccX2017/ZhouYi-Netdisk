@@ -263,7 +263,7 @@ CREATE TABLE `tb_user` (
   `birthday` date DEFAULT NULL COMMENT '生日',
   `used_storage_space` bigint DEFAULT '0' COMMENT '已用存储空间',
   `is_data_perfect` tinyint unsigned DEFAULT '0' COMMENT '资料是否完善（0-未完善，1-已完善）',
-  `expiration_time` date DEFAULT NULL COMMENT '会员过期时间',
+  `expiration_time` datetime DEFAULT NULL COMMENT '会员过期时间',
   `login_ip` varchar(50) DEFAULT NULL COMMENT '最后登录ip',
   `login_date` datetime DEFAULT NULL COMMENT '最后登录时间',
   `gmt_create` datetime NOT NULL COMMENT '创建时间',
