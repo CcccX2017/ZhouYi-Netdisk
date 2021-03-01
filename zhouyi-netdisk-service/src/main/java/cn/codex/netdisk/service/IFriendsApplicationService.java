@@ -1,5 +1,6 @@
 package cn.codex.netdisk.service;
 
+import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.entity.FriendsApplication;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,4 +22,14 @@ public interface IFriendsApplicationService extends IService<FriendsApplication>
      * @return 申请列表
      */
     List<FriendsApplication> getFriendsApplicationList();
+
+    /**
+     * 发送添加好友请求
+     *
+     * @param from    申请人
+     * @param to      被申请人
+     * @param message 验证消息
+     * @return 发送添加好友请求结果
+     */
+    ServerResponse addFriend(String from, String to, String message);
 }
