@@ -86,7 +86,7 @@ CREATE TABLE `tb_friends_application` (
   `applicant` varchar(64) DEFAULT NULL COMMENT '申请人',
   `respondent` varchar(64) DEFAULT NULL COMMENT '被申请人',
   `message` varchar(30) DEFAULT NULL COMMENT '验证消息',
-  `is_agreed` tinyint(1) DEFAULT '0' COMMENT '申请状态（0-未同意，1-已同意，默认0）',
+  `is_agreed` char(1) DEFAULT '0' COMMENT '申请状态（0-未处理，1-同意，2-拒绝，默认0）',
   `is_viewed` tinyint(1) DEFAULT '0' COMMENT '是否查看（0-未查看，1-已查看，默认0）',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
