@@ -67,14 +67,13 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
         }
 
         // 判断是否是系统用户
-        Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, to).or().eq(User.EMAIL, to));
-        if (count <= 0) {
+        User user = userMapper.selectByUsername(to);
+        if (user != null) {
             return ServerResponse.createByErrorMessage("非本系统用户");
         }
-
-        User user = userMapper.selectOne(new QueryWrapper<User>().eq(User.USERNAME, to).or().eq(User.EMAIL, to));
+        
         // 判断30分钟内是否重复发送过请求
-        String repeat = redisUtil.getObject("FROM_" + from + "_TO_" + user.getUsername() + "_" + user.getEmail());
+        String repeat = redisUtil.getObject("ADD_FRIENDS_" + from + "_" + to);
         if (!Strings.isNullOrEmpty(repeat)){
             return ServerResponse.createByErrorMessage("您已发送过好友添加请求，请耐心等待");
         }
@@ -91,7 +90,7 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
         }
 
         // 将请求结果存入redis中，防止30分钟内重复发送请求
-        redisUtil.setObject("FROM_" + from + "_TO_" + user.getUsername() + "_" + user.getEmail(), "OK", 30, TimeUnit.MINUTES);
+        redisUtil.setObject("ADD_FRIENDS_" + from + "_" + to, "OK", 30, TimeUnit.MINUTES);
         return ServerResponse.createBySuccessMessage("您的好友添加请求已经发送成功，等待对方确认");
     }
 }
