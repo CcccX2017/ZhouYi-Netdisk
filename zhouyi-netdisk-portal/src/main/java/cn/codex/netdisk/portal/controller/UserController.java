@@ -1,14 +1,16 @@
 package cn.codex.netdisk.portal.controller;
 
+import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.utils.JwtTokenUtil;
 import cn.codex.netdisk.common.utils.RegexUtil;
+import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.model.vo.UserVo;
+import cn.codex.netdisk.portal.component.CaptchaMail;
 import cn.codex.netdisk.portal.dtos.UpdateUserInfoDto;
-import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
@@ -39,6 +41,9 @@ public class UserController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private CaptchaMail captchaMail;
+
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/")
     public ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request) {
@@ -47,7 +52,7 @@ public class UserController {
 
     @ApiOperation("更新个人信息")
     @PutMapping("/")
-    public ServerResponse<String> update(@RequestBody UpdateUserInfoDto updateUserInfoDto) {
+    public ServerResponse update(@RequestBody UpdateUserInfoDto updateUserInfoDto) {
         if (Strings.isNullOrEmpty(updateUserInfoDto.getNickname())) {
             return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_EMPTY);
         }
@@ -65,7 +70,7 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(updateUserInfoDto, user);
         boolean update = userService.updateById(user);
-        if (update){
+        if (update) {
             // redis中的用户信息
             LoginUser loginUser = SecurityUtil.getLoginUser();
             loginUser.setUser(userService.selectUserByUsername(loginUser.getUsername()));
@@ -75,5 +80,22 @@ public class UserController {
         return ServerResponse.createByErrorMessage(ReturnMessage.UPDATE_ERROR);
     }
 
+    @ApiOperation("修改密码")
+    @PostMapping("/")
+    public ServerResponse updatePwd(String oldPassword, String newPassword, String code, String uuid) {
+        return userService.updatePwd(oldPassword, newPassword, code, uuid);
+    }
+
+    @ApiOperation("发送修改密码的邮件验证码")
+    @GetMapping("/sendCode")
+    public ServerResponse sendCode() {
+        LoginUser loginUser = SecurityUtil.getLoginUser();
+        String email = loginUser.getUser().getEmail();
+        if (Strings.isNullOrEmpty(email)) {
+            return ServerResponse.createByErrorMessage("账号未绑定邮箱，请先绑定");
+        }
+
+        return captchaMail.sendCaptchaMail(email, "修改密码", Const.UPDATE_KEY);
+    }
 }
 

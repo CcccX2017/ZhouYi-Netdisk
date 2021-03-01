@@ -23,8 +23,8 @@ public class ReturnMessage {
 
     public static final String UPDATE_SUCCESS = "更新成功";
     public static final String UPDATE_ERROR = "更新失败";
-    public static final String UPDATE_PASSWORD_SUCCESS = "修改密码成功";
-    public static final String UPDATE_PASSWORD_ERROR = "修改密码失败";
+    public static final String UPDATE_PASSWORD_SUCCESS = "密码修改成功";
+    public static final String UPDATE_PASSWORD_ERROR = "密码修改失败";
 
     public static final String REGISTER_SUCCESS = "注册成功";
     public static final String REGISTER_ERROR = "注册失败";
@@ -46,4 +46,6 @@ public class ReturnMessage {
    public static final String NICKNAME_EMPTY = "请输入用户昵称";
    public static final String NICKNAME_ILLEGAL = "用户昵称只能是长度为5-12位的中英文/数字/下划线'_'";
    public static final String NICKNAME_EXIST = "昵称已被使用，请更换";
+
+    public static final String OLD_PASSWORD_ERROR = "旧密码不正确";
 }

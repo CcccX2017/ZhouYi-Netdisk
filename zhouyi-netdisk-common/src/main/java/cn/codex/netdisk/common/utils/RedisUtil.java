@@ -1,5 +1,7 @@
 package cn.codex.netdisk.common.utils;
 
+import cn.codex.netdisk.common.constants.ReturnMessage;
+import cn.codex.netdisk.common.exception.CaptchaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -111,4 +113,24 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 验证验证码
+     *
+     * @param captchaKey 验证码唯一标识
+     * @param code       验证码
+     */
+    public void validateCaptcha(String captchaKey, String code) {
+        String captcha = this.getObject(captchaKey);
+
+        if (captcha == null) {
+            throw new CaptchaException(ReturnMessage.CAPTCHA_EXPIRE);
+        }
+
+        if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException(ReturnMessage.CAPTCHA_ERROR);
+        }
+
+        // 验证码正确，删除redis中缓存的验证码
+        this.deleteObject(captchaKey);
+    }
 }

@@ -44,11 +44,13 @@ public class CaptchaMail {
 
     /**
      * 发送邮件
-     * @param to 收件人
-     * @param subject 主题
+     *
+     * @param to        收件人
+     * @param subject   主题
+     * @param prefixKey redis键前缀
      * @return 发送结果
      */
-    public ServerResponse<String> sendCaptchaMail(String to, String subject){
+    public ServerResponse<String> sendCaptchaMail(String to, String subject, String prefixKey) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -67,7 +69,7 @@ public class CaptchaMail {
             String uuid = IdUtil.simpleUUID();
             try {
                 // 将验证码存入redis服务器中，并返回唯一标识
-                redisUtil.setObject(Const.FORGOT_KEY + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+                redisUtil.setObject(prefixKey + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
             } catch (Exception ex) {
                 log.error("发送给 {} 的邮件发送失败=========> {}", to, ex.getMessage());
                 return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);

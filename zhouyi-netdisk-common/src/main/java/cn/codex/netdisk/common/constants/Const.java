@@ -40,12 +40,17 @@ public class Const {
     /**
      * 找回密码验证码key
      */
-    public static final String FORGOT_KEY = "forgot_key_";
+    public static final String FORGOT_KEY = "forgot_password_key_";
     
     /**
      * 找回密码验证码有效期（分钟）
      */
     public static final Integer FORGOT_CAPTCHA_EXPIRATION = 5;
+
+    /**
+     * 修改密码验证码key
+     */
+    public static final String UPDATE_KEY = "update_key_";
 
     /**
      * 用户信息key

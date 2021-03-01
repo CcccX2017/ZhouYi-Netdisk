@@ -64,7 +64,7 @@ public class ForgotService {
             return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ERROR);
         }
 
-        return captchaMail.sendCaptchaMail(email, "找回密码");
+        return captchaMail.sendCaptchaMail(email, "找回密码", Const.FORGOT_KEY);
     }
 
     /**

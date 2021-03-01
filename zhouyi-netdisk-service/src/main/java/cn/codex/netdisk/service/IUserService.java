@@ -32,4 +32,15 @@ public interface IUserService extends IService<User> {
      * @return 登录用户信息
      */
     ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request);
+
+    /**
+     * 修改密码
+     *
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @param code        验证码
+     * @param uuid        验证码唯一标识符
+     * @return 密码修改结果
+     */
+    ServerResponse updatePwd(String oldPassword, String newPassword, String code, String uuid);
 }
