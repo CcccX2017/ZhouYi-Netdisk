@@ -18,4 +18,19 @@
         id, username, friend, user_to_friend_remark, friend_to_user_remark, gmt_create, gmt_modified
     </sql>
 
+    <select id="selectFriends" resultType="cn.codex.netdisk.model.vo.FriendsVo">
+        select f.id,
+               f.username,
+               f.friend,
+               f.user_to_friend_remark,
+               f.friend_to_user_remark,
+               u1.nickname,
+               u1.avatar,
+               u2.nickname friend_nickname,
+               u2.avatar friend_avatar
+        from tb_friends f, tb_user u1, tb_user u2
+        where f.username = u1.username
+          and f.friend = u2.username
+          and (f.username = #{username} or f.friend = #{username})
+    </select>
 </mapper>

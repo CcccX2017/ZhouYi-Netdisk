@@ -40,7 +40,7 @@ public class FriendsApplication implements Serializable {
 
     @ApiModelProperty(value = "申请状态（0-未同意，1-已同意，默认0）")
     @TableField("is_agreed")
-    private Boolean agreed;
+    private String agreed;
 
     @ApiModelProperty(value = "是否查看（0-未查看，1-已查看，默认0）")
     @TableField("is_viewed")

@@ -15,7 +15,7 @@ public class Const {
      * 未知性别
      */
     public static final String DEFAULT_SEX = "2";
-
+    
     /**
      * 虚拟目录
      */
@@ -46,12 +46,12 @@ public class Const {
      * 找回密码验证码有效期（分钟）
      */
     public static final Integer FORGOT_CAPTCHA_EXPIRATION = 5;
-
+    
     /**
      * 修改密码验证码key
      */
     public static final String UPDATE_KEY = "update_key_";
-
+    
     /**
      * 用户信息key
      */
@@ -61,7 +61,7 @@ public class Const {
      * 登录用户token key
      */
     public static final String LOGIN_TOKEN_KEY = "login_token_";
-
+    
     /**
      * 密码最小长度
      */
@@ -71,4 +71,19 @@ public class Const {
      * 密码最大长度
      */
     public static final int PASSWORD_MAX_LENGTH = 16;
+    
+    /**
+     * 未处理
+     */
+    public static final String UNTREATED = "0";
+    
+    /**
+     * 同意
+     */
+    public static final String AGREED = "1";
+    
+    /**
+     * 拒绝
+     */
+    public static final String REFUSE = "2";
 }
