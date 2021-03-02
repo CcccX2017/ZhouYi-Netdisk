@@ -1,6 +1,7 @@
 package cn.codex.netdisk.service.impl;
 
 import cn.codex.netdisk.common.utils.SecurityUtil;
+import cn.codex.netdisk.common.utils.UsernameEncryptionUtil;
 import cn.codex.netdisk.dao.FriendsMapper;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.vo.FriendsVo;
@@ -34,18 +35,27 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
     public List<FriendsVo> getFriends() {
         String username = SecurityUtil.getUsername();
         List<FriendsVo> list = friendsMapper.selectFriends(username);
-
+        
         // 处理返回结果，只返回好友信息
-        list.forEach(friendsVo -> {
-            // 用户发出的好友申请
-            if (!friendsVo.getUsername().equals(username)){
-                friendsVo.setFriend(friendsVo.getUsername());
-                friendsVo.setFriendAvatar(friendsVo.getAvatar());
-                friendsVo.setFriendNickname(friendsVo.getNickname());
-                friendsVo.setUserToFriendRemark(friendsVo.getFriendToUserRemark());
-            }
-        });
-
+        list.forEach(friendsVo -> assembleFriendsVo(friendsVo, username));
+        
         return list;
+    }
+    
+    /**
+     * 组装FriendsVo
+     */
+    private void assembleFriendsVo(FriendsVo friendsVo, String username) {
+        // 用户发出的添加好友申请
+        if (!friendsVo.getUsername().equals(username)) {
+            friendsVo.setFriend(friendsVo.getUsername());
+            friendsVo.setFriendAvatar(friendsVo.getAvatar());
+            friendsVo.setFriendNickname(friendsVo.getNickname());
+            friendsVo.setUserToFriendRemark(friendsVo.getFriendToUserRemark());
+            friendsVo.setEncryptionName(UsernameEncryptionUtil.encryptionUsername(friendsVo.getUsername()));
+        } else {
+            // 好友发出的添加好友申请
+            friendsVo.setEncryptionName(UsernameEncryptionUtil.encryptionUsername(friendsVo.getFriend()));
+        }
     }
 }

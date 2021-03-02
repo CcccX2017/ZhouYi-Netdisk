@@ -45,7 +45,10 @@ public class FriendsVo implements Serializable {
     @ApiModelProperty(value = "好友头像URL", position = 7)
     private String friendAvatar;
     
-    @ApiModelProperty(value = "好友给用户的备注", position = 8)
+    @ApiModelProperty(value = "加密的好友用户名", position = 8)
+    private String encryptionName;
+    
+    @ApiModelProperty(value = "好友给用户的备注", position = 9)
     @JsonIgnore
     private String friendToUserRemark;
 }
