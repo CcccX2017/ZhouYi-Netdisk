@@ -7,6 +7,7 @@ import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import cn.codex.netdisk.service.IFriendsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,15 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
         } else {
             // 好友发出的添加好友申请
             friendsVo.setEncryptionName(UsernameEncryptionUtil.encryptionUsername(friendsVo.getFriend()));
+        }
+        
+        // 设置好友显示名称
+        if (!Strings.isNullOrEmpty(friendsVo.getUserToFriendRemark())) {
+            friendsVo.setShowName(friendsVo.getUserToFriendRemark());
+        } else if (!Strings.isNullOrEmpty(friendsVo.getFriendNickname())) {
+            friendsVo.setShowName(friendsVo.getFriendNickname());
+        } else {
+            friendsVo.setShowName(friendsVo.getEncryptionName());
         }
     }
 }
