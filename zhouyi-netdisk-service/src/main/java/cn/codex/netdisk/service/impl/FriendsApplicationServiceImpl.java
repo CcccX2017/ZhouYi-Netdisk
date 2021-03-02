@@ -1,12 +1,15 @@
 package cn.codex.netdisk.service.impl;
 
+import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.RedisUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FriendsApplicationMapper;
+import cn.codex.netdisk.dao.FriendsMapper;
 import cn.codex.netdisk.dao.UserMapper;
+import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.entity.FriendsApplication;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.service.IFriendsApplicationService;
@@ -39,6 +42,9 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private FriendsMapper friendsMapper;
+
     /**
      * 获取好友申请列表
      *
@@ -66,15 +72,28 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
             return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
 
+        // 判断是否添加自己为好友
+        if (from.equalsIgnoreCase(to)) {
+            return ServerResponse.createByErrorMessage("不能添加自己为好友");
+        }
+
         // 判断是否是系统用户
         User user = userMapper.selectByUsername(to);
         if (user == null) {
             return ServerResponse.createByErrorMessage("非本系统用户");
         }
-        
+
+        // 判断是否已经是好友
+        Integer count =
+                friendsMapper.selectCount(new QueryWrapper<Friends>().and(i -> i.eq(Friends.USERNAME, from).eq(Friends.FRIEND,
+                        to)).or(i -> i.eq(Friends.USERNAME, to).eq(Friends.FRIEND, from)));
+        if (count > 0) {
+            return ServerResponse.createByErrorMessage("你们已经是好友啦，无需重复添加");
+        }
+
         // 判断30分钟内是否重复发送过请求
         String repeat = redisUtil.getObject("add_friends_" + from + "_" + to);
-        if (!Strings.isNullOrEmpty(repeat)){
+        if (!Strings.isNullOrEmpty(repeat)) {
             return ServerResponse.createByErrorMessage("您已发送过好友添加请求，请耐心等待");
         }
 
@@ -82,6 +101,9 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
         friendsApplication.setApplicant(from);
         friendsApplication.setRespondent(to);
         friendsApplication.setMessage(message);
+
+        // 删除已发的请求
+        friendsApplicationMapper.delete(new QueryWrapper<FriendsApplication>().eq(FriendsApplication.APPLICANT, from).eq(FriendsApplication.RESPONDENT, to).eq(FriendsApplication.IS_AGREED, Const.UNTREATED));
 
         int resultCount = friendsApplicationMapper.insert(friendsApplication);
 
