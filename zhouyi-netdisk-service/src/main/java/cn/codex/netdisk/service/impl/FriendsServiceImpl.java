@@ -1,6 +1,5 @@
 package cn.codex.netdisk.service.impl;
 
-import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FriendsMapper;
 import cn.codex.netdisk.model.entity.Friends;
@@ -34,6 +33,19 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
     @Override
     public List<FriendsVo> getFriends() {
         String username = SecurityUtil.getUsername();
-        return friendsMapper.selectFriends(username);
+        List<FriendsVo> list = friendsMapper.selectFriends(username);
+
+        // 处理返回结果，只返回好友信息
+        list.forEach(friendsVo -> {
+            // 用户发出的好友申请
+            if (!friendsVo.getUsername().equals(username)){
+                friendsVo.setFriend(friendsVo.getUsername());
+                friendsVo.setFriendAvatar(friendsVo.getAvatar());
+                friendsVo.setFriendNickname(friendsVo.getNickname());
+                friendsVo.setUserToFriendRemark(friendsVo.getFriendToUserRemark());
+            }
+        });
+
+        return list;
     }
 }

@@ -10,7 +10,6 @@ import cn.codex.netdisk.model.entity.FriendsApplication;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import cn.codex.netdisk.service.IFriendsApplicationService;
 import cn.codex.netdisk.service.IFriendsService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +41,7 @@ public class FriendsController {
     @ApiOperation("获取好友列表")
     @GetMapping("/")
     public ServerResponse<List<FriendsVo>> getFriends() {
-        List<FriendsVo> friends = friendsService.getFriends();
-        if (friends.size() > 0) {
-            
-            return ServerResponse.createBySuccess(friends);
-        }
-        return ServerResponse.createByErrorMessage("获取好友列表失败");
+        return ServerResponse.createBySuccess(friendsService.getFriends());
     }
     
     @ApiOperation("添加好友")

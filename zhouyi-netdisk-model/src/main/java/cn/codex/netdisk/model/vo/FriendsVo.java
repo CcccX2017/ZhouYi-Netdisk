@@ -1,5 +1,6 @@
 package cn.codex.netdisk.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,12 +22,15 @@ public class FriendsVo implements Serializable {
     
     
     @ApiModelProperty(value = "用户名", position = 1)
+    @JsonIgnore
     private String username;
     
     @ApiModelProperty(value = "用户昵称", position = 2)
+    @JsonIgnore
     private String nickname;
     
     @ApiModelProperty(value = "用户头像URL", position = 3)
+    @JsonIgnore
     private String avatar;
     
     @ApiModelProperty(value = "用户给好友的备注", position = 4)
@@ -42,5 +46,6 @@ public class FriendsVo implements Serializable {
     private String friendAvatar;
     
     @ApiModelProperty(value = "好友给用户的备注", position = 8)
+    @JsonIgnore
     private String friendToUserRemark;
 }
