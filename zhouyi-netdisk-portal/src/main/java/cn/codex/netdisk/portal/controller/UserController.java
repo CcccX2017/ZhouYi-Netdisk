@@ -8,9 +8,11 @@ import cn.codex.netdisk.common.utils.JwtTokenUtil;
 import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.User;
+import cn.codex.netdisk.model.vo.OrderVo;
 import cn.codex.netdisk.model.vo.UserVo;
 import cn.codex.netdisk.portal.component.CaptchaMail;
 import cn.codex.netdisk.portal.dtos.UpdateUserInfoDto;
+import cn.codex.netdisk.service.IOrderService;
 import cn.codex.netdisk.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -43,6 +46,9 @@ public class UserController {
 
     @Autowired
     private CaptchaMail captchaMail;
+    
+    @Autowired
+    private IOrderService orderService;
 
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/")
@@ -96,6 +102,13 @@ public class UserController {
         }
 
         return captchaMail.sendCaptchaMail(email, "修改密码", Const.UPDATE_KEY);
+    }
+    
+    @ApiOperation("获取订单信息")
+    @GetMapping("/order")
+    public ServerResponse getOrder(){
+        List<OrderVo> orderVos = orderService.getOrder();
+        return ServerResponse.createBySuccess(orderVos);
     }
 }
 

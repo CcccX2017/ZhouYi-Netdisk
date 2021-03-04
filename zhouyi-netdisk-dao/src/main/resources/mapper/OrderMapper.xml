@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.OrderMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Order">
-        <id column="order_no" property="orderNo" />
-        <result column="username" property="username" />
-        <result column="payment_amount" property="paymentAmount" />
-        <result column="payment_method_id" property="paymentMethodId" />
-        <result column="status" property="status" />
-        <result column="group_id" property="groupId" />
-        <result column="payment_time" property="paymentTime" />
-        <result column="gmt_create" property="gmtCreate" />
-        <result column="gmt_modified" property="gmtModified" />
+        <id column="order_no" property="orderNo"/>
+        <result column="username" property="username"/>
+        <result column="payment_amount" property="paymentAmount"/>
+        <result column="payment_method_id" property="paymentMethodId"/>
+        <result column="status" property="status"/>
+        <result column="group_id" property="groupId"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_no, username, payment_amount, payment_method_id, status, group_id, payment_time, gmt_create, gmt_modified
+        order_no,
+        username,
+        payment_amount,
+        payment_method_id,
+        status,
+        group_id,
+        payment_time,
+        gmt_create,
+        gmt_modified
     </sql>
 
+    <select id="selectOrderByUsername" resultType="cn.codex.netdisk.model.vo.OrderVo">
+        select o.order_no,
+               pm.payment_method,
+               pi.payment_number,
+               ug.group_name,
+               o.payment_amount,
+               o.status,
+               o.gmt_create
+        from tb_order o,
+             tb_pay_info pi,
+             tb_payment_method pm,
+             tb_user_groups ug
+        where o.order_no = pi.order_no
+          and o.payment_method_id = pm.id
+          and o.group_id = ug.group_id
+          and o.username = #{username}
+    </select>
 </mapper>
