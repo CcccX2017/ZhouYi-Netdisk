@@ -2,6 +2,8 @@ package cn.codex.netdisk.service.impl;
 
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginUser;
+import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.ErrorException;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.common.utils.UsernameEncryptionUtil;
@@ -94,6 +96,35 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
         map.put("avatar", user.getAvatar());
 
         return map;
+    }
+
+    /**
+     * 添加好友备注
+     *
+     * @param id     好友表主键ID
+     * @param remark 备注
+     * @return 添加结果
+     */
+    @Override
+    public ServerResponse setRemark(Long id, String remark) {
+        if (remark.length() > 10) {
+            throw new ErrorException("备注过长，请重新输入");
+        }
+        Friends friends = friendsMapper.selectById(id);
+        if (friends == null) {
+            throw new ErrorException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Friends update = new Friends();
+        update.setId(id);
+        if (friends.getUsername().equals(SecurityUtil.getUsername())) {
+            update.setUserToFriendRemark(remark);
+        } else if (friends.getFriend().equals(SecurityUtil.getUsername())) {
+            update.setFriendToUserRemark(remark);
+        }
+
+        return friendsMapper.updateById(update) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.UPDATE_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.UPDATE_ERROR);
     }
 
     /**

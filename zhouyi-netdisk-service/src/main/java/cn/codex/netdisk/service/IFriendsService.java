@@ -1,5 +1,6 @@
 package cn.codex.netdisk.service;
 
+import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -30,4 +31,13 @@ public interface IFriendsService extends IService<Friends> {
      * @return 用户信息
      */
     Map<String, Object> searchFriends(String keyword);
+
+    /**
+     * 添加好友备注
+     *
+     * @param id     好友表主键ID
+     * @param remark 备注
+     * @return 添加结果
+     */
+    ServerResponse setRemark(Long id, String remark);
 }
