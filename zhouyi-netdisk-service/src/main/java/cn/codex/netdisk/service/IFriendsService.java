@@ -1,11 +1,11 @@
 package cn.codex.netdisk.service;
 
-import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,4 +22,12 @@ public interface IFriendsService extends IService<Friends> {
      * @return 好友列表集合
      */
     List<FriendsVo> getFriends();
+
+    /**
+     * 搜索用户添加好友
+     *
+     * @param keyword 关键词
+     * @return 用户信息
+     */
+    Map<String, Object> searchFriends(String keyword);
 }

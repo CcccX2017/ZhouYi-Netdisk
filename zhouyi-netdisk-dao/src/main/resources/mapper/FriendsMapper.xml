@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.FriendsMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Friends">
-        <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="friend" property="friend" />
-        <result column="user_to_friend_remark" property="userToFriendRemark" />
-        <result column="friend_to_user_remark" property="friendToUserRemark" />
-        <result column="gmt_create" property="gmtCreate" />
-        <result column="gmt_modified" property="gmtModified" />
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="friend" property="friend"/>
+        <result column="user_to_friend_remark" property="userToFriendRemark"/>
+        <result column="friend_to_user_remark" property="friendToUserRemark"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, friend, user_to_friend_remark, friend_to_user_remark, gmt_create, gmt_modified
+        id,
+        username,
+        friend,
+        user_to_friend_remark,
+        friend_to_user_remark,
+        gmt_create,
+        gmt_modified
     </sql>
 
     <select id="selectFriends" resultType="cn.codex.netdisk.model.vo.FriendsVo">
@@ -27,10 +32,20 @@
                u1.nickname,
                u1.avatar,
                u2.nickname friend_nickname,
-               u2.avatar friend_avatar
-        from tb_friends f, tb_user u1, tb_user u2
+               u2.avatar   friend_avatar
+        from tb_friends f,
+             tb_user u1,
+             tb_user u2
         where f.username = u1.username
           and f.friend = u2.username
           and (f.username = #{username} or f.friend = #{username})
+    </select>
+
+    <!-- 查询是否互为好友 -->
+    <select id="selectFriendCount" resultType="java.lang.Integer">
+        select count(*)
+        from tb_friends
+        where (username = #{username} and friend = #{friendName})
+           or (username = #{friendName} and friend = #{username})
     </select>
 </mapper>

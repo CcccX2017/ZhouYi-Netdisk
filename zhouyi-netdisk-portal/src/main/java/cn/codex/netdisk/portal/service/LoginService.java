@@ -111,15 +111,15 @@ public class LoginService {
         // 注册用户
         User user = new User();
         user.setGroupId(Const.DEFAULT_GROUP_ID);
-        user.setUsername(registerDto.getUsername());
+        user.setUsername(registerDto.getUsername().trim());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setSalt(BCrypt.gensalt());
         user.setStatus(true);
-        user.setNickname(registerDto.getNickname());
+        user.setNickname(registerDto.getNickname().trim());
         user.setAvatar("");
         user.setRealName("");
         user.setPhone("");
-        user.setEmail(registerDto.getEmail());
+        user.setEmail(registerDto.getEmail().trim());
         // 默认未知
         user.setSex(Const.DEFAULT_SEX);
         user.setUsedStorageSpace(0L);

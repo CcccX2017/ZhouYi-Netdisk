@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,7 +38,14 @@ public class FriendsController {
     
     @Autowired
     private IFriendsService friendsService;
-    
+
+    @ApiOperation("搜索用户添加好友")
+    @GetMapping("/search/{keyword}")
+    public ServerResponse<Map<String, Object>> searchFriends(@PathVariable String keyword){
+        Map<String, Object> userInfo = friendsService.searchFriends(keyword);
+        return ServerResponse.createBySuccess(userInfo);
+    }
+
     @ApiOperation("获取好友列表")
     @GetMapping("/")
     public ServerResponse<List<FriendsVo>> getFriends() {

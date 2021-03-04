@@ -82,6 +82,7 @@
         u.gmt_modified
     </sql>
 
+    <!-- 根据用户名查询用户信息 -->
     <select id="selectByUsername" resultMap="UserInfoWithGroupInfo">
         select <include refid="Alias_Column_List"/>,
             ug.group_name,
@@ -91,5 +92,13 @@
                  tb_user_groups ug
             where u.group_id = ug.group_id
               and u.username = #{username}
+    </select>
+
+    <!-- 根据用户名或邮箱查询用户信息 -->
+    <select id="selectByUsernameOrEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_user
+        where (username = #{keyword} or email = #{keyword})
     </select>
 </mapper>

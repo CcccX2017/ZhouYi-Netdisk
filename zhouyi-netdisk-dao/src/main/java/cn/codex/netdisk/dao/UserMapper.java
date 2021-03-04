@@ -20,4 +20,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 用户信息
      */
     User selectByUsername(String username);
+
+    /**
+     * 根据用户名或邮箱查询用户信息
+     * @param keyword 关键词
+     * @return 用户信息
+     */
+    User selectByUsernameOrEmail(String keyword);
 }
