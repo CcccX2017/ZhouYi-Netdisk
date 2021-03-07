@@ -8,6 +8,8 @@ package cn.codex.netdisk.common.constants;
  */
 public class ReturnMessage {
 
+    public static final String FILENAME_NOT_BE_EMMPTY = "文件(夹)名不能为空，请输入文件(夹)名称";
+    
     public static final String CAPTCHA_ERROR = "验证码错误";
     public static final String CAPTCHA_EXPIRE = "验证码已失效";
     public static final String CAPTCHA_SEND_ERROR = "验证码发送失败，请重试";
