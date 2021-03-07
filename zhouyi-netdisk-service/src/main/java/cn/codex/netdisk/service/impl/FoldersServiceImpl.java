@@ -77,7 +77,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
             return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMMPTY);
         }
         
-        if (parentId == null){
+        if (parentId == null) {
             return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
         
@@ -89,7 +89,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         }
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count =
-                foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, newFolderName).eq(Folders.PARENT_ID, parentId));
+                foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, newFolderName).eq(Folders.PARENT_ID, parentId).ne(Folders.FOLDER_ID, folderId));
         if (count > 0) {
             return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(), ResponseCode.FOLDER_NAME_REPEAT.getDesc());
         }
