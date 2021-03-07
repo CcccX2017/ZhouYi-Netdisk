@@ -7,6 +7,7 @@ import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.base.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/portal/folders")
-@Api(tags = "FoldersController")
+@Api(tags = "文件夹管理")
 public class FoldersController {
     
     @Autowired
@@ -48,6 +49,12 @@ public class FoldersController {
     @PostMapping("/")
     public ServerResponse addFolder(@RequestBody Folders folders) {
         return foldersService.addFolder(folders);
+    }
+    
+    @ApiOperation("重命名文件夹")
+    @PutMapping("/{folderId}")
+    public ServerResponse rename(@PathVariable Long folderId, Long parentId, String newFolderName) {
+        return foldersService.rename(folderId, parentId, newFolderName);
     }
 }
 

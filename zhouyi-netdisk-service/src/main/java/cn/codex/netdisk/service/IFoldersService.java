@@ -21,4 +21,14 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse addFolder(Folders folders);
+    
+    /**
+     * 重命名文件夹
+     *
+     * @param folderId      文件夹ID
+     * @param parentId      父文件夹ID
+     * @param newFolderName 新文件夹名称
+     * @return 结果
+     */
+    ServerResponse rename(Long folderId, Long parentId, String newFolderName);
 }
