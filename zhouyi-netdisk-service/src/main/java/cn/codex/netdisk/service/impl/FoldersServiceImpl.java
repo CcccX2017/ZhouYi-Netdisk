@@ -73,6 +73,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      */
     @Override
     public ServerResponse rename(Long folderId, Long parentId, String newFolderName) {
+        newFolderName = newFolderName.trim();
         if (Strings.isNullOrEmpty(newFolderName.trim())) {
             return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMMPTY);
         }
@@ -82,10 +83,8 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         }
         
         // 判断文件夹名称是否超长
-        int length = newFolderName.getBytes().length;
-        System.out.println(length);
-        if (length > 32) {
-            return ServerResponse.createByErrorMessage("文件夹名称不能超过32字节");
+        if (newFolderName.length() > 64) {
+            return ServerResponse.createByErrorMessage("文件夹名称不能超过64个字节");
         }
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count =
