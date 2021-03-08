@@ -38,28 +38,34 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
     /**
      * 新建文件夹
      *
-     * @param folders 目录实体类
+     * @param folderName 文件夹名称
+     * @param parentId   父文件夹ID
      * @return 结果
      */
     @Override
-    public ServerResponse addFolder(Folders folders) {
+    public ServerResponse addFolder(String folderName, Long parentId) {
         // 判断文件夹名称是否为空
-        if (Strings.isNullOrEmpty(folders.getFolderName().trim())) {
+        if (Strings.isNullOrEmpty(folderName)) {
             return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMMPTY);
         }
         // 判断文件夹名称是否超长
-        int length = folders.getFolderName().getBytes().length;
+        int length = folderName.getBytes().length;
         if (length > Const.MAX_FILE_NAME_LENGTH) {
             return ServerResponse.createByErrorMessage("文件夹名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
         }
         String username = SecurityUtil.getUsername();
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
-                folders.getFolderName()).eq(Folders.PARENT_ID, folders.getParentId()).eq(Folders.CREATOR, username));
+                folderName).eq(Folders.PARENT_ID, parentId).eq(Folders.CREATOR, username));
+
+        Folders folders = new Folders();
+
         if (count > 0) {
             // 重命名文件夹名称为：文件夹名称_年月日_时分秒
             String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
-            folders.setFolderName(folders.getFolderName() + suffix);
+            folders.setFolderName(folderName + suffix);
+        }else {
+            folders.setFolderName(folderName);
         }
         folders.setFolderId(snowflake.nextId());
         folders.setCreator(username);
@@ -89,8 +95,8 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         }
         
         // 判断文件夹名称是否超长
-        if (newFolderName.length() > 64) {
-            return ServerResponse.createByErrorMessage("文件夹名称不能超过64个字节");
+        if (newFolderName.length() > Const.MAX_FILE_NAME_LENGTH) {
+            return ServerResponse.createByErrorMessage("文件夹名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
         }
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count =

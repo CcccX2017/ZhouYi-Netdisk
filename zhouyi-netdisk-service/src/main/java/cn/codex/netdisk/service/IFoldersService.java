@@ -13,15 +13,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-01-28
  */
 public interface IFoldersService extends IService<Folders> {
-    
+
     /**
      * 新建文件夹
      *
-     * @param folders 目录实体类
+     * @param folderName 文件夹名称
+     * @param parentId   父文件夹ID
      * @return 结果
      */
-    ServerResponse addFolder(Folders folders);
-    
+    ServerResponse addFolder(String folderName, Long parentId);
+
     /**
      * 重命名文件夹
      *
