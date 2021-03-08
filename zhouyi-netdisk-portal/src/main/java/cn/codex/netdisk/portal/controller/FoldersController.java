@@ -25,10 +25,10 @@ import java.util.List;
 @RequestMapping("/portal/folders")
 @Api(tags = "文件夹管理")
 public class FoldersController {
-
+    
     @Autowired
     private IFoldersService foldersService;
-
+    
     @ApiOperation("获取文件夹列表")
     @GetMapping("/{parentId}")
     public ServerResponse<List<Folders>> getFolders(@PathVariable Long parentId) {
@@ -42,17 +42,23 @@ public class FoldersController {
         }
         return ServerResponse.createBySuccess(folders);
     }
-
+    
     @ApiOperation("新建文件夹")
     @PostMapping("/")
     public ServerResponse addFolder(@RequestBody Folders folders) {
         return foldersService.addFolder(folders.getFolderName().trim(), folders.getParentId());
     }
-
+    
     @ApiOperation("重命名文件夹")
     @PutMapping("/{folderId}")
     public ServerResponse rename(@PathVariable Long folderId, Long parentId, String newFolderName) {
         return foldersService.rename(folderId, parentId, newFolderName);
+    }
+    
+    @ApiOperation("重命名文件夹(文件夹名重复处理)")
+    @PutMapping("/rename/{folderId}")
+    public ServerResponse renameRepeat(@PathVariable Long folderId, Long parentId, String newFolderName) {
+        return foldersService.renameRepeat(folderId, parentId, newFolderName);
     }
 }
 

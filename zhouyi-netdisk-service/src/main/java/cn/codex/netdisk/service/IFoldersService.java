@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-01-28
  */
 public interface IFoldersService extends IService<Folders> {
-
+    
     /**
      * 新建文件夹
      *
@@ -22,7 +22,7 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse addFolder(String folderName, Long parentId);
-
+    
     /**
      * 重命名文件夹
      *
@@ -32,4 +32,14 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse rename(Long folderId, Long parentId, String newFolderName);
+    
+    /**
+     * 重命名文件夹(文件夹名重复处理)
+     *
+     * @param folderId      文件夹ID
+     * @param parentId      父文件夹ID
+     * @param newFolderName 新文件夹名称
+     * @return 结果
+     */
+    ServerResponse renameRepeat(Long folderId, Long parentId, String newFolderName);
 }

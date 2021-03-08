@@ -31,10 +31,10 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
     
     @Autowired
     private FoldersMapper foldersMapper;
-
+    
     @Autowired
     private Snowflake snowflake;
-
+    
     /**
      * 新建文件夹
      *
@@ -57,19 +57,19 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
                 folderName).eq(Folders.PARENT_ID, parentId).eq(Folders.CREATOR, username));
-
+        
         Folders folders = new Folders();
-
+        
         if (count > 0) {
             // 重命名文件夹名称为：文件夹名称_年月日_时分秒
             String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
             folders.setFolderName(folderName + suffix);
-        }else {
+        } else {
             folders.setFolderName(folderName);
         }
         folders.setFolderId(snowflake.nextId());
         folders.setCreator(username);
-
+        
         return foldersMapper.insert(folders) > 0
                 ? ServerResponse.createBySuccessMessage("创建文件夹成功")
                 : ServerResponse.createByErrorMessage("创建文件夹失败");
@@ -86,6 +86,54 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
     @Override
     public ServerResponse rename(Long folderId, Long parentId, String newFolderName) {
         newFolderName = newFolderName.trim();
+        ServerResponse responseServer = checkData(parentId, newFolderName);
+        if (responseServer != null) {
+            return responseServer;
+        }
+        
+        // 判断文件夹名称是否重复，重复则重新命名
+        Integer count =
+                foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, newFolderName).eq(Folders.PARENT_ID, parentId).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
+        if (count > 0) {
+            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(), ResponseCode.FOLDER_NAME_REPEAT.getDesc());
+        }
+        
+        Folders folders = new Folders();
+        folders.setFolderId(folderId);
+        folders.setFolderName(newFolderName);
+        return foldersMapper.updateById(folders) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+    }
+    
+    /**
+     * 重命名文件夹(文件夹名重复)
+     *
+     * @param folderId      文件夹ID
+     * @param parentId      父文件夹ID
+     * @param newFolderName 新文件夹名称
+     * @return 结果
+     */
+    @Override
+    public ServerResponse renameRepeat(Long folderId, Long parentId, String newFolderName) {
+        ServerResponse responseServer = checkData(parentId, newFolderName);
+        if (responseServer != null) {
+            return responseServer;
+        }
+        
+        Folders folders = new Folders();
+        folders.setFolderId(folderId);
+        
+        // 重命名文件夹名称
+        Integer count = foldersMapper.selectRenameCount(folderId, newFolderName, parentId, SecurityUtil.getUsername());
+        folders.setFolderName(newFolderName + "(" + count + ")");
+        
+        return foldersMapper.updateById(folders) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+    }
+    
+    private ServerResponse checkData(Long parentId, String newFolderName) {
         if (Strings.isNullOrEmpty(newFolderName.trim())) {
             return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMMPTY);
         }
@@ -98,18 +146,6 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         if (newFolderName.length() > Const.MAX_FILE_NAME_LENGTH) {
             return ServerResponse.createByErrorMessage("文件夹名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
         }
-        // 判断文件夹名称是否重复，重复则重新命名
-        Integer count =
-                foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, newFolderName).eq(Folders.PARENT_ID, parentId).ne(Folders.FOLDER_ID, folderId));
-        if (count > 0) {
-            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(), ResponseCode.FOLDER_NAME_REPEAT.getDesc());
-        }
-        
-        Folders folders = new Folders();
-        folders.setFolderId(folderId);
-        folders.setFolderName(newFolderName);
-        return foldersMapper.updateById(folders) > 0
-                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
-                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        return null;
     }
 }
