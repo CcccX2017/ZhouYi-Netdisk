@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `tb_files`;
 CREATE TABLE `tb_files`
 (
     `file_id`         bigint unsigned NOT NULL COMMENT '文件id',
-    `real_name`       varchar(100)             DEFAULT NULL COMMENT '文件真实名称',
+    `real_name`       varchar(255)             DEFAULT NULL COMMENT '文件真实名称',
     `encryption_name` varchar(64)              DEFAULT NULL COMMENT '加密后的名称',
     `storage_path`    varchar(255)             DEFAULT NULL COMMENT '文件存储路径',
     `extension`       varchar(10)              DEFAULT NULL COMMENT '文件扩展名',
@@ -41,7 +41,7 @@ CREATE TABLE `tb_folders`
 (
     `folder_id`    bigint     NOT NULL COMMENT '目录id',
     `parent_id`    bigint     NOT NULL COMMENT '上级目录id',
-    `folder_name`  varchar(32)         DEFAULT NULL COMMENT '文件夹名',
+    `folder_name`  varchar(255)        DEFAULT NULL COMMENT '文件夹名',
     `is_hidden`    tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
     `is_deleted`   tinyint(1)          DEFAULT '0' COMMENT '是否删除（0-未删除，1-已删除）',
     `creator`      varchar(64)         DEFAULT NULL COMMENT '创建者',
