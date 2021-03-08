@@ -1,8 +1,10 @@
 package cn.codex.netdisk.portal;
 
-import org.mybatis.spring.annotation.MapperScan;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * 舟意网盘门户网站启动类
@@ -24,5 +26,10 @@ public class PortalApplication {
                 "|   |      \\ `\"/  \\  ) / |  | \\ `'   /(_(=)_)  |  _( )_  | `-'`-'|___  \n" +
                 "/   )       '. \\_/``\".'  |  |  \\    /  (_I_)   \\ (_ o _) /  |        \\ \n" +
                 "`---'         '-----'    ''-'   `'-'   '---'    '.(_,_).'   `--------` \n");
+    }
+
+    @Bean
+    public Snowflake getSnowflake() {
+        return IdUtil.getSnowflake(1, 1);
     }
 }

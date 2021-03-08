@@ -1,15 +1,14 @@
 package cn.codex.netdisk.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.util.Date;
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -28,7 +27,7 @@ public class Folders implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "目录id")
-    @TableId(value = "folder_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "folder_id", type = IdType.INPUT)
     private Long folderId;
 
     @ApiModelProperty(value = "上级目录id")
