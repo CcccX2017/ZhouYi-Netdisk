@@ -26,9 +26,11 @@
     </sql>
 
     <select id="selectRenameCount" resultType="java.lang.Integer">
-        select count(*)
-        from tb_folders
-        where parent_id = #{parentId}
+        select max(convert(substring(substring(folder_name, locate('(', folder_name), length(folder_name)), 2,
+                                     length(substring(folder_name, locate('(', folder_name), length(folder_name))) -
+                                     2), signed)) + 1 as count
+        FROM tb_folders
+        WHERE parent_id = #{parentId}
           and creator = #{username}
           and folder_id <![CDATA[ <> ]]> #{folderId}
           and is_deleted = 0

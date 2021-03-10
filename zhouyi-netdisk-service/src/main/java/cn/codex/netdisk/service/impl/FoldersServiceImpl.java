@@ -70,6 +70,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         }
         folders.setFolderId(snowflake.nextId());
         folders.setCreator(username);
+        folders.setParentId(parentId);
         
         return foldersMapper.insert(folders) > 0
                 ? ServerResponse.createBySuccessMessage("创建文件夹成功")
@@ -127,6 +128,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         
         // 重命名文件夹名称
         Integer count = foldersMapper.selectRenameCount(folderId, newFolderName, parentId, SecurityUtil.getUsername());
+        
         folders.setFolderName(newFolderName + "(" + count + ")");
         
         return foldersMapper.updateById(folders) > 0

@@ -62,7 +62,7 @@ public class FoldersController {
         return foldersService.rename(folderId, parentId, newFolderName);
     }
     
-    @ApiOperation("重命名文件夹(文件夹名重复处理)")
+    @ApiOperation("重命名文件夹(文件夹名重复)")
     @PutMapping("/rename/{folderId}")
     public ServerResponse renameRepeat(@PathVariable Long folderId, Long parentId, String newFolderName) {
         return foldersService.renameRepeat(folderId, parentId, newFolderName);
