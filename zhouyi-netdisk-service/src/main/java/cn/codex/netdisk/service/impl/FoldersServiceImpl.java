@@ -127,13 +127,16 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         folders.setFolderId(folderId);
         
         // 重命名文件夹名称
-        Integer count = foldersMapper.selectRenameCount(folderId, newFolderName, parentId, SecurityUtil.getUsername());
-        
-        folders.setFolderName(newFolderName + "(" + count + ")");
-        
-        return foldersMapper.updateById(folders) > 0
-                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
-                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        try {
+            int count = foldersMapper.selectRenameCount(folderId, newFolderName, parentId, SecurityUtil.getUsername());
+            folders.setFolderName(newFolderName + "(" + count + ")");
+            
+            return foldersMapper.updateById(folders) > 0
+                    ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                    : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        } catch (Exception e) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        }
     }
     
     /**
