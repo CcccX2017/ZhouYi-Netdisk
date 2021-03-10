@@ -34,4 +34,10 @@
           and is_deleted = 0
           and (folder_name = #{newFolderName} or folder_name like concat(#{newFolderName}, '(%)'))
     </select>
+
+    <update id="moveFolder">
+        update tb_folders
+        set parent_id = #{parentId}
+        where folder_id = #{folderId}
+    </update>
 </mapper>

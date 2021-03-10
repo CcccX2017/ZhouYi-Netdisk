@@ -4,6 +4,7 @@ import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
+import cn.codex.netdisk.common.exception.ErrorException;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FoldersMapper;
 import cn.codex.netdisk.model.entity.Folders;
@@ -131,6 +132,24 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         return foldersMapper.updateById(folders) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+    }
+    
+    /**
+     * 移动文件夹
+     *
+     * @param folderId 文件夹ID
+     * @param parentId 父文件夹ID
+     * @return 移动文件夹结果
+     */
+    @Override
+    public ServerResponse move(Long folderId, Long parentId) {
+        if (folderId == null || parentId == null) {
+            throw new ErrorException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        
+        return foldersMapper.moveFolder(folderId, parentId) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.MOVE_FOLDER_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.MOVE_FOLDER_ERROR);
     }
     
     private ServerResponse checkData(Long parentId, String newFolderName) {

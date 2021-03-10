@@ -55,4 +55,7 @@ public class ReturnMessage {
     public static final String OLD_PASSWORD_ERROR = "旧密码不正确";
     
     public static final String USER_NOT_FIND = "没有找到你搜索的用户，检查下输入的帐号吧";
+    
+    public static final String MOVE_FOLDER_SUCCESS = "移动文件(夹)成功";
+    public static final String MOVE_FOLDER_ERROR = "移动文件(夹)失败";
 }

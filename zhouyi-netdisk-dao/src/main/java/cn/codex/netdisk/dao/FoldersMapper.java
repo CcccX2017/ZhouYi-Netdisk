@@ -27,4 +27,13 @@ public interface FoldersMapper extends BaseMapper<Folders> {
                               @Param("newFolderName") String newFolderName,
                               @Param("parentId") Long parentId,
                               @Param("username") String username);
+    
+    /**
+     * 移动文件夹
+     *
+     * @param folderId 文件夹ID
+     * @param parentId 父文件夹ID
+     * @return 影响条数
+     */
+    Integer moveFolder(@Param("folderId") Long folderId, @Param("parentId") Long parentId);
 }

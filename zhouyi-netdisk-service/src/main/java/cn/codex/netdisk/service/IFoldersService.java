@@ -42,4 +42,13 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse renameRepeat(Long folderId, Long parentId, String newFolderName);
+    
+    /**
+     * 移动文件夹
+     *
+     * @param folderId 文件夹ID
+     * @param parentId 父文件夹ID
+     * @return 移动文件夹结果
+     */
+    ServerResponse move(Long folderId, Long parentId);
 }
