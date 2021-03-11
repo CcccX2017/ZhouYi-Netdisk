@@ -7,6 +7,8 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
+    
+    public static final String MENU_PREFIX = "menu";
 
     public static final int MAX_FILE_NAME_LENGTH = 255;
 
