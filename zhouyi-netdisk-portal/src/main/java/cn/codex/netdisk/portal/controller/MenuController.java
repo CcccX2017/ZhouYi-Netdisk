@@ -40,7 +40,7 @@ public class MenuController {
     public ServerResponse<List<Menu>> getMenuList(){
         List<Menu> menus = redisUtil.getObject(Const.MENU_PREFIX);
         if (menus == null || menus.size() <= 0) {
-            menus = menuService.list();
+            menus = menuService.getMenuList();
             redisUtil.setObject(Const.MENU_PREFIX, menus);
             return ServerResponse.createBySuccess(menus);
         }
