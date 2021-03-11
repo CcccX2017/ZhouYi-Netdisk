@@ -51,8 +51,8 @@ public class FoldersController {
     }
     
     @ApiOperation("移动文件夹")
-    @PostMapping("/move/{folderId}")
-    public ServerResponse move(@PathVariable Long folderId, Long parentId){
+    @PostMapping("/move")
+    public ServerResponse move(@PathVariable Long[] folderId, Long parentId){
         return foldersService.move(folderId, parentId);
     }
     

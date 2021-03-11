@@ -50,5 +50,5 @@ public interface IFoldersService extends IService<Folders> {
      * @param parentId 父文件夹ID
      * @return 移动文件夹结果
      */
-    ServerResponse move(Long folderId, Long parentId);
+    ServerResponse move(Long[] folderId, Long parentId);
 }

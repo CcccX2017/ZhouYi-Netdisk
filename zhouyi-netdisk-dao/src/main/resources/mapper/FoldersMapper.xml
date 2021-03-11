@@ -42,4 +42,13 @@
         set parent_id = #{parentId}
         where folder_id = #{folderId}
     </update>
+
+    <update id="batchMoveFolder">
+        update tb_folders
+        set parent_id = #{parentId}
+        where folder_id in
+        <foreach collection="folderIds" item="folderId" separator="," open="(" close=")">
+            #{folderId}
+        </foreach>
+    </update>
 </mapper>

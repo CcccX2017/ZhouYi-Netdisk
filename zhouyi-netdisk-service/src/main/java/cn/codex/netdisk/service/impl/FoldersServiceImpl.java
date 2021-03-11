@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -28,6 +29,7 @@ import java.util.Date;
  * @since 2021-01-28
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> implements IFoldersService {
     
     @Autowired
@@ -147,12 +149,18 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      * @return 移动文件夹结果
      */
     @Override
-    public ServerResponse move(Long folderId, Long parentId) {
-        if (folderId == null || parentId == null) {
+    public ServerResponse move(Long[] folderId, Long parentId) {
+        if (folderId == null || folderId.length == 0 || parentId == null) {
             throw new ErrorException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        
-        return foldersMapper.moveFolder(folderId, parentId) > 0
+
+        if (folderId.length == 1){
+            return foldersMapper.moveFolder(folderId[0], parentId) > 0
+                    ? ServerResponse.createBySuccessMessage(ReturnMessage.MOVE_FOLDER_SUCCESS)
+                    : ServerResponse.createByErrorMessage(ReturnMessage.MOVE_FOLDER_ERROR);
+        }
+
+        return foldersMapper.batchMoveFolder(folderId, parentId) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.MOVE_FOLDER_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.MOVE_FOLDER_ERROR);
     }
