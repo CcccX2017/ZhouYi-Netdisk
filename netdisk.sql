@@ -338,4 +338,46 @@ INSERT INTO `tb_user_groups`
 VALUES (1003, 'ROLE_PORTAL', '超级会员', 0, 5497558138880, 10737418240, '2021-01-20 19:33:33', '2021-01-20 19:33:33');
 COMMIT;
 
+-- ----------------------------
+-- Table structure for tb_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_menu`;
+CREATE TABLE `tb_menu`
+(
+    `menu_id`      bigint NOT NULL COMMENT '主键ID',
+    `menu_title`   varchar(32)                                            DEFAULT NULL COMMENT '菜单标题',
+    `icon_class`   varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '菜单图标',
+    `path`         varchar(20)                                            DEFAULT NULL COMMENT '菜单路径',
+    `parent_id`    bigint                                                 DEFAULT NULL COMMENT '父菜单ID',
+    `gmt_create`   datetime                                               DEFAULT NULL COMMENT '创建时间',
+    `gmt_modified` datetime                                               DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`menu_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='菜单表';
+
+-- ----------------------------
+-- Records of tb_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `tb_menu`
+VALUES (1001, '全部文件', 'el-icon-document-copy', '/', 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13');
+INSERT INTO `tb_menu`
+VALUES (1002, '图片', '', 'image', 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31');
+INSERT INTO `tb_menu`
+VALUES (1003, '文档', '', 'doc', 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25');
+INSERT INTO `tb_menu`
+VALUES (1004, '视频', '', 'video', 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46');
+INSERT INTO `tb_menu`
+VALUES (1005, '种子', '', 'seed', 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18');
+INSERT INTO `tb_menu`
+VALUES (1006, '音乐', '', 'music', 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39');
+INSERT INTO `tb_menu`
+VALUES (1007, '其它', '', 'other', 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15');
+INSERT INTO `tb_menu`
+VALUES (1008, '我的分享', 'iconfont icon-share', 'myShare', 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08');
+INSERT INTO `tb_menu`
+VALUES (1009, '回收站', 'el-icon-delete', 'recycle', 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;
