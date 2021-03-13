@@ -14,15 +14,15 @@ CREATE TABLE `tb_files`
     `extension`       varchar(10)              DEFAULT NULL COMMENT '文件扩展名',
     `short_url`       varchar(255)             DEFAULT NULL COMMENT '文件短地址',
     `size`            bigint                   DEFAULT NULL COMMENT '文件大小',
-    `folder_id`       int                      DEFAULT NULL COMMENT '所属文件夹id',
+    `dir`             text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '所属文件夹路径',
     `is_hidden`       tinyint(1)      NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
     `is_deleted`      tinyint(1)      NOT NULL DEFAULT '0' COMMENT '是否已删除（0-未删除，1-已删除）',
     `creator`         varchar(64)              DEFAULT NULL COMMENT '创建者',
     `gmt_create`      datetime                 DEFAULT NULL COMMENT '创建时间',
     `gmt_modified`    datetime                 DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`file_id`),
-    KEY `folder_id` (`folder_id`),
-    KEY `creator` (`creator`(20))
+    KEY `creator` (`creator`(20)),
+    KEY `dir` (`dir`(20)) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   ROW_FORMAT = COMPACT COMMENT ='文件表';
@@ -39,16 +39,17 @@ COMMIT;
 DROP TABLE IF EXISTS `tb_folders`;
 CREATE TABLE `tb_folders`
 (
-    `folder_id`    bigint     NOT NULL COMMENT '目录id',
-    `parent_id`    bigint     NOT NULL COMMENT '上级目录id',
-    `folder_name`  varchar(255)        DEFAULT NULL COMMENT '文件夹名',
-    `is_hidden`    tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
-    `is_deleted`   tinyint(1)          DEFAULT '0' COMMENT '是否删除（0-未删除，1-已删除）',
-    `creator`      varchar(64)         DEFAULT NULL COMMENT '创建者',
-    `gmt_create`   datetime            DEFAULT NULL COMMENT '创建时间',
-    `gmt_modified` datetime            DEFAULT NULL COMMENT '更新时间',
+    `folder_id`    bigint                                          NOT NULL COMMENT '目录id',
+    `folder_name`  varchar(255)                                             DEFAULT NULL COMMENT '文件夹名',
+    `dir`          text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件夹路径',
+    `is_hidden`    tinyint(1)                                      NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
+    `is_deleted`   tinyint(1)                                               DEFAULT '0' COMMENT '是否删除（0-未删除，1-已删除）',
+    `creator`      varchar(64)                                              DEFAULT NULL COMMENT '创建者',
+    `gmt_create`   datetime                                                 DEFAULT NULL COMMENT '创建时间',
+    `gmt_modified` datetime                                                 DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`folder_id`),
-    KEY `creator` (`creator`)
+    KEY `creator` (`creator`),
+    KEY `dir` (`dir`(20)) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   ROW_FORMAT = COMPACT COMMENT ='目录表';
