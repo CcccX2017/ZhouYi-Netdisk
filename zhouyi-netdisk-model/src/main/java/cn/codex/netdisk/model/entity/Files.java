@@ -50,8 +50,8 @@ public class Files implements Serializable {
     @ApiModelProperty(value = "文件大小")
     private Long size;
 
-    @ApiModelProperty(value = "所属文件夹id")
-    private Integer folderId;
+    @ApiModelProperty(value = "所属文件夹路径")
+    private String dir;
 
     @ApiModelProperty(value = "是否隐藏（0-未隐藏，1-隐藏）")
     @TableField("is_hidden")
@@ -86,7 +86,7 @@ public class Files implements Serializable {
 
     public static final String SIZE = "size";
 
-    public static final String FOLDER_ID = "folder_id";
+    public static final String DIR = "dir";
 
     public static final String IS_HIDDEN = "is_hidden";
 

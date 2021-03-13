@@ -3,10 +3,12 @@ package cn.codex.netdisk.portal.controller;
 
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.base.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,41 +33,39 @@ public class FoldersController {
     private IFoldersService foldersService;
     
     @ApiOperation("获取文件夹列表")
-    @GetMapping("/{parentId}")
-    public ServerResponse<List<Folders>> getFolders(@PathVariable Long parentId) {
-        List<Folders> folders;
-        if (parentId == 0L) {
-            folders =
-                    foldersService.list(new QueryWrapper<Folders>().eq(Folders.PARENT_ID, parentId).eq(Folders.CREATOR, SecurityUtil.getUsername()));
-        } else {
-            folders =
-                    foldersService.list(new QueryWrapper<Folders>().eq(Folders.PARENT_ID, parentId));
+    @GetMapping("/")
+    public ServerResponse<List<Folders>> getFolders(String dir) {
+        if (Strings.isNullOrEmpty(dir)) {
+            return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        return ServerResponse.createBySuccess(folders);
+        List<Folders> list =
+                foldersService.list(new QueryWrapper<Folders>().eq(Folders.DIR, dir.trim()).eq(Folders.CREATOR,
+                        SecurityUtil.getUsername()));
+        return ServerResponse.createBySuccess(list);
     }
     
     @ApiOperation("新建文件夹")
     @PostMapping("/")
     public ServerResponse addFolder(@RequestBody Folders folders) {
-        return foldersService.addFolder(folders.getFolderName().trim(), folders.getParentId());
+        return foldersService.addFolder(folders.getFolderName(), folders.getDir());
     }
     
     @ApiOperation("移动文件夹")
     @PostMapping("/move")
-    public ServerResponse move(@PathVariable Long[] folderId, Long parentId){
-        return foldersService.move(folderId, parentId);
+    public ServerResponse move(Long[] folderId, String dir) {
+        return foldersService.move(folderId, dir);
     }
     
     @ApiOperation("重命名文件夹")
-    @PutMapping("/{folderId}")
-    public ServerResponse rename(@PathVariable Long folderId, Long parentId, String newFolderName) {
-        return foldersService.rename(folderId, parentId, newFolderName);
+    @PutMapping("/rename/{folderId}")
+    public ServerResponse rename(@PathVariable Long folderId, String dir, String newFolderName) {
+        return foldersService.rename(folderId, dir, newFolderName);
     }
     
     @ApiOperation("重命名文件夹(文件夹名重复)")
-    @PutMapping("/rename/{folderId}")
-    public ServerResponse renameRepeat(@PathVariable Long folderId, Long parentId, String newFolderName) {
-        return foldersService.renameRepeat(folderId, parentId, newFolderName);
+    @PutMapping("/rename/repeat/{folderId}")
+    public ServerResponse renameRepeat(@PathVariable Long folderId, String dir, String newFolderName) {
+        return foldersService.renameRepeat(folderId, dir, newFolderName);
     }
     
     @ApiOperation("删除文件夹")
@@ -75,7 +75,5 @@ public class FoldersController {
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
     }
-    
-    
 }
 

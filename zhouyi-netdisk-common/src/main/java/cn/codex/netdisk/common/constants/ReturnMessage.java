@@ -58,4 +58,9 @@ public class ReturnMessage {
     
     public static final String MOVE_FOLDER_SUCCESS = "移动文件(夹)成功";
     public static final String MOVE_FOLDER_ERROR = "移动文件(夹)失败";
+    
+    public static final String CREATE_FOLDER_SUCCESS = "创建文件夹成功";
+    public static final String CREATE_FOLDER_ERROR = "创建文件夹失败";
+    
+    public static final String DIR_NOT_BE_EMPTY = "路径不能为空";
 }

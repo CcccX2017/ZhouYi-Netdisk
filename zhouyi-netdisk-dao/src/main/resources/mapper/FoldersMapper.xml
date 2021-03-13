@@ -4,7 +4,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Folders">
         <id column="folder_id" property="folderId"/>
-        <result column="parent_id" property="parentId"/>
+        <result column="dir" property="dir"/>
         <result column="folder_name" property="folderName"/>
         <result column="is_hidden" property="hidden"/>
         <result column="is_deleted" property="deleted"/>
@@ -16,7 +16,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         folder_id,
-        parent_id,
+        dir,
         folder_name,
         is_hidden,
         is_deleted,
@@ -30,7 +30,7 @@
                                      length(substring(folder_name, locate('(', folder_name), length(folder_name))) -
                                      2), signed)) + 1 as count
         FROM tb_folders
-        WHERE parent_id = #{parentId}
+        WHERE dir = #{dir}
           and creator = #{username}
           and folder_id <![CDATA[ <> ]]> #{folderId}
           and is_deleted = 0
@@ -39,13 +39,13 @@
 
     <update id="moveFolder">
         update tb_folders
-        set parent_id = #{parentId}
+        set dir = #{dir}
         where folder_id = #{folderId}
     </update>
 
     <update id="batchMoveFolder">
         update tb_folders
-        set parent_id = #{parentId}
+        set dir = #{dir}
         where folder_id in
         <foreach collection="folderIds" item="folderId" separator="," open="(" close=")">
             #{folderId}
