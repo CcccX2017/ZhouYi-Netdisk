@@ -32,11 +32,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      */
     @Override
     public List<Menu> getMenuList() {
-        List<Menu> menuList = menuMapper.getMenuList();
-        List<Menu> menus = Lists.newArrayList();
-        menuList.forEach(menu -> {
-        
-        });
-        return menuList;
+        return menuMapper.getMenuList();
     }
 }
