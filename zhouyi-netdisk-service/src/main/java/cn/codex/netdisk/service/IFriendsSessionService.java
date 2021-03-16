@@ -1,7 +1,10 @@
 package cn.codex.netdisk.service;
 
 import cn.codex.netdisk.model.entity.FriendsSession;
+import cn.codex.netdisk.model.vo.FriendsSessionVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IFriendsSessionService extends IService<FriendsSession> {
 
+    /**
+     * 获取好友会话列表
+     *
+     * @return 好友会话列表集合
+     */
+    List<FriendsSessionVo> sessionList();
 }

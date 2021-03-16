@@ -1,15 +1,16 @@
 package cn.codex.netdisk.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -51,6 +52,9 @@ public class FriendsSession implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
 
+    @ApiModelProperty(value = "好友信息")
+    @TableField(exist = false)
+    private User friendInfo;
 
     public static final String ID = "id";
 

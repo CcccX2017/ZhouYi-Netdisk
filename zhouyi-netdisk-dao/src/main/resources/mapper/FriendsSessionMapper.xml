@@ -13,9 +13,26 @@
         <result column="gmt_modified" property="gmtModified" />
     </resultMap>
 
+    <resultMap id="SessionListMap" type="cn.codex.netdisk.model.entity.FriendsSession" extends="BaseResultMap">
+        <association property="friendInfo" javaType="cn.codex.netdisk.model.entity.User">
+
+        </association>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, username, friend, is_visited_by_user, is_visited_by_friend, gmt_create, gmt_modified
     </sql>
 
+
+    <select id="selectSessionList" resultMap="SessionListMap" parameterType="String">
+        select
+        <include refid="Base_Column_List" />
+        from tb_friends_session
+        where
+        (username = #{username} and is_visited_by_user = 1)
+        or
+        (friend = #{username} and is_visited_by_friend = 1)
+        order by gmt_modified desc
+    </select>
 </mapper>

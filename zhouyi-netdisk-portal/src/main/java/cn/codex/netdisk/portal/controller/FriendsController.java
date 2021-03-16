@@ -8,9 +8,11 @@ import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.entity.FriendsApplication;
+import cn.codex.netdisk.model.vo.FriendsSessionVo;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import cn.codex.netdisk.service.IFriendsApplicationService;
 import cn.codex.netdisk.service.IFriendsService;
+import cn.codex.netdisk.service.IFriendsSessionService;
 import com.google.common.base.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +42,9 @@ public class FriendsController {
     
     @Autowired
     private IFriendsService friendsService;
+
+    @Autowired
+    private IFriendsSessionService friendsSessionService;
     
     @ApiOperation("搜索用户添加好友")
     @GetMapping("/search/{keyword}")
@@ -130,6 +135,14 @@ public class FriendsController {
         return friendsService.removeById(id)
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
+    }
+
+    @ApiOperation("好友会话列表")
+    @GetMapping("/sessionList")
+    public ServerResponse sessionList(){
+        List<FriendsSessionVo> list = friendsSessionService.sessionList();
+
+        return ServerResponse.createBySuccess(list);
     }
 }
 
