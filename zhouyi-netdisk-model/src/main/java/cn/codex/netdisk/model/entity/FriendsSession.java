@@ -36,6 +36,9 @@ public class FriendsSession implements Serializable {
     @ApiModelProperty(value = "好友用户名")
     private String friend;
 
+    @ApiModelProperty(value = "显示标题")
+    private String title;
+
     @ApiModelProperty(value = "是否显示(0-不显示，1-显示，默认1,对应username)")
     @TableField("is_visited_by_user")
     private Boolean visitedByUser;
@@ -67,6 +70,8 @@ public class FriendsSession implements Serializable {
     public static final String USERNAME = "username";
 
     public static final String FRIEND = "friend";
+
+    public static final String TITLE = "title";
 
     public static final String IS_VISITED_BY_USER = "is_visited_by_user";
 

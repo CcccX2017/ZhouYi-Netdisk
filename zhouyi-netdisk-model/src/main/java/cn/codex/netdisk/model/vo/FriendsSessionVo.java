@@ -35,10 +35,10 @@ public class FriendsSessionVo implements Serializable {
     private String showName;
 
     @ApiModelProperty(value = "标题")
-    private String newTitle;
+    private String title;
 
-    @ApiModelProperty(value = "最新共享时间")
-    private String newSharingTime;
+    @ApiModelProperty(value = "显示时间")
+    private String time;
 
     @ApiModelProperty(value = "条数")
     private Integer count;

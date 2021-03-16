@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.FriendsShareMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.FriendsShare">
-        <id column="id" property="id" />
-        <result column="file_id_group" property="fileIdGroup" />
-        <result column="share_title" property="shareTitle" />
-        <result column="distributors" property="distributors" />
-        <result column="receiver" property="receiver" />
-        <result column="is_viewed" property="viewed" />
-        <result column="gmt_create" property="gmtCreate" />
-        <result column="gmt_modified" property="gmtModified" />
+        <id column="id" property="id"/>
+        <result column="file_id_group" property="fileIdGroup"/>
+        <result column="share_title" property="shareTitle"/>
+        <result column="distributors" property="distributors"/>
+        <result column="receiver" property="receiver"/>
+        <result column="is_viewed" property="viewed"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, file_id_group, share_title, distributors, receiver, is_viewed, gmt_create, gmt_modified
+        id,
+        file_id_group,
+        share_title,
+        distributors,
+        receiver,
+        is_viewed,
+        gmt_create,
+        gmt_modified
     </sql>
 
+    <select id="selectUnreadCount" resultType="int">
+        select count(*)
+        from tb_friends_share
+        where distributors = #{username}
+          and receiver = #{friend}
+          and is_viewed = 0
+    </select>
 </mapper>

@@ -6,6 +6,7 @@
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="friend" property="friend"/>
+        <result column="title" property="title"/>
         <result column="is_visited_by_user" property="visitedByUser"/>
         <result column="is_visited_by_friend" property="visitedByFriend"/>
         <result column="gmt_create" property="gmtCreate"/>
@@ -17,6 +18,7 @@
         id,
         username,
         friend,
+        title,
         is_visited_by_user,
         is_visited_by_friend,
         gmt_create,
@@ -25,11 +27,12 @@
 
     <resultMap id="SessionListMap" type="cn.codex.netdisk.model.entity.FriendsSession" extends="BaseResultMap">
         <association property="userInfo" javaType="cn.codex.netdisk.model.entity.User">
-            <id column="user_id" property="userId" />
+            <id column="user_id" property="userId"/>
             <result column="nickname" property="nickname"/>
             <result column="avatar" property="avatar"/>
         </association>
         <association property="friends" javaType="cn.codex.netdisk.model.entity.Friends">
+            <result column="fUsername" property="username" />
             <result column="friend_to_user_remark" property="friendToUserRemark"/>
             <result column="user_to_friend_remark" property="userToFriendRemark"/>
         </association>
@@ -38,13 +41,15 @@
         select fs.id,
                fs.username,
                fs.friend,
-               fs.new_title,
-               fs.new_sharing_time,
-               fs.visited_user,
-               fs.visited_friend,
+               fs.title,
+               fs.is_visited_by_user,
+               fs.is_visited_by_friend,
+               fs.gmt_create,
+               fs.gmt_modified,
                u.user_id,
                u.nickname,
                u.avatar,
+               f.username fUsername,
                f.friend_to_user_remark,
                f.user_to_friend_remark
         from tb_friends_session fs,
@@ -52,8 +57,8 @@
              tb_friends f
         where ((fs.username = #{username} and fs.is_visited_by_user = 1 and fs.friend = u.username)
                 or (fs.friend = #{username} and fs.is_visited_by_friend = 1 and fs.username = u.username))
-          and ((fs.username = f.username and fs.friend = f.friendname) or
-               (fs.username = f.friendname and fs.friend = f.username))
+          and ((fs.username = f.username and fs.friend = f.friend) or
+               (fs.username = f.friend and fs.friend = f.username))
         order by fs.gmt_modified desc
     </select>
 </mapper>
