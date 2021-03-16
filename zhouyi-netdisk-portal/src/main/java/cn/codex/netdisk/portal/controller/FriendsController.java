@@ -8,6 +8,7 @@ import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.entity.FriendsApplication;
+import cn.codex.netdisk.model.entity.FriendsSession;
 import cn.codex.netdisk.model.vo.FriendsSessionVo;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import cn.codex.netdisk.service.IFriendsApplicationService;
@@ -102,10 +103,19 @@ public class FriendsController {
         friends.setFriend(from);
         friends.setUserToFriendRemark("");
         friends.setFriendToUserRemark("");
-        
-        return friendsService.save(friends)
-                ? ServerResponse.createBySuccessMessage("添加好友成功")
-                : ServerResponse.createByErrorMessage("添加好友失败，请重试");
+
+        if (friendsService.save(friends)){
+            // 初始化好友会话表数据
+            FriendsSession friendsSession = new FriendsSession();
+            friendsSession.setUsername(username);
+            friendsSession.setFriend(from);
+            friendsSession.setVisitedByFriend(false);
+            friendsSession.setVisitedByUser(false);
+            friendsSessionService.save(friendsSession);
+            return ServerResponse.createBySuccessMessage("添加好友成功");
+        }
+
+        return ServerResponse.createByErrorMessage("添加好友失败，请重试");
     }
     
     @ApiOperation("拒绝好友申请")

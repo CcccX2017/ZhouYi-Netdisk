@@ -22,14 +22,17 @@ public class FriendsSessionVo implements Serializable {
     @ApiModelProperty(value = "主键ID")
     private Long id;
 
-    @ApiModelProperty(value = "用户名")
-    private String username;
+    @ApiModelProperty(value = "好友ID")
+    private Long friendId;
 
     @ApiModelProperty(value = "好友")
     private String friend;
 
-    @ApiModelProperty(value = "最新显示信息")
-    private String showInfo;
+    @ApiModelProperty(value = "好友头像")
+    private String avatar;
+
+    @ApiModelProperty(value = "好友显示名称")
+    private String showName;
 
     @ApiModelProperty(value = "标题")
     private String newTitle;

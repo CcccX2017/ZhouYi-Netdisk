@@ -1,6 +1,7 @@
 package cn.codex.netdisk.service.impl;
 
 import cn.codex.netdisk.common.utils.SecurityUtil;
+import cn.codex.netdisk.dao.FriendsMapper;
 import cn.codex.netdisk.dao.FriendsSessionMapper;
 import cn.codex.netdisk.model.entity.FriendsSession;
 import cn.codex.netdisk.model.vo.FriendsSessionVo;
@@ -25,6 +26,9 @@ public class FriendsSessionServiceImpl extends ServiceImpl<FriendsSessionMapper,
 
     @Autowired
     private FriendsSessionMapper friendsSessionMapper;
+
+    @Autowired
+    private FriendsMapper friendsMapper;
 
     /**
      * 获取好友会话列表
