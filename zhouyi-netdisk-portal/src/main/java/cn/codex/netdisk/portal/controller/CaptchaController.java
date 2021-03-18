@@ -2,9 +2,8 @@ package cn.codex.netdisk.portal.controller;
 
 import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.utils.LineCaptchaUtil;
 import cn.codex.netdisk.common.utils.RedisUtil;
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -37,9 +36,9 @@ public class CaptchaController {
             @RequestParam(defaultValue = "40") Integer height) {
         
         Map<String, Object> map = Maps.newHashMap();
-        
-        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(width, height, Const.CAPTCHA_LENGTH, Const.LINE_COUNT);
-        
+
+        LineCaptchaUtil lineCaptcha = new LineCaptchaUtil(width, height, Const.CAPTCHA_LENGTH, Const.LINE_COUNT);
+
         String uuid = IdUtil.simpleUUID();
         
         redisUtil.setObject(Const.CAPTCHA_KEY + uuid, lineCaptcha.getCode(), Const.CAPTCHA_EXPIRATION,
