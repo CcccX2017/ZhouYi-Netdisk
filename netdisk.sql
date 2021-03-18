@@ -121,6 +121,7 @@ CREATE TABLE `tb_friends_session`
     `title`                varchar(255) DEFAULT NULL COMMENT '显示标题',
     `is_visited_by_user`   tinyint(1)   DEFAULT '1' COMMENT '是否显示(0-不显示，1-显示，默认1,对应username)',
     `is_visited_by_friend` tinyint(1)   DEFAULT '1' COMMENT '是否显示(0-不显示，1-显示，默认1，对应friend)',
+    `share_time`           datetime     DEFAULT NULL COMMENT '分享时间',
     `gmt_create`           datetime     DEFAULT NULL COMMENT '创建时间',
     `gmt_modified`         datetime     DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
