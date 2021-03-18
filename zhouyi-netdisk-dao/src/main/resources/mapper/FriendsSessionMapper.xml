@@ -9,6 +9,7 @@
         <result column="title" property="title"/>
         <result column="is_visited_by_user" property="visitedByUser"/>
         <result column="is_visited_by_friend" property="visitedByFriend"/>
+        <result column="share_time" property="shareTime"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
@@ -21,6 +22,7 @@
         title,
         is_visited_by_user,
         is_visited_by_friend,
+        share_time,
         gmt_create,
         gmt_modified
     </sql>
@@ -32,7 +34,7 @@
             <result column="avatar" property="avatar"/>
         </association>
         <association property="friends" javaType="cn.codex.netdisk.model.entity.Friends">
-            <result column="fUsername" property="username" />
+            <result column="fUsername" property="username"/>
             <result column="friend_to_user_remark" property="friendToUserRemark"/>
             <result column="user_to_friend_remark" property="userToFriendRemark"/>
         </association>
@@ -44,6 +46,7 @@
                fs.title,
                fs.is_visited_by_user,
                fs.is_visited_by_friend,
+               fs.share_time,
                fs.gmt_create,
                fs.gmt_modified,
                u.user_id,

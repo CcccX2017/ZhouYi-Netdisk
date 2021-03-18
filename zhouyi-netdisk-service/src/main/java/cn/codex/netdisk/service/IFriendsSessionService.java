@@ -22,4 +22,12 @@ public interface IFriendsSessionService extends IService<FriendsSession> {
      * @return 好友会话列表集合
      */
     List<FriendsSessionVo> sessionList();
+
+    /**
+     * 删除好友会话列表
+     *
+     * @param id 会话id
+     * @return 影响行数
+     */
+    int delSessionList(Long id);
 }

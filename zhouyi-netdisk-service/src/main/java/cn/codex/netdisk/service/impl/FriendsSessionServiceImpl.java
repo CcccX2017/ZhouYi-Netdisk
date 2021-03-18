@@ -50,8 +50,28 @@ public class FriendsSessionServiceImpl extends ServiceImpl<FriendsSessionMapper,
         });
         return list;
     }
-    
-    
+
+    /**
+     * 删除好友会话列表
+     *
+     * @param id 会话id
+     * @return 影响行数
+     */
+    @Override
+    public int delSessionList(Long id) {
+        FriendsSession friendsSession = friendsSessionMapper.selectById(id);
+        FriendsSession updateEntity = new FriendsSession();
+        updateEntity.setId(id);
+        if (SecurityUtil.getUsername().equals(friendsSession.getUsername())){
+            updateEntity.setVisitedByUser(false);
+        }else{
+            updateEntity.setVisitedByFriend(false);
+        }
+
+        return friendsSessionMapper.updateById(updateEntity);
+    }
+
+
     /**
      * 组装 FriendsSessionVo
      */
@@ -65,7 +85,7 @@ public class FriendsSessionServiceImpl extends ServiceImpl<FriendsSessionMapper,
         friendsSessionVo.setAvatar(friendsSession.getUserInfo().getAvatar());
         friendsSessionVo.setShowName(setShowName(friendsSession, username));
         friendsSessionVo.setTitle(friendsSession.getTitle());
-        friendsSessionVo.setTime(setTime(friendsSession.getGmtModified()));
+        friendsSessionVo.setTime(setTime(friendsSession.getShareTime()));
         friendsSessionVo.setCount(setCount(friendsSession, username));
         
         return friendsSessionVo;
@@ -99,24 +119,24 @@ public class FriendsSessionServiceImpl extends ServiceImpl<FriendsSessionMapper,
     /**
      * 设置时间
      */
-    private String setTime(Date modified) {
+    private String setTime(Date shareTime) {
         String time;
         // 分享时间与当前时间超过一年
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(modified);
+        calendar.setTime(shareTime);
         if (Math.abs(year - calendar.get(Calendar.YEAR)) > 0) {
-            time = DateUtil.format(modified, "yy-MM-dd HH:mm");
+            time = DateUtil.format(shareTime, "yy-MM-dd HH:mm");
         } else if (DateUtil.between(
                 DateUtil.parse(DateUtil.now(), "yyyy-MM-dd"),
-                DateUtil.parse(calendar.getTime().toString(), "yyyy-MM-dd"),
+                DateUtil.parse(DateUtil.formatDate(calendar.getTime()), "yyyy-MM-dd"),
                 DateUnit.DAY) > 0) {
             // 分享时间与当前时间超过一天
-            time = DateUtil.format(modified, "MM-dd HH:mm");
+            time = DateUtil.format(shareTime, "MM-dd HH:mm");
         } else {
             // 当天
-            time = DateUtil.format(modified, "HH:mm");
+            time = DateUtil.format(shareTime, "HH:mm");
         }
         
         return time;

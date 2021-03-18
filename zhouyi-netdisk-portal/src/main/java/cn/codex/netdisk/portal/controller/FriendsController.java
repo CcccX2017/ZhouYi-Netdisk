@@ -144,5 +144,13 @@ public class FriendsController {
 
         return ServerResponse.createBySuccess(list);
     }
+
+    @ApiOperation("删除好友会话列表")
+    @DeleteMapping("/sessionList/{id}")
+    public ServerResponse delSessionList(@PathVariable Long id) {
+        return friendsSessionService.delSessionList(id) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
+    }
 }
 

@@ -47,6 +47,9 @@ public class FriendsSession implements Serializable {
     @TableField("is_visited_by_friend")
     private Boolean visitedByFriend;
 
+    @ApiModelProperty(value = "分享时间")
+    private Date shareTime;
+
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT)
