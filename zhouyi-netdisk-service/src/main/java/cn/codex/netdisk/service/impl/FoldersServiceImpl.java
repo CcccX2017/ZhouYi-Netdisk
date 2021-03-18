@@ -164,7 +164,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
     
     private ServerResponse checkData(String dir, String newFolderName) {
         if (Strings.isNullOrEmpty(newFolderName.trim())) {
-            return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMMPTY);
+            return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMPTY);
         }
         
         if (dir == null) {

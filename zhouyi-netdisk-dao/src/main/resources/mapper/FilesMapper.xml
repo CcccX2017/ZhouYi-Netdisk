@@ -1,29 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.FilesMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.codex.netdisk.model.entity.Files">
-        <id column="file_id" property="fileId" />
-        <result column="real_name" property="realName" />
-        <result column="encryption_name" property="encryptionName" />
-        <result column="storage_path" property="storagePath" />
-        <result column="extension" property="extension" />
-        <result column="short_url" property="shortUrl" />
-        <result column="size" property="size" />
-        <result column="file_type" property="fileType" />
-        <result column="dir" property="dir" />
-        <result column="is_hidden" property="hidden" />
-        <result column="is_deleted" property="deleted" />
-        <result column="creator" property="creator" />
-        <result column="gmt_create" property="gmtCreate" />
-        <result column="gmt_modified" property="gmtModified" />
+        <id column="file_id" property="fileId"/>
+        <result column="real_name" property="realName"/>
+        <result column="encryption_name" property="encryptionName"/>
+        <result column="storage_path" property="storagePath"/>
+        <result column="extension" property="extension"/>
+        <result column="short_url" property="shortUrl"/>
+        <result column="size" property="size"/>
+        <result column="file_type" property="fileType"/>
+        <result column="dir" property="dir"/>
+        <result column="is_hidden" property="hidden"/>
+        <result column="is_deleted" property="deleted"/>
+        <result column="creator" property="creator"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        file_id, real_name, encryption_name, storage_path, extension, short_url, size, file_type, dir, is_hidden,
-        is_deleted, creator, gmt_create, gmt_modified
+        file_id,
+        real_name,
+        encryption_name,
+        storage_path,
+        extension,
+        short_url,
+        size,
+        file_type,
+        dir,
+        is_hidden,
+        is_deleted,
+        creator,
+        gmt_create,
+        gmt_modified
     </sql>
 
+    <delete id="physicalDelete">
+        delete
+        from tb_files
+        where dir = #{dir}
+          and real_name = #{realName}
+          and creator = #{username}
+    </delete>
+
+    <select id="selectRepeatNameCount" resultType="java.lang.Integer">
+        select max(convert(substring(substring(real_name, locate('(', real_name), length(real_name)), 2,
+                                     length(substring(real_name, locate('(', real_name), length(real_name))) -
+                                     2), signed)) as count
+        FROM tb_files
+        WHERE dir = #{path}
+          and creator = #{username}
+          and is_deleted = 0
+          and (real_name = #{realName} or real_name like concat(#{realName}, '(%)'))
+    </select>
 </mapper>
