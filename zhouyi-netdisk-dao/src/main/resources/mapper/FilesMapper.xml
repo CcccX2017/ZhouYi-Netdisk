@@ -11,7 +11,8 @@
         <result column="extension" property="extension" />
         <result column="short_url" property="shortUrl" />
         <result column="size" property="size" />
-        <result column="folder_id" property="folderId" />
+        <result column="file_type" property="fileType" />
+        <result column="dir" property="dir" />
         <result column="is_hidden" property="hidden" />
         <result column="is_deleted" property="deleted" />
         <result column="creator" property="creator" />
@@ -21,7 +22,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        file_id, real_name, encryption_name, storage_path, extension, short_url, size, folder_id, is_hidden, is_deleted, creator, gmt_create, gmt_modified
+        file_id, real_name, encryption_name, storage_path, extension, short_url, size, file_type, dir, is_hidden,
+        is_deleted, creator, gmt_create, gmt_modified
     </sql>
 
 </mapper>
