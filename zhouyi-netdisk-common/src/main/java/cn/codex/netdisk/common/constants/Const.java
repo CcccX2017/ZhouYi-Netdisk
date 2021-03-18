@@ -7,7 +7,6 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
-
     /**
      * 保存两者
      */
@@ -51,6 +50,16 @@ public class Const {
      * 验证码有效期（分钟）
      */
     public static final Integer CAPTCHA_EXPIRATION = 2;
+
+    /**
+     * 验证码长度
+     */
+    public static final int CAPTCHA_LENGTH = 4;
+
+    /**
+     * 干扰线条数
+     */
+    public static final int LINE_COUNT = 150;
     
     /**
      * 找回密码验证码key
