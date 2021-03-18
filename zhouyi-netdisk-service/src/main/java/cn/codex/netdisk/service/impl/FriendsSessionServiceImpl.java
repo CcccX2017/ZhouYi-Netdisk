@@ -127,7 +127,7 @@ public class FriendsSessionServiceImpl extends ServiceImpl<FriendsSessionMapper,
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(shareTime);
         if (Math.abs(year - calendar.get(Calendar.YEAR)) > 0) {
-            time = DateUtil.format(shareTime, "yy-MM-dd HH:mm");
+            time = DateUtil.format(shareTime, "yyyy-MM-dd");
         } else if (DateUtil.between(
                 DateUtil.parse(DateUtil.now(), "yyyy-MM-dd"),
                 DateUtil.parse(DateUtil.formatDate(calendar.getTime()), "yyyy-MM-dd"),
