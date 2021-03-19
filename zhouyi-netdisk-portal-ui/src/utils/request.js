@@ -1,9 +1,10 @@
 import axios from 'axios'
-import { from } from 'core-js/core/array'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from "./token"
-import { errorCode } from './errorCode'
+import errorCode from './errorCode'
+
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 // 实例化axios
 const service = axios.create({
@@ -33,7 +34,7 @@ service.interceptors.response.use(response => {
     const code = response.data.status || 200;
 
     // 获取错误信息
-    const msg = errorCode[code] || res.data.msg || errorCode['default']
+    const msg = errorCode[code] || response.data.msg || errorCode['default']
     if (code === 401) {
         MessageBox.confirm('用户登录已过期，您可以继续留在当前页面或者重新登录', '系统提示', {
             confirmButtonText: '重新登录',
@@ -44,7 +45,7 @@ service.interceptors.response.use(response => {
                 location.href = '/'
             })
         })
-    } else if (code === 500 || code === 401 || code === 403) {
+    } else if (code === 500 || code === 403) {
         if (response.data.data) {
             return response.data;
         }
@@ -62,60 +63,26 @@ service.interceptors.response.use(response => {
         })
         return Promise.reject(new Error(msg))
     } else {
-        Message.success({ message: response.data.msg })
+        if(response.data.msg){
+            Message.success({ message: response.data.msg })
+        }
         return response.data
     }
 
 }, error => {
     console.log('error ==> ' + error)
-    let { msg } = error;
-    if (msg == "Network Error") {
-        msg = "后端接口连接异常";
-    } else if (msg.includes("timeout")) {
-        msg = "系统接口请求超时";
-    } else if (msg.includes("Request failed with status code")) {
-        msg = "系统接口" + msg.substr(msg.length - 3) + "异常";
+    let { message } = error
+    if (message == "Network Error") {
+        message = "后端接口连接异常";
+    } else if (message.includes("timeout")) {
+        message = "系统接口请求超时";
+    } else if (message.includes("Request failed with status code")) {
+        message = "系统接口" + message.substr(message.length - 3) + "异常";
     }
 
-    Message.error({ message: msg, duration: 5 * 1000 })
+    Message.error({ message: message, duration: 5 * 1000 })
 
     return Promise.reject(error)
 })
 
-let baseUrl = ''
-
-// post请求
-export const postRequest = (url, params) => {
-    return service({
-        method: 'POST',
-        url: `${baseUrl}${url}`,
-        data: params
-    })
-}
-
-// put请求
-export const putRequest = (url, params) => {
-    return service({
-        method: 'PUT',
-        url: `${baseUrl}${url}`,
-        data: params
-    })
-}
-
-// delete请求
-export const deleteRequest = (url, params) => {
-    return service({
-        method: 'DELETE',
-        url: `${baseUrl}${url}`,
-        data: params
-    })
-}
-
-// get请求
-export const getRequest = (url, params) => {
-    return service({
-        method: 'GET',
-        url: `${baseUrl}${url}`,
-        data: params
-    })
-}
+export default service

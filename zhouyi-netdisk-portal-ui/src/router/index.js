@@ -6,12 +6,18 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'Index',
+    component: () => import("@/views/index")
+  },
+  {
+    path: '/login',
     name: 'Login',
     component: () => import("@/views/Login")
   }
 ]
 
 const router = new VueRouter({
+  mode: 'hash',
   routes
 })
 
