@@ -12,10 +12,16 @@ export const constantRoutes = [
     },
     {
         path: '/login',
-        name: 'Login',
+        name: '登录',
         component: () => import("@/views/Login"),
         hidden: true
-    }
+    },
+	{
+	    path: '/register',
+	    name: '注册',
+	    component: () => import("@/views/Register"),
+	    hidden: true
+	}
 ]
 
 const router = new VueRouter({
