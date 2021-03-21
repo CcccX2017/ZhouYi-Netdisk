@@ -7,6 +7,7 @@
         <result column="menu_title" property="menuTitle"/>
         <result column="icon_class" property="iconClass"/>
         <result column="path" property="path"/>
+        <result column="component" property="component"/>
         <result column="level" property="level"/>
         <result column="parent_id" property="parentId"/>
         <result column="gmt_create" property="gmtCreate"/>
@@ -19,6 +20,7 @@
         menu_title,
         icon_class,
         path,
+        component,
         level,
         parent_id,
         gmt_create,
@@ -31,6 +33,7 @@
             <result column="menu_title2" property="menuTitle"/>
             <result column="icon_class2" property="iconClass"/>
             <result column="path2" property="path"/>
+            <result column="component2" property="component"/>
             <result column="level2" property="level"/>
             <result column="parent_id2" property="parentId"/>
             <result column="gmt_create2" property="gmtCreate"/>
@@ -43,12 +46,13 @@
                m2.menu_title   menu_title2,
                m2.icon_class   icon_class2,
                m2.path         path2,
+               m2.component    component2,
                m2.level        level2,
                m2.parent_id    parent_id2,
                m2.gmt_create   gmt_create2,
                m2.gmt_modified gmt_modified2
         from tb_menu m1
-        left join tb_menu m2 on m1.menu_id = m2.parent_id
+                     left join tb_menu m2 on m1.menu_id = m2.parent_id
         where m1.level = 1
         order by m1.menu_id, m2.menu_id
     </select>

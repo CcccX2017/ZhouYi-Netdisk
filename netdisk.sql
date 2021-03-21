@@ -179,30 +179,40 @@ DROP TABLE IF EXISTS `tb_menu`;
 
 CREATE TABLE `tb_menu`
 (
-    `menu_id`      bigint(20) NOT NULL COMMENT '主键ID',
+    `menu_id`      bigint NOT NULL COMMENT '主键ID',
     `menu_title`   varchar(32)                                            DEFAULT NULL COMMENT '菜单标题',
     `icon_class`   varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '菜单图标',
     `path`         varchar(20)                                            DEFAULT NULL COMMENT '菜单路径',
-    `level`        int(11)                                                DEFAULT NULL COMMENT '菜单层级',
-    `parent_id`    bigint(20)                                             DEFAULT NULL COMMENT '父菜单ID',
+    `component`    varchar(30)                                            DEFAULT NULL COMMENT '组件名称',
+    `level`        int                                                    DEFAULT NULL COMMENT '菜单层级',
+    `parent_id`    bigint                                                 DEFAULT NULL COMMENT '父菜单ID',
     `gmt_create`   datetime                                               DEFAULT NULL COMMENT '创建时间',
     `gmt_modified` datetime                                               DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`menu_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='菜单表';
 
+
 /*Data for the table `tb_menu` */
 
-insert into `tb_menu`(`menu_id`, `menu_title`, `icon_class`, `path`, `level`, `parent_id`, `gmt_create`, `gmt_modified`)
-values (1001, '全部文件', 'el-icon-document-copy', '/', 1, 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13'),
-       (1002, '图片', '', 'image', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31'),
-       (1003, '文档', '', 'doc', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25'),
-       (1004, '视频', '', 'video', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46'),
-       (1005, '种子', '', 'seed', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18'),
-       (1006, '音乐', '', 'music', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39'),
-       (1007, '其它', '', 'other', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15'),
-       (1008, '我的分享', 'iconfont icon-share', 'myShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08'),
-       (1009, '回收站', 'el-icon-delete', 'recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
+INSERT INTO `tb_menu`
+VALUES (1001, '全部文件', 'el-icon-document-copy', '/', 'AllFile', 1, 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13');
+INSERT INTO `tb_menu`
+VALUES (1002, '图片', '', '/image', 'Image', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31');
+INSERT INTO `tb_menu`
+VALUES (1003, '文档', '', '/doc', 'Document', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25');
+INSERT INTO `tb_menu`
+VALUES (1004, '视频', '', '/video', 'Video', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46');
+INSERT INTO `tb_menu`
+VALUES (1005, '种子', '', '/seed', 'Seed', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18');
+INSERT INTO `tb_menu`
+VALUES (1006, '音乐', '', '/music', 'Music', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39');
+INSERT INTO `tb_menu`
+VALUES (1007, '其它', '', '/other', 'Other', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15');
+INSERT INTO `tb_menu`
+VALUES (1008, '我的分享', 'iconfont icon-share', '/myShare', 'MyShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08');
+INSERT INTO `tb_menu`
+VALUES (1009, '回收站', 'el-icon-delete', '/recycle', 'Recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
 
 /*Table structure for table `tb_order` */
 

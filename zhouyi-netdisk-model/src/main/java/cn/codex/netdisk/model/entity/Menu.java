@@ -41,6 +41,9 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "菜单路径")
     private String path;
     
+    @ApiModelProperty(value = "组件名称")
+    private String component;
+    
     @ApiModelProperty(value = "菜单层级")
     private Integer level;
     
@@ -68,6 +71,8 @@ public class Menu implements Serializable {
     public static final String ICON_CLASS = "icon_class";
     
     public static final String PATH = "path";
+    
+    public static final String COMPONENT = "component";
     
     public static final String PARENT_ID = "parent_id";
     
