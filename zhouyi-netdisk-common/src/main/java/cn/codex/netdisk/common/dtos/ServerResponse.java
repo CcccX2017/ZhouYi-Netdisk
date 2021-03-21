@@ -17,6 +17,8 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "ServerResponse", description = "服务器响应类")
 public class ServerResponse<T> implements Serializable {
+    private static final long serialVersionUID = 1433136055242956983L;
+    
     @ApiModelProperty(value = "响应码")
     private final int status;
     @ApiModelProperty(value = "响应消息", position = 1)

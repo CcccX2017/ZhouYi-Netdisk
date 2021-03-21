@@ -44,7 +44,7 @@ public class Const {
     /**
      * 验证码key
      */
-    public static final String CAPTCHA_KEY = "captcha_key_";
+    public static final String CAPTCHA_KEY = "captcha_key:";
     
     /**
      * 验证码有效期（分钟）
@@ -64,7 +64,7 @@ public class Const {
     /**
      * 找回密码验证码key
      */
-    public static final String FORGOT_KEY = "forgot_password_key_";
+    public static final String FORGOT_KEY = "forgot_password_key:";
     
     /**
      * 找回密码验证码有效期（分钟）
@@ -74,17 +74,17 @@ public class Const {
     /**
      * 修改密码验证码key
      */
-    public static final String UPDATE_KEY = "update_key_";
+    public static final String UPDATE_KEY = "update_key:";
     
     /**
      * 用户信息key
      */
-    public static final String LOGIN_USER_KEY = "login_user_key";
+    public static final String LOGIN_USER_KEY = "login_user_key:";
     
     /**
      * 登录用户token key
      */
-    public static final String LOGIN_TOKEN_KEY = "login_token_";
+    public static final String LOGIN_TOKEN_KEY = "login_token:";
     
     /**
      * 密码最小长度
