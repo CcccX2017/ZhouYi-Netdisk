@@ -3,22 +3,25 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Index',
-    component: () => import("@/views/index")
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import("@/views/Login")
-  }
+export const constantRoutes = [
+    {
+        path: '/',
+        name: 'Index',
+        component: () => import("@/views/index"),
+        hidden: true
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import("@/views/Login"),
+        hidden: true
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'hash',
-  routes
+    mode: 'history',
+    scrollBehavior: () => ({y: 0}),
+    routes: constantRoutes
 })
 
 export default router

@@ -93,7 +93,7 @@
                      Cookies.remove("rememberMe")
                   }
                   this.$store.dispatch("Login", this.loginForm).then(() => {
-                     this.$router.replace({ path: this.redirect || "/home" }).catch(()=>{});
+                     this.$router.replace({ path: this.redirect || "/" }).catch(()=>{});
                   }).catch(() => {
                      this.loading = false
                      this.getCaptcha()
