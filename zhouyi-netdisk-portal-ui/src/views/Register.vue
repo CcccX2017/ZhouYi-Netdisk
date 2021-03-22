@@ -24,7 +24,7 @@
 			</el-form-item>
 			<el-form-item prop="code" label="验证码">
 				<el-input prefix-icon="iconfont icon-yanzhengma" placeholder="请输入验证码" v-model.trim="registerForm.code" class="register-code-input" @keyup.enter.native="register"></el-input>
-				<countDown delay='60' tagName='register' :to='registerForm.email' @setUuid='setUuid'></countDown>
+				<countDown delay='60' tagName='register' :to='registerForm.email' @setUuid='setUuid' @checkEmail='checkEmail'></countDown>
 			</el-form-item>
 			<el-button type="primary" style="width:100%" :loading="loading" @click.native.prevent="register">
 				<span v-if="!loading">注册</span>

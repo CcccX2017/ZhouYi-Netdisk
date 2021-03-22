@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/portal/forgot",
                 "/portal/sendCode",
                 "/portal/captcha",
+                "/portal/validate",
                 "/**/**.css",
                 "/**/**.js",
                 "/**/**.html",

@@ -22,12 +22,9 @@ public class ForgotDto implements Serializable {
     @ApiModelProperty(value = "邮箱", position = 1)
     private String email;
     
-    @ApiModelProperty(value = "验证码", position = 2)
-    private String code;
-    
-    @ApiModelProperty(value = "新密码", position = 3)
+    @ApiModelProperty(value = "新密码", position = 2)
     private String password;
     
-    @ApiModelProperty(value = "验证码唯一标识", position = 4)
+    @ApiModelProperty(value = "验证码唯一标识", position = 3)
     private String uuid;
 }

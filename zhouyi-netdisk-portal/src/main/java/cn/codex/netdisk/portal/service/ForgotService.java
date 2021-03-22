@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 找回密码服务类
  *
@@ -55,17 +57,20 @@ public class ForgotService {
             return ServerResponse.createByErrorMessage(ReturnMessage.EMAIL_ERROR);
         }
 
-        return captchaMail.sendCaptchaMail(email, "找回密码", Const.FORGOT_KEY);
+        return captchaMail.sendCaptchaMail(email, "找回密码", Const.FORGOT_KEY + email);
     }
     
     /**
      * 重置密码验证验证码
+     *
+     * @param email 邮箱
      * @param code 验证码
      * @param uuid 验证码唯一标识
      * @return 验证结果
      */
-    public ServerResponse<String> validateCode(String code, String uuid){
-        String captcha = redisUtil.getObject(Const.FORGOT_KEY + uuid);
+    public ServerResponse<String> validateCode(String email, String code, String uuid){
+        String key = Const.FORGOT_KEY + email + uuid;
+        String captcha = redisUtil.getObject(key);
         if (Strings.isNullOrEmpty(captcha)){
             throw new CaptchaException(ReturnMessage.CAPTCHA_EXPIRE);
         }
@@ -75,9 +80,9 @@ public class ForgotService {
         }
         
         // 验证成功，删除redis缓存并生成验证成功标识
-        redisUtil.deleteObject(Const.FORGOT_KEY + uuid);
+        redisUtil.deleteObject(key);
         String newKey = Md5Util.md5EncodeUtf8(uuid);
-        redisUtil.setObject(Const.FORGOT_KEY + newKey, "ok");
+        redisUtil.setObject(Const.FORGOT_KEY + newKey, "ok", Const.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     
         return ServerResponse.createBySuccess(newKey);
     }

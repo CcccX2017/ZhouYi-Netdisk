@@ -10,6 +10,14 @@ export const postRequest = (url, params) => {
         data: params
     })
 }
+// post 请求 非json格式数据
+export const postParamsRequest = (url, params) => {
+    return request({
+        method: 'POST',
+        url: `${base}${url}`,
+        params: params
+    })
+}
 
 // put请求
 export const putRequest = (url, params) => {

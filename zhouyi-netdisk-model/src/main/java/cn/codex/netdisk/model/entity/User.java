@@ -65,7 +65,7 @@ public class User implements Serializable {
     private String sex;
 
     @ApiModelProperty(value = "生日")
-    @JsonFormat(pattern = "yyyy-MM-dd", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     @ApiModelProperty(value = "已用存储空间")
@@ -76,24 +76,24 @@ public class User implements Serializable {
     private Boolean dataPerfect;
 
     @ApiModelProperty(value = "会员过期时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date expirationTime;
 
     @ApiModelProperty(value = "最后登录ip")
     private String loginIp;
 
     @ApiModelProperty(value = "最后登录时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date loginDate;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtCreate;
 
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "Asia/Shanghai", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtModified;
 
     @ApiModelProperty(value = "用户组")

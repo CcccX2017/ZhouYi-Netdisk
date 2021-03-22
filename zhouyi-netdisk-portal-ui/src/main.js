@@ -9,6 +9,7 @@ import './permission'
 import {
     postRequest,
     putRequest,
+	postParamsRequest,
     getRequest,
     deleteRequest
 } from "./api";
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 
 // 插件形式使用axios请求
 Vue.prototype.postRequest = postRequest
+Vue.prototype.postParamsRequest = postParamsRequest
 Vue.prototype.putRequest = putRequest
 Vue.prototype.deleteRequest = deleteRequest
 Vue.prototype.getRequest = getRequest

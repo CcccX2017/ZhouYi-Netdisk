@@ -33,8 +33,10 @@ public class ForgotController {
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "验证验证码")
     @PostMapping("/validate")
-    public ServerResponse<String> validate(@RequestBody String code, @RequestBody String uuid) {
-        return forgotService.validateCode(code, uuid);
+    public ServerResponse<String> validate(@RequestParam("email") String email,
+                                           @RequestParam("code") String code,
+                                           @RequestParam("uuid") String uuid) {
+        return forgotService.validateCode(email, code, uuid);
     }
     
     @ApiOperationSupport(order = 3)
