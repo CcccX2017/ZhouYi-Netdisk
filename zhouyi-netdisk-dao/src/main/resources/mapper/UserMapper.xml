@@ -101,4 +101,8 @@
         from tb_user
         where (username = #{keyword} or email = #{keyword})
     </select>
+
+    <update id="updatePasswordByEmail">
+        update tb_user set password = #{password}, gmt_modified = now() where email = #{email}
+    </update>
 </mapper>

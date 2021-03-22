@@ -116,8 +116,7 @@ public class ForgotService {
         }
 
         // 修改用户密码
-        int resultCount = userMapper.update(null, new UpdateWrapper<User>().set(User.PASSWORD, BCrypt.hashpw(forgotDto.getPassword())).eq(User.EMAIL,
-                forgotDto.getEmail()));
+        int resultCount = userMapper.updatePasswordByEmail(BCrypt.hashpw(forgotDto.getPassword()), forgotDto.getEmail());
 
         return resultCount > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RESET_PASSWORD_SUCCESS)
