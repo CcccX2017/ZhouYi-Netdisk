@@ -21,6 +21,12 @@ export const constantRoutes = [
 	    name: '注册',
 	    component: () => import("@/views/Register"),
 	    hidden: true
+	},
+	{
+	    path: '/forgot',
+	    name: '忘记密码',
+	    component: () => import("@/views/Forgot"),
+	    hidden: true
 	}
 ]
 

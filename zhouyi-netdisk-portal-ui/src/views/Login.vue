@@ -21,7 +21,7 @@
 				<span v-else>登录中...</span>
 			</el-button>
 			<div class="footer-bar">
-				<el-link title="忘记密码?">忘记密码?</el-link>
+				<el-link title="忘记密码?" @click='forgotPwd'>忘记密码?</el-link>
 				<el-link type="primary" title="立即注册" @click="register">立即注册</el-link>
 			</div>
 		</el-form>
@@ -57,6 +57,10 @@ export default {
 		this.getCookie();
 	},
 	methods: {
+		// 忘记密码
+		forgotPwd(){
+			this.$router.push('/forgot')
+		},
 		register() {
 			this.$router.push('/register')
 		},

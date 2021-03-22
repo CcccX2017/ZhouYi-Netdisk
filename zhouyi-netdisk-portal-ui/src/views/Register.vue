@@ -159,10 +159,6 @@
 			width: 215px;
 			margin-right: 5px;
 		}
-		
-		.code_btn{
-			width: 128px;
-		}
 	}
 
 	.footer {
