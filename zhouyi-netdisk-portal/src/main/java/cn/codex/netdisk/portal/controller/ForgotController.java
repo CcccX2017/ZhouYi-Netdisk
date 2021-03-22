@@ -7,10 +7,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 找回密码
@@ -28,12 +25,19 @@ public class ForgotController {
     
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "发送邮箱验证码")
-    @PostMapping("/sendCode")
-    public ServerResponse<String> sendEmailCode(String username, String email) {
-        return forgotService.sendEmailCode(username, email);
+    @GetMapping("/sendCode")
+    public ServerResponse<String> sendEmailCode(String email) {
+        return forgotService.sendEmailCode(email);
     }
     
     @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "验证验证码")
+    @PostMapping("/validate")
+    public ServerResponse<String> validate(@RequestBody String code, @RequestBody String uuid) {
+        return forgotService.validateCode(code, uuid);
+    }
+    
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "重置密码")
     @PostMapping("/forgot")
     public ServerResponse<String> forgot(@RequestBody ForgotDto forgotDto) {

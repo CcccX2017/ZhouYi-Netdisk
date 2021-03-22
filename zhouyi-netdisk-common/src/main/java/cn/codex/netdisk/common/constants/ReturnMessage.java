@@ -35,6 +35,9 @@ public class ReturnMessage {
     public static final String UPDATE_ERROR = "更新失败";
     public static final String UPDATE_PASSWORD_SUCCESS = "密码修改成功";
     public static final String UPDATE_PASSWORD_ERROR = "密码修改失败";
+    
+    public static final String RESET_PASSWORD_SUCCESS = "重置密码成功";
+    public static final String RESET_PASSWORD_ERROR = "重置密码失败";
 
     public static final String REGISTER_SUCCESS = "注册成功";
     public static final String REGISTER_ERROR = "注册失败";
