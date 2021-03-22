@@ -41,7 +41,7 @@ public class ReturnMessage {
 
     public static final String USERNAME_PASSWORD_ERROR = "用户名不存在或密码错误";
     public static final String USERNAME_EMPTY = "请输入用户名";
-    public static final String USERNAME_ILLEGAL = "用户名须以英文字母开头长度为5-16位的英文/数字/下划线'_'";
+    public static final String USERNAME_ILLEGAL = "用户名须以英文字母开头长度为5-16位的英文/数字/下划线";
     public static final String USERNAME_NOT_EXIST = "用户名不存在";
     public static final String USERNAME_EXIST = "用户名已存在，请更换";
 
@@ -54,7 +54,7 @@ public class ReturnMessage {
     public static final String PASSWORD_ILLEGAL = "密码长度为6-16位";
 
     public static final String NICKNAME_EMPTY = "请输入用户昵称";
-    public static final String NICKNAME_ILLEGAL = "用户昵称只能是长度为1-12位的中英文/数字/下划线'_'";
+    public static final String NICKNAME_ILLEGAL = "用户昵称只能是长度为1-12位的中英文/数字/下划线";
     public static final String NICKNAME_EXIST = "昵称已被使用，请更换";
 
     public static final String OLD_PASSWORD_ERROR = "旧密码不正确";

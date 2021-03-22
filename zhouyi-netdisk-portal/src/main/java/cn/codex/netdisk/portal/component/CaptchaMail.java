@@ -85,4 +85,45 @@ public class CaptchaMail {
             return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);
         }
     }
+
+    /**
+     * 发送用户注册邮件
+     *
+     * @param to 收件人
+     * @return 发送结果
+     */
+    public ServerResponse<String> sendRegisterMail(String to) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+            // 发件人
+            helper.setFrom(mailProperties.getUsername());
+            // 收件人
+            helper.setTo(to);
+            helper.setSubject("【" + portalConfig.getNameZh() + "】账号激活");
+            // 发送日期
+            helper.setSentDate(new Date());
+            // 邮件内容
+            String code = RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER + RandomUtil.BASE_CHAR.toUpperCase(), 4);
+            helper.setText("【" + portalConfig.getNameZh() + "】您用于激活账号的验证码为：<b>" + code + "</b>，有效期" + Const.FORGOT_CAPTCHA_EXPIRATION + "分钟", true);
+
+            String uuid = IdUtil.simpleUUID();
+            try {
+                // 将验证码存入redis服务器中，并返回唯一标识
+                redisUtil.setObject(Const.CAPTCHA_KEY + uuid, code, Const.FORGOT_CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+            } catch (Exception ex) {
+                log.error("发送给 {} 的邮件发送失败=========> {}", to, ex.getMessage());
+                return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);
+            }
+
+            // 发送邮件
+            javaMailSender.send(message);
+
+            log.info("发送给 {} 的邮件发送成功", to);
+            return ServerResponse.createBySuccess(ReturnMessage.CAPTCHA_SEND_SUCCESS, uuid);
+        } catch (Exception e) {
+            log.error("发送给 {} 的邮件发送失败=========> {}", to, e.getMessage());
+            return ServerResponse.createByErrorMessage(ReturnMessage.CAPTCHA_SEND_ERROR);
+        }
+    }
 }

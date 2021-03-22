@@ -3,6 +3,7 @@ package cn.codex.netdisk.portal.controller;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginDto;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.portal.component.CaptchaMail;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
 import cn.codex.netdisk.portal.service.LoginService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -11,10 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,6 +33,9 @@ public class LoginController {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    @Autowired
+    private CaptchaMail captchaMail;
+
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "登录并返回token")
     @PostMapping("/login")
@@ -50,6 +51,13 @@ public class LoginController {
     }
 
     @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "发送邮箱验证码")
+    @GetMapping("/registerCode")
+    public ServerResponse<String> sendRegisterCode(String to){
+        return captchaMail.sendRegisterMail(to);
+    }
+
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
     public ServerResponse<String> register(@RequestBody RegisterDto registerDto){

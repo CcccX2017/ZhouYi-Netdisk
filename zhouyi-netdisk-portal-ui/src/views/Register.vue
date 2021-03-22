@@ -31,9 +31,12 @@
 				<span v-if="!loading">注册</span>
 				<span v-else>注册中...</span>
 			</el-button>
-			<el-checkbox v-model="checked">
-				<p style="cursor: default;">阅读并接受<el-link type="primary" title="《舟意网盘用户协议》">《舟意网盘用户协议》</el-link>及<el-link type="primary" title="《舟意网盘隐私权保护声明》">《舟意网盘隐私权保护声明》</el-link></p>
-			</el-checkbox>
+			<div style="display: flex;align-items: center;justify-content: center;margin-top: 5px;">
+				<el-checkbox v-model="agree">阅读并接受</el-checkbox>
+				<el-link type="primary" title="《舟意网盘用户协议》" href="#">《舟意网盘用户协议》</el-link>
+				及
+				<el-link type="primary" title="《舟意网盘隐私权保护声明》" href="#">《舟意网盘隐私权保护声明》</el-link>
+			</div>
 		</el-form>
 		<div class="footer">Copyright © 2021-2031 舟意网盘 All Rights Reserved.</div>
 	</div>
@@ -45,6 +48,7 @@ export default {
 		return {
 			loading: false,
 			sendCode: false,
+			agree: false,
 			registerForm: {
 				username: '',
 				password: '',
@@ -53,7 +57,25 @@ export default {
 				code: '',
 				uuid: ''
 			},
-			registerRules: {}
+			registerRules: {
+				username: [
+					{ required: true, trigger: 'blur', message: '用户名不能为空' },
+					{ pattern:  /^[a-zA-Z]\w{4,15}$/, trigger: 'blur', message: '用户名须以英文字母开头长度为5-16位的英文/数字/下划线' }
+				],
+				nickname: [
+					{ required: true, trigger: 'blur', message: '昵称不能为空' },
+					{ pattern:  /^[\u4E00-\u9FA5\w]{1,12}$/, trigger: 'blur', message: '用户昵称只能是长度为1-12位的中英文/数字/下划线' }
+				],
+				password: [
+					{ required: true, trigger: 'blur', message: '密码不能为空' },
+					{ min: 6, max: 16, message: '密码长度在 6 到 16 个字符', trigger: 'blur' }
+				],
+				email: [
+					{ required: true, trigger: 'blur', message: '邮箱不能为空' },
+					{ type: 'email', message: '邮箱地址格式不正确', trigger: 'blur'}
+				],
+				code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+			}
 		};
 	},
 	created() {},
@@ -62,10 +84,27 @@ export default {
 			this.$router.push('/login')
 		},
 		sendEmailCode(){
-			this.sendCode = true
+			this.$refs.registerForm.validateField('email', valid => {
+				if(!valid){
+					this.sendCode = true
+				}
+			})
 		},
 		register(){
-			
+			this.$refs.registerForm.validate(valid => {
+				if(valid){
+					if(!this.agree){
+						this.$message.error("同意并接受本站协议及隐私保护声明再进行注册", {duration: 5 * 1000})
+						return
+					}
+					// 发送注册请求
+					this.postRequest('/portal/register', this.registerForm).then(resp => {
+						if(resp){
+							this.$message.success(resp.msg)
+						}
+					})
+				}
+			})
 		}
 	}
 };
