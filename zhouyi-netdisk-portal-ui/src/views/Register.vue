@@ -24,8 +24,7 @@
 			</el-form-item>
 			<el-form-item prop="code" label="验证码">
 				<el-input prefix-icon="iconfont icon-yanzhengma" placeholder="请输入验证码" v-model.trim="registerForm.code" class="register-code-input" @keyup.enter.native="register"></el-input>
-				<el-button type="primary" v-if="!sendCode" @click="sendEmailCode" class="code_btn">获取验证码</el-button>
-				<el-button v-else disabled class="code_btn">重新获取(60)</el-button>
+				<countDown delay='60' tagName='register' :to='registerForm.email' @setUuid='setUuid'></countDown>
 			</el-form-item>
 			<el-button type="primary" style="width:100%" :loading="loading" @click.native.prevent="register">
 				<span v-if="!loading">注册</span>
@@ -43,71 +42,79 @@
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			loading: false,
-			sendCode: false,
-			agree: false,
-			registerForm: {
-				username: '',
-				password: '',
-				nickname: '',
-				email: '',
-				code: '',
-				uuid: ''
+	import countDown from '@/components/CountDown'
+	export default {
+		components:{
+			countDown
+		},
+		data() {
+			return {
+				loading: false,
+				agree: false,
+				registerForm: {
+					username: '',
+					password: '',
+					nickname: '',
+					email: '',
+					code: '',
+					uuid: ''
+				},
+				registerRules: {
+					username: [
+						{ required: true, trigger: 'blur', message: '用户名不能为空' },
+						{ pattern:  /^[a-zA-Z]\w{4,15}$/, trigger: 'blur', message: '用户名须以英文字母开头长度为5-16位的英文/数字/下划线' }
+					],
+					nickname: [
+						{ required: true, trigger: 'blur', message: '昵称不能为空' },
+						{ pattern:  /^[\u4E00-\u9FA5\w]{1,12}$/, trigger: 'blur', message: '用户昵称只能是长度为1-12位的中英文/数字/下划线' }
+					],
+					password: [
+						{ required: true, trigger: 'blur', message: '密码不能为空' },
+						{ min: 6, max: 16, message: '密码长度在 6 到 16 个字符', trigger: 'blur' }
+					],
+					email: [
+						{ required: true, trigger: 'blur', message: '邮箱不能为空' },
+						{ type: 'email', message: '邮箱地址格式不正确', trigger: 'blur'}
+					],
+					code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+				}
+			};
+		},
+		created() {
+			
+		},
+		methods: {
+			// 验证码发送成功，设置uuid
+			setUuid(uuid){
+				this.registerForm.uuid = uuid
 			},
-			registerRules: {
-				username: [
-					{ required: true, trigger: 'blur', message: '用户名不能为空' },
-					{ pattern:  /^[a-zA-Z]\w{4,15}$/, trigger: 'blur', message: '用户名须以英文字母开头长度为5-16位的英文/数字/下划线' }
-				],
-				nickname: [
-					{ required: true, trigger: 'blur', message: '昵称不能为空' },
-					{ pattern:  /^[\u4E00-\u9FA5\w]{1,12}$/, trigger: 'blur', message: '用户昵称只能是长度为1-12位的中英文/数字/下划线' }
-				],
-				password: [
-					{ required: true, trigger: 'blur', message: '密码不能为空' },
-					{ min: 6, max: 16, message: '密码长度在 6 到 16 个字符', trigger: 'blur' }
-				],
-				email: [
-					{ required: true, trigger: 'blur', message: '邮箱不能为空' },
-					{ type: 'email', message: '邮箱地址格式不正确', trigger: 'blur'}
-				],
-				code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
-			}
-		};
-	},
-	created() {},
-	methods: {
-		login(){
-			this.$router.push('/login')
-		},
-		sendEmailCode(){
-			this.$refs.registerForm.validateField('email', valid => {
-				if(!valid){
-					this.sendCode = true
-				}
-			})
-		},
-		register(){
-			this.$refs.registerForm.validate(valid => {
-				if(valid){
-					if(!this.agree){
-						this.$message.error("同意并接受本站协议及隐私保护声明再进行注册", {duration: 5 * 1000})
-						return
+			login(){
+				this.$router.push('/login')
+			},
+			sendEmailCode(){
+				this.$refs.registerForm.validateField('email', valid => {
+					if(!valid){
+						this.sendCode = true
 					}
-					// 发送注册请求
-					this.postRequest('/portal/register', this.registerForm).then(resp => {
-						if(resp){
-							this.$message.success(resp.msg)
+				})
+			},
+			register(){
+				this.$refs.registerForm.validate(valid => {
+					if(valid){
+						if(!this.agree){
+							this.$message.error("同意并接受本站协议及隐私保护声明再进行注册", {duration: 5 * 1000})
+							return
 						}
-					})
-				}
-			})
+						// 发送注册请求
+						this.postRequest('/portal/register', this.registerForm).then(resp => {
+							// 注册成功，跳转到登录页面
+							this.$router.replace('/login')
+						})
+					}
+				})
+			}
 		}
-	}
-};
+	};
 </script>
 <style lang="less" scoped>
 .register {
