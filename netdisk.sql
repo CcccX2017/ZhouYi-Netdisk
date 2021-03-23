@@ -198,21 +198,21 @@ CREATE TABLE `tb_menu`
 INSERT INTO `tb_menu`
 VALUES (1001, '全部文件', 'el-icon-document-copy', '/', 'AllFile', 1, 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13');
 INSERT INTO `tb_menu`
-VALUES (1002, '图片', '', '/image', 'Image', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31');
+VALUES (1002, '图片', '', 'image', 'ImageCom', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31');
 INSERT INTO `tb_menu`
-VALUES (1003, '文档', '', '/doc', 'Document', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25');
+VALUES (1003, '文档', '', 'doc', 'DocumentCom', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25');
 INSERT INTO `tb_menu`
-VALUES (1004, '视频', '', '/video', 'Video', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46');
+VALUES (1004, '视频', '', 'video', 'VideoCom', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46');
 INSERT INTO `tb_menu`
-VALUES (1005, '种子', '', '/seed', 'Seed', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18');
+VALUES (1005, '种子', '', 'seed', 'SeedCom', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18');
 INSERT INTO `tb_menu`
-VALUES (1006, '音乐', '', '/music', 'Music', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39');
+VALUES (1006, '音乐', '', 'music', 'MusicCom', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39');
 INSERT INTO `tb_menu`
-VALUES (1007, '其它', '', '/other', 'Other', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15');
+VALUES (1007, '其它', '', 'other', 'OtherCom', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15');
 INSERT INTO `tb_menu`
-VALUES (1008, '我的分享', 'iconfont icon-share', '/myShare', 'MyShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08');
+VALUES (1008, '我的分享', 'iconfont icon-share', 'myShare', 'MyShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08');
 INSERT INTO `tb_menu`
-VALUES (1009, '回收站', 'el-icon-delete', '/recycle', 'Recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
+VALUES (1009, '回收站', 'el-icon-delete', 'recycle', 'Recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
 
 /*Table structure for table `tb_order` */
 
