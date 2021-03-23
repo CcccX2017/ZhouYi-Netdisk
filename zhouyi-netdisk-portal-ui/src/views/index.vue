@@ -6,7 +6,7 @@
 					<div class="logo" style="font-size: 24px;">舟意网盘</div>
 					<div class="header-link">
 						<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :router="menuRouter">
-						  <el-menu-item index="/netdisk/allFile">网盘</el-menu-item>
+						  <el-menu-item index="/netdisk/">网盘</el-menu-item>
 						  <el-menu-item index="/share">分享</el-menu-item>
 						</el-menu>
 						<div class="line"></div>
@@ -36,7 +36,7 @@ export default {
 	name: 'index',
 	data(){
 		return{
-			activeIndex: '/netdisk',
+			activeIndex: '/netdisk/',
 			menuRouter: true,
 			userInfo:{
 				avatar: '',
@@ -50,13 +50,18 @@ export default {
 	},
 	methods:{
 		setActiveIndex(){
-			this.activeIndex = this.$route.path
+            this.activeIndex = this.$route.path.indexOf('/netdisk/') !== -1 ? "/netdisk/" : this.$route.path
 		},
 		setUserInfo(){
 			this.userInfo.avatar = this.$store.getters.avatar
 			this.userInfo.username = this.$store.getters.name
 		}
-	}
+	},
+    watch: {
+	    '$route.path': function (val){
+            this.activeIndex = this.$route.path.indexOf('/netdisk/') !== -1 ? "/netdisk/" : this.$route.path
+        }
+    }
 };
 </script>
 
