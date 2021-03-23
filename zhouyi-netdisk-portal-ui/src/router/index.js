@@ -6,9 +6,22 @@ Vue.use(VueRouter)
 export const constantRoutes = [
     {
         path: '/',
+		redirect: '/netdisk',
         name: 'Index',
         component: () => import("@/views/index"),
-        hidden: true
+        hidden: true,
+		children:[
+			{
+			    path: '/netdisk',
+			    name: '网盘',
+			    component: () => import("@/views/Netdisk")
+			},
+			{
+			    path: '/share',
+			    name: '分享',
+			    component: () => import("@/views/Share")
+			}
+		]
     },
     {
         path: '/login',

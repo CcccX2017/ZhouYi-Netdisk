@@ -18,9 +18,7 @@ const menus = {
 	},
 	actions: {
 		// 初始化菜单
-		InitMenu({
-			commit
-		}) {
+		InitMenu({ commit }) {
 			return new Promise(resolve => {
 				getRequest('/portal/menu/').then(resp => {
 					const menus = formatMenu(resp.data)
