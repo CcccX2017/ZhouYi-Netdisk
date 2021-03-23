@@ -6,7 +6,7 @@
 					<div class="logo" style="font-size: 24px;">舟意网盘</div>
 					<div class="header-link">
 						<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :router="menuRouter">
-						  <el-menu-item index="/netdisk">网盘</el-menu-item>
+						  <el-menu-item index="/netdisk/allFile">网盘</el-menu-item>
 						  <el-menu-item index="/share">分享</el-menu-item>
 						</el-menu>
 						<div class="line"></div>

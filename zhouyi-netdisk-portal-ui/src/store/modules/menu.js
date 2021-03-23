@@ -7,6 +7,7 @@ import {
 
 const menus = {
 	state: {
+		menus: [],
 		routes: [],
 		addRoutes: []
 	},
@@ -14,6 +15,9 @@ const menus = {
 		SET_ROUTES: (state, routes) => {
 			state.addRoutes = routes
 			state.routes = constantRoutes.concat(routes)
+		},
+		SET_MENUS: (state, menus) => {
+			state.menus = menus
 		}
 	},
 	actions: {
@@ -22,13 +26,37 @@ const menus = {
 			return new Promise(resolve => {
 				getRequest('/portal/menu/').then(resp => {
 					const menus = formatMenu(resp.data)
-					menus.push({
-						path: '*',
-						redirect: '/404',
-						hidden: true
-					})
-					commit('SET_ROUTES', menus)
-					resolve(menus)
+					let rootMenu = [
+						{
+							path: '/',
+							redirect: '/netdisk/',
+							name: 'Index',
+							component: () => import("@/views/index"),
+							hidden: true,
+							children:[
+								{
+									path: '/netdisk/',
+									redirect: '/netdisk/allFile',
+									name: '网盘',
+									component: () => import("@/views/Netdisk"),
+									children: menus
+								},
+								{
+									path: '/share',
+									name: '分享',
+									component: () => import("@/views/Share")
+								}
+							]
+						},
+						{
+							path: '*',
+							redirect: '/404',
+							hidden: true
+						}
+					]
+					commit('SET_ROUTES', rootMenu)
+					commit('SET_MENUS', menus)
+					resolve(rootMenu)
 				})
 			})
 		}
@@ -48,19 +76,19 @@ function formatMenu(routers) {
 			children,
 			component
 		} = router
-
 		if (children && children instanceof Array) {
 			// 递归
 			children = formatMenu(children)
 		}
 
 		let fmRoute = {
-			path: path === '/' ? '/allFile' : path,
+			menuId: menuId,
+			path: path === '/' ? 'allFile' : path,
 			name: menuTitle,
 			iconCls: iconClass,
 			children: children,
 			component(resolve) {
-				require([`@/views/${component}`], resolve)
+				require(['@/components/' + component + '.vue'], resolve)
 			}
 		}
 

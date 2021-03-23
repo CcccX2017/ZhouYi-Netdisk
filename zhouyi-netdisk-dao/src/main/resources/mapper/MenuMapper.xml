@@ -40,7 +40,7 @@
             <result column="gmt_modified2" property="gmtModified"/>
         </collection>
     </resultMap>
-    <select id="getMenuList" resultMap="Menus">
+    <!--<select id="getMenuList" resultMap="Menus">
         select m1.*,
                m2.menu_id      menu_id2,
                m2.menu_title   menu_title2,
@@ -55,5 +55,10 @@
                      left join tb_menu m2 on m1.menu_id = m2.parent_id
         where m1.level = 1
         order by m1.menu_id, m2.menu_id
+    </select>-->
+    <select id="getMenuList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from tb_menu
+        order by menu_id
     </select>
 </mapper>

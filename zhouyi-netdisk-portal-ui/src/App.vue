@@ -19,13 +19,16 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, Tahoma !important;
+	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, Tahoma, serif;
 }
 .clearfix{zoom:1}
 .clearfix:after{content:"\20";display:block;height:0;clear:both;visibility:hidden}
 ul,
 ol {
 	list-style: none;
+}
+a{
+    text-decoration: none;
 }
 
 </style>
