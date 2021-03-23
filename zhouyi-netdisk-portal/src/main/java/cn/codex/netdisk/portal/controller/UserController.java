@@ -4,6 +4,7 @@ import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.utils.FileUtil;
 import cn.codex.netdisk.common.utils.JwtTokenUtil;
 import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
@@ -16,6 +17,7 @@ import cn.codex.netdisk.service.IOrderService;
 import cn.codex.netdisk.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -109,6 +112,24 @@ public class UserController {
     public ServerResponse getOrder(){
         List<OrderVo> orderVos = orderService.getOrder();
         return ServerResponse.createBySuccess(orderVos);
+    }
+    
+    @ApiOperation("获取空间使用情况")
+    @GetMapping("/storage")
+    public ServerResponse getStorageInfo(){
+        User user = userService.selectUserByUsername(SecurityUtil.getUsername());
+        Long usedStorageSpace = user.getUsedStorageSpace();
+        Long maxStorageSpace = user.getUserGroups().getMaxStorageSpace();
+        Map<String, Object> map = Maps.newHashMap();
+        if (usedStorageSpace.equals(0L)){
+            map.put("usedStorageSpace", "0");
+        }else{
+            map.put("usedStorageSpaceStr", FileUtil.unreservedDecimalPoint(usedStorageSpace));
+        }
+        map.put("maxStorageSpace", FileUtil.unreservedDecimalPoint(maxStorageSpace));
+        map.put("percent", usedStorageSpace / maxStorageSpace * 100);
+        
+        return ServerResponse.createBySuccess(map);
     }
 }
 

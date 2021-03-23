@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2021-01-28
  */
 public interface IUserService extends IService<User> {
-
+    
     /**
      * 根据用户名获取用户信息
      *
@@ -24,7 +24,7 @@ public interface IUserService extends IService<User> {
      * @return 用户信息
      */
     User selectUserByUsername(String username);
-
+    
     /**
      * 获取登录用户信息
      *
@@ -32,7 +32,7 @@ public interface IUserService extends IService<User> {
      * @return 登录用户信息
      */
     ServerResponse<UserVo> getLoginUserInfo(HttpServletRequest request);
-
+    
     /**
      * 修改密码
      *
