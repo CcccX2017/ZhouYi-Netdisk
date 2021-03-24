@@ -1,13 +1,13 @@
 <template>
-<div>图片</div>
+	<div>
+		图片
+	</div>
 </template>
 
 <script>
 export default {
-name: "ImageCom"
-}
+	name: 'ImageCom'
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
