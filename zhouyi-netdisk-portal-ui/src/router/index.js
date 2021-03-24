@@ -3,6 +3,16 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+// 解决路由跳转原路由或者刷新出错
+const originalReplace = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function replace(location) {
+    return originalReplace.call(this, location).catch(err => err);
+};
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err);
+}
+
 export const constantRoutes = [
     {
         path: '/login',
