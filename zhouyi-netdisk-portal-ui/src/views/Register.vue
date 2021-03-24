@@ -24,7 +24,7 @@
 			</el-form-item>
 			<el-form-item prop="code" label="验证码">
 				<el-input prefix-icon="iconfont icon-yanzhengma" placeholder="请输入验证码" v-model.trim="registerForm.code" class="register-code-input" @keyup.enter.native="register"></el-input>
-				<countDown delay='60' tagName='register' :to='registerForm.email' @setUuid='setUuid' @checkEmail='checkEmail'></countDown>
+				<countDown delay='60' tagName='register' :to='registerForm.email' @setUuid='setUuid' ></countDown>
 			</el-form-item>
 			<el-button type="primary" style="width:100%" :loading="loading" @click.native.prevent="register">
 				<span v-if="!loading">注册</span>
@@ -33,7 +33,7 @@
 			<div style="display: flex;align-items: center;justify-content: center;margin-top: 5px;">
 				<el-checkbox v-model="agree">阅读并接受</el-checkbox>
 				<el-link type="primary" title="《舟意网盘用户协议》" href="#">《舟意网盘用户协议》</el-link>
-				及
+				<span style="color: #606266;font-size: 14px">及</span>
 				<el-link type="primary" title="《舟意网盘隐私权保护声明》" href="#">《舟意网盘隐私权保护声明》</el-link>
 			</div>
 		</el-form>
@@ -123,7 +123,7 @@
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	background-image: url('../assets/image/login_bg.png');
+	background-image: url('../assets/images/login_bg.png');
 	justify-content: center;
 	align-items: center;
 	user-select: none;

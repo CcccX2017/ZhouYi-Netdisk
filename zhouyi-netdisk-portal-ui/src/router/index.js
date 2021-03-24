@@ -18,7 +18,10 @@ export const constantRoutes = [
         path: '/login',
         name: '登录',
         component: () => import("@/views/Login"),
-        hidden: true
+        hidden: true,
+		meta:{
+        	title: process.env.VUE_APP_SYSTEM_TITLE + "，留住世间的美好"
+		}
     },
 	{
 	    path: '/register',

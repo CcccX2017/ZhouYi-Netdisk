@@ -135,7 +135,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	background-image: url('../assets/image/login_bg.png');
+	background-image: url('../assets/images/login_bg.png');
 	justify-content: center;
 	align-items: center;
 	user-select: none;

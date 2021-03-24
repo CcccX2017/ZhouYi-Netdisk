@@ -1,15 +1,20 @@
 import router from './router'
 import store from './store/index.js'
-import {Message} from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {getToken} from "./utils/token"
+import {Message} from "element-ui";
 
 NProgress.configure({showSpinner: false})
 
 const whitelist = ['/login', '/register', '/forgot']
 
 router.beforeEach((to, from, next) => {
+    if (to.meta.title){
+        document.title = to.meta.title
+    }else{
+        document.title = process.env.VUE_APP_SYSTEM_TITLE + ' - ' + to.name
+    }
     NProgress.start()
     if (getToken()) {
         // 有token值，已经登录
@@ -27,11 +32,11 @@ router.beforeEach((to, from, next) => {
                     })
                 }).catch(error => {
                     store.dispatch('FedLogOut').then(() => {
-                        // Message.error(error)
-                        // NProgress.done()
+                        Message.error(error)
+                        next({path: '/'})
                     })
                 })
-            }else {
+            } else {
                 next()
             }
         }

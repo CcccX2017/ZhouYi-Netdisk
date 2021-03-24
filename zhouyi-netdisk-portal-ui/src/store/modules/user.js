@@ -52,7 +52,7 @@ const user = {
             return new Promise((resolve, reject) => {
                 getRequest('/portal/user/').then(resp => {
                     const user = resp.data;
-                    const avatar = user.avatar === "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+                    const avatar = user.avatar === "" ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
                     commit('SET_NAME', user.username)
                     commit('SET_NICKNAME', user.nickname)
                     commit("SET_AVATAR", avatar)
