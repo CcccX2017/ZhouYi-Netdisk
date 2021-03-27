@@ -39,6 +39,7 @@
                 </choose>
             </otherwise>
         </choose>
+        limit 18446744073709551615
         ) t1
                 union
                 select * from (
@@ -89,6 +90,7 @@
                 </choose>
             </otherwise>
         </choose>
+        limit 18446744073709551615
         ) t2
     </select>
 </mapper>
