@@ -4,18 +4,27 @@ import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
+import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.exception.ErrorException;
+import cn.codex.netdisk.common.utils.FileUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FilesMapper;
 import cn.codex.netdisk.model.dtos.FileCopyDto;
 import cn.codex.netdisk.model.dtos.FileRenameDto;
+import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
+import cn.codex.netdisk.model.dtos.PageResult;
 import cn.codex.netdisk.model.entity.Files;
+import cn.codex.netdisk.model.vo.FolderAndFileVo;
 import cn.codex.netdisk.service.IFilesService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements IFilesService {
-
+    
     /**
      * 复制到
      *
@@ -41,7 +50,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
         if (Strings.isNullOrEmpty(fileCopyDto.getPath())) {
             throw new ErrorException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-
+        
         // 根据ID查询文件信息
         Files files = baseMapper.selectById(fileId);
         if (files == null) {
@@ -57,7 +66,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
             return retryCopy(fileCopyDto, files);
         }
     }
-
+    
     /**
      * 重命名文件
      *
@@ -77,7 +86,56 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
             return ServerResponse.createByErrorMessage(ReturnMessage.ILLEGAL_REQUEST);
         }
     }
-
+    
+    /**
+     * 获取文件列表
+     *
+     * @param fileType 文件类型
+     * @param dto      文件夹和文件查询实体类
+     * @return 查询结果
+     */
+    @Override
+    public ServerResponse getList(String fileType, FolderAndFileQueryDto dto) {
+        if (dto == null) {
+            throw new CustomException(ReturnMessage.ILLEGAL_REQUEST);
+        }
+        
+        Page<Files> page = new Page<>(dto.getPage(), dto.getLimit());
+        QueryWrapper<Files> wrapper = new QueryWrapper<>();
+        wrapper.eq(Files.DIR, dto.getDir())
+                .eq(Files.CREATOR, SecurityUtil.getUsername())
+                .eq(Files.FILE_TYPE, fileType);
+        if (dto.getDesc() == 1) {
+            wrapper.orderByDesc(dto.getOrder());
+        } else {
+            wrapper.orderByAsc(dto.getOrder());
+        }
+        Page<Files> filesPage = baseMapper.selectPage(page, wrapper);
+        List<FolderAndFileVo> list = Lists.newArrayList();
+        filesPage.getRecords().forEach(files -> {
+            FolderAndFileVo folderAndFileVo = new FolderAndFileVo();
+            folderAndFileVo.setId(files.getFileId());
+            folderAndFileVo.setName(files.getRealName());
+            folderAndFileVo.setSize(files.getSize());
+            folderAndFileVo.setSizeStr(FileUtil.byteCountToDisplaySize(files.getSize()));
+            folderAndFileVo.setIsDir(0);
+            folderAndFileVo.setGmtModified(files.getGmtModified());
+            if ("/".equals(dto.getDir())) {
+                folderAndFileVo.setPath(dto.getDir() + files.getRealName());
+            } else {
+                folderAndFileVo.setPath(dto.getDir() + "/" + files.getRealName());
+            }
+            list.add(folderAndFileVo);
+        });
+        PageResult pageResult = new PageResult();
+        pageResult.setList(list);
+        // 已加载数 = 当前查询到的记录数 + 之前已经加载的记录数 (page - 1) * limit
+        pageResult.setCount(filesPage.getRecords().size() + (int) ((dto.getPage() - 1) * dto.getLimit()));
+        // 是否全部加载 = 已加载数 == 总记录数 ? 1 : 0
+        pageResult.setIsAll(pageResult.getCount() == filesPage.getTotal() ? 1 : 0);
+        return ServerResponse.createBySuccess(pageResult);
+    }
+    
     /**
      * 出现同名文件时，用户选择保留两者之后的第二次尝试重命名
      */
@@ -96,7 +154,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
     }
-
+    
     /**
      * 第一次重命名
      */
@@ -118,7 +176,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
     }
-
+    
     /**
      * 出现同名文件时，用户选择替换或保留两者之后的第二次尝试复制
      */
@@ -149,7 +207,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
                 return ServerResponse.createByErrorMessage(ReturnMessage.ILLEGAL_REQUEST);
         }
     }
-
+    
     /**
      * 第一次复制
      */
@@ -161,7 +219,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
             // 存在同名文件，保存失败，并返回同名文件信息
             return ServerResponse.createByError(ReturnMessage.COPY_FILE_ERROR, selectOne);
         }
-
+        
         // 不存在同名文件
         return baseMapper.insert(files) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.COPY_FILE_SUCCESS)

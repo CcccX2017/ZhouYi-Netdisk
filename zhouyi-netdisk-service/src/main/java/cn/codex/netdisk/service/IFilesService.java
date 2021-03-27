@@ -3,6 +3,7 @@ package cn.codex.netdisk.service;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.dtos.FileCopyDto;
 import cn.codex.netdisk.model.dtos.FileRenameDto;
+import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.entity.Files;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,7 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-01-28
  */
 public interface IFilesService extends IService<Files> {
-
+    
     /**
      * 复制到
      *
@@ -24,7 +25,7 @@ public interface IFilesService extends IService<Files> {
      * @return 复制结果
      */
     ServerResponse copy(Long fileId, FileCopyDto fileCopyDto);
-
+    
     /**
      * 重命名文件
      *
@@ -33,4 +34,13 @@ public interface IFilesService extends IService<Files> {
      * @return 重命名结果
      */
     ServerResponse rename(Long fileId, FileRenameDto fileRenameDto);
+    
+    /**
+     * 获取文件列表
+     *
+     * @param fileType 文件类型
+     * @param dto      文件夹和文件查询实体类
+     * @return 查询结果
+     */
+    ServerResponse getList(String fileType, FolderAndFileQueryDto dto);
 }

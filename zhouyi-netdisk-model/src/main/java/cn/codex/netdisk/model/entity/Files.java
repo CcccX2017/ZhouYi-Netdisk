@@ -90,6 +90,8 @@ public class Files implements Serializable {
     public static final String SHORT_URL = "short_url";
 
     public static final String SIZE = "size";
+    
+    public static final String FILE_TYPE = "file_type";
 
     public static final String DIR = "dir";
 
