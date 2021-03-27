@@ -30,11 +30,11 @@
                 <choose>
                     <when test="dto.order == 'name'">
                         <!--@ignoreSql-->
-                        folder_name asc
+                        order by folder_name asc
                     </when>
                     <when test="dto.order == 'time' or dto.order == 'size'">
                         <!--@ignoreSql-->
-                        gmt_modified asc
+                        order by gmt_modified asc
                     </when>
                 </choose>
             </otherwise>
