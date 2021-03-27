@@ -47,19 +47,31 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      */
     @Override
     public ServerResponse addFolder(String folderName, String dir) {
-        
+        String username = SecurityUtil.getUsername();
+        return addFolder(folderName, dir, username);
+    }
+    
+    /**
+     * 新建文件夹
+     *
+     * @param folderName 文件夹名称
+     * @param dir        文件夹路径
+     * @param username   用户名
+     * @return 结果
+     */
+    @Override
+    public ServerResponse addFolder(String folderName, String dir, String username) {
         ServerResponse responseServer = checkData(dir, folderName);
         if (responseServer != null) {
             return responseServer;
         }
         
-        String username = SecurityUtil.getUsername();
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
                 folderName).eq(Folders.DIR, dir).eq(Folders.CREATOR, username));
-        
+    
         Folders folders = new Folders();
-        
+    
         if (count > 0) {
             // 重命名文件夹名称为：文件夹名称_年月日_时分秒
             String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
@@ -70,7 +82,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         folders.setFolderId(snowflake.nextId());
         folders.setCreator(username);
         folders.setDir(dir);
-        
+    
         return foldersMapper.insert(folders) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.CREATE_FOLDER_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.CREATE_FOLDER_ERROR);

@@ -24,6 +24,16 @@ public interface IFoldersService extends IService<Folders> {
     ServerResponse addFolder(String folderName, String dir);
     
     /**
+     * 新建文件夹
+     *
+     * @param folderName 文件夹名称
+     * @param dir        文件夹路径
+     * @param username   用户名
+     * @return 结果
+     */
+    ServerResponse addFolder(String folderName, String dir, String username);
+    
+    /**
      * 重命名文件夹
      *
      * @param folderId      文件夹ID

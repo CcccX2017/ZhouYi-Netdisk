@@ -110,4 +110,7 @@ public class Const {
      * 拒绝
      */
     public static final String REFUSE = "2";
+    
+    public static final long DEFAULT_PAGE = 1;
+    public static final long DEFAULT_LIMIT = 100;
 }

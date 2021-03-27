@@ -14,6 +14,7 @@ import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.portal.dtos.RegisterDto;
+import cn.codex.netdisk.service.IFoldersService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -53,6 +54,9 @@ public class LoginService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private IFoldersService foldersService;
     
     /**
      * 用户登录并返回token
@@ -127,9 +131,13 @@ public class LoginService {
         
         int resultCount = userMapper.insert(user);
         
-        return resultCount > 0
-                ? ServerResponse.createBySuccessMessage(ReturnMessage.REGISTER_SUCCESS)
-                : ServerResponse.createByErrorMessage(ReturnMessage.REGISTER_ERROR);
+        // 用户注册成功，默认生成我的资源文件夹
+        if (resultCount > 0) {
+            foldersService.addFolder("我的资源", "/", user.getUsername());
+            return ServerResponse.createBySuccessMessage(ReturnMessage.REGISTER_SUCCESS);
+        }
+        
+        return ServerResponse.createByErrorMessage(ReturnMessage.REGISTER_ERROR);
     }
     
     /**
@@ -153,7 +161,7 @@ public class LoginService {
         if (Strings.isNullOrEmpty(registerDto.getPassword())) {
             return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_EMPTY);
         }
-        if (registerDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || registerDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH){
+        if (registerDto.getPassword().trim().length() < Const.PASSWORD_MIN_LENGTH || registerDto.getPassword().trim().length() > Const.PASSWORD_MAX_LENGTH) {
             return ServerResponse.createByErrorMessage(ReturnMessage.PASSWORD_ILLEGAL);
         }
         

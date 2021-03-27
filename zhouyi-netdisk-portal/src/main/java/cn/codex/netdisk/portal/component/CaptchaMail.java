@@ -100,12 +100,12 @@ public class CaptchaMail {
             helper.setFrom(mailProperties.getUsername());
             // 收件人
             helper.setTo(to);
-            helper.setSubject("【" + portalConfig.getNameZh() + "】账号激活");
+            helper.setSubject("【" + portalConfig.getNameZh() + "】新用户");
             // 发送日期
             helper.setSentDate(new Date());
             // 邮件内容
             String code = RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER + RandomUtil.BASE_CHAR.toUpperCase(), 4);
-            helper.setText("【" + portalConfig.getNameZh() + "】您用于激活账号的验证码为：<b>" + code + "</b>，有效期" + Const.FORGOT_CAPTCHA_EXPIRATION + "分钟", true);
+            helper.setText("【" + portalConfig.getNameZh() + "】欢迎新用户，您的验证码为：<b>" + code + "</b>，有效期" + Const.FORGOT_CAPTCHA_EXPIRATION + "分钟", true);
 
             String uuid = IdUtil.simpleUUID();
             try {

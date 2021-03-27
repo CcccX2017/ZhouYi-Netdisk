@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -41,7 +42,7 @@ public class MenuController {
         List<Menu> menus = redisUtil.getObject(Const.MENU_PREFIX);
         if (menus == null || menus.size() <= 0) {
             menus = menuService.getMenuList();
-            redisUtil.setObject(Const.MENU_PREFIX, menus);
+            redisUtil.setObject(Const.MENU_PREFIX, menus, 30, TimeUnit.MINUTES);
             return ServerResponse.createBySuccess(menus);
         }
         
