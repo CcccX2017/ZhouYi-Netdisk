@@ -164,14 +164,14 @@ export default {
 				height: 36px;
 				line-height: 36px;
 				color: #888;
-				border-bottom: 1px solid rgba(179, 216, 255, 0.3);
+				border-bottom: 1px solid rgba(179, 216, 255, 0.2);
 				li {
 					float: left;
 					cursor: pointer;
 					font-size: 12px;
 					padding-left: 10px;
 					&:hover {
-						background-color: rgba(179, 216, 255, 0.3);
+						background-color: rgba(179, 216, 255, 0.2);
 					}
 				}
 			}
