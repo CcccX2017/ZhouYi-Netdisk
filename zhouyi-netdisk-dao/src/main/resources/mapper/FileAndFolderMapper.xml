@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.codex.netdisk.dao.FileAndFolderMapper">
+    <select id="getFolderAndFileVo" resultType="cn.codex.netdisk.model.vo.FolderAndFileVo">
+        select * from (
+                select folder_id   as id,
+                       folder_name as name,
+                       1           as isDir,
+                       null        as size,
+                       null        as sizeStr,
+                       dir         as path,
+                       gmt_modified
+                from tb_folders
+                where dir = #{dto.dir}
+                  and creator = #{username}
+                order by
+        <choose>
+            <when test="dto.desc != null and dto.desc == 1">
+                ${dto.order} desc
+            </when>
+            <otherwise>
+                ${dto.order} asc
+            </otherwise>
+        </choose>
+        ) t1
+                union
+                select * from (
+                select file_id   as id,
+                       real_name as name,
+                       0         as dir,
+                       size,
+                       ''        as sizeStr,
+                       dir       as path,
+                       gmt_modified
+                from tb_files
+                where dir = #{dto.dir}
+                  and creator = #{username}
+                order by
+        <choose>
+            <when test="dto.desc != null and dto.desc == 1">
+                ${dto.order} desc
+            </when>
+            <otherwise>
+                ${dto.order} asc
+            </otherwise>
+        </choose>
+        ) t2
+    </select>
+</mapper>

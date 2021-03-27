@@ -2,8 +2,6 @@ package cn.codex.netdisk.model.dtos;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -13,8 +11,6 @@ import java.io.Serializable;
  * @author codex
  * @since 2021-03-27
  */
-@Getter
-@Setter
 @ApiModel(value = "文件夹和文件查询实体类", description = "FolderAndFileQueryDto")
 public class FolderAndFileQueryDto implements Serializable {
     private static final long serialVersionUID = -4529087909682362550L;
@@ -33,4 +29,50 @@ public class FolderAndFileQueryDto implements Serializable {
     
     @ApiModelProperty("是否降序 1-降序，0-升序")
     private Integer desc;
+    
+    public Long getPage() {
+        if (page == null || page <= 0) {
+            page = 1L;
+        }
+        return page;
+    }
+    
+    public void setPage(Long page) {
+        this.page = page;
+    }
+    
+    public Long getLimit() {
+        if (limit == null || limit <= 0) {
+            limit = 100L;
+        }
+        return limit;
+    }
+    
+    public void setLimit(Long limit) {
+        this.limit = limit;
+    }
+    
+    public String getDir() {
+        return dir;
+    }
+    
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+    
+    public String getOrder() {
+        return order;
+    }
+    
+    public void setOrder(String order) {
+        this.order = order;
+    }
+    
+    public Integer getDesc() {
+        return desc;
+    }
+    
+    public void setDesc(Integer desc) {
+        this.desc = desc;
+    }
 }
