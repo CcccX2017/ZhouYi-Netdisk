@@ -50,8 +50,9 @@ const menus = {
 						},
 						{
 							path: '*',
-							redirect: '/404',
-							hidden: true
+							name: '404',
+							hidden: true,
+							component: () => import("@/views/404")
 						}
 					]
 					commit('SET_ROUTES', rootMenu)

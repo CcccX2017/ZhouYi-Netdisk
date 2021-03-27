@@ -3,15 +3,15 @@
 </template>
 
 <style lang="less">
-@font-face{
-	font-family: 'PingFangSC-Semibold'; 
-	src: url('./assets/font/PingFang-SC-Semibold.otf'); 
+@font-face {
+	font-family: 'PingFangSC-Semibold';
+	src: url('./assets/font/PingFang-SC-Semibold.otf');
 	font-weight: normal;
 	font-style: normal;
 }
-@font-face{
-	font-family: 'PingFangSC-Regular'; 
-	src: url('./assets/font/PingFang-SC-Regular.ttf'); 
+@font-face {
+	font-family: 'PingFangSC-Regular';
+	src: url('./assets/font/PingFang-SC-Regular.ttf');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -21,14 +21,26 @@
 	box-sizing: border-box;
 	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, Tahoma, serif;
 }
-.clearfix{zoom:1}
-.clearfix:after{content:"\20";display:block;height:0;clear:both;visibility:hidden}
+.clearfix {
+	zoom: 1;
+}
+.clearfix:after {
+	content: '\20';
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
 ul,
 ol {
 	list-style: none;
 }
-a{
-    text-decoration: none;
+a {
+	text-decoration: none;
 }
-
+.normal-dropdown {
+	.popper__arrow::after {
+		border-bottom-color: #2fc7fe !important;
+	}
+}
 </style>

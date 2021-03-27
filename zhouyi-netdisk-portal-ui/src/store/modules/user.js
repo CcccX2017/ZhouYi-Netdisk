@@ -8,6 +8,7 @@ const user = {
         nickname: '',
         avatar: '',
         role: '',
+		groupId: 0,
         maxFileSize: 0,
         maxStorageSpace: 0
     },
@@ -27,6 +28,9 @@ const user = {
         SET_ROLE: (state, role) => {
             state.role = role
         },
+		SET_GROUP_ID(state, groupId){
+			state.groupId = groupId
+		},
         SET_MAX_FILE_SIZE: (state, maxFileSize) => {
             state.maxFileSize = maxFileSize
         },
@@ -57,6 +61,7 @@ const user = {
                     commit('SET_NICKNAME', user.nickname)
                     commit("SET_AVATAR", avatar)
                     commit('SET_ROLE', user.groupName)
+					commit('SET_GROUP_ID', user.groupId)
                     commit('SET_MAX_FILE_SIZE', user.maxFileSize)
                     commit('SET_MAX_STORAGE_SPACE', user.maxStorageSpace)
                     resolve(resp)
