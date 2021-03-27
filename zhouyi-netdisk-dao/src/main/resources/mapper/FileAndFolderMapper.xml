@@ -13,13 +13,30 @@
                 from tb_folders
                 where dir = #{dto.dir}
                   and creator = #{username}
-                order by
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
-                ${dto.order} desc
+                <choose>
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by folder_name desc
+                    </when>
+                    <when test="dto.order == 'time' or dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified desc
+                    </when>
+                </choose>
             </when>
             <otherwise>
-                ${dto.order} asc
+                <choose>
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        folder_name asc
+                    </when>
+                    <when test="dto.order == 'time' or dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        gmt_modified asc
+                    </when>
+                </choose>
             </otherwise>
         </choose>
         ) t1
@@ -35,13 +52,37 @@
                 from tb_files
                 where dir = #{dto.dir}
                   and creator = #{username}
-                order by
+
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
-                ${dto.order} desc
+                <choose>
+                    <!--@ignoreSql-->
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by real_name desc
+                    </when>
+                    <when test="dto.order == 'time'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified desc
+                    </when>
+                </choose>
             </when>
             <otherwise>
-                ${dto.order} asc
+                <choose>
+                    <!--@ignoreSql-->
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by real_name asc
+                    </when>
+                    <when test="dto.order == 'time'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified asc
+                    </when>
+                    <when test="dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by size asc
+                    </when>
+                </choose>
             </otherwise>
         </choose>
         ) t2
