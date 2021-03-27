@@ -65,6 +65,10 @@
                         <!--@ignoreSql-->
                         order by gmt_modified desc
                     </when>
+                    <when test="dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by size desc
+                    </when>
                 </choose>
             </when>
             <otherwise>
