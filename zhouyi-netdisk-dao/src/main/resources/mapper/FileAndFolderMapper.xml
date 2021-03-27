@@ -7,7 +7,7 @@
                        folder_name as name,
                        1           as isDir,
                        null        as size,
-                       null        as sizeStr,
+                       '-'        as sizeStr,
                        dir         as path,
                        gmt_modified
                 from tb_folders
