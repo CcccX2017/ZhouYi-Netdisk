@@ -39,6 +39,9 @@ public class FolderAndFileVo implements Serializable {
     @ApiModelProperty("路径")
     private String path;
     
+    @ApiModelProperty("文件类型")
+    private String type;
+    
     @ApiModelProperty("修改时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date gmtModified;

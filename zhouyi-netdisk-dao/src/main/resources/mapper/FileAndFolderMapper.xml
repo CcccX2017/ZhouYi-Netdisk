@@ -7,8 +7,9 @@
                        folder_name as name,
                        1           as isDir,
                        null        as size,
-                       '-'        as sizeStr,
+                       '-'         as sizeStr,
                        dir         as path,
+                       'folder'    as type,
                        gmt_modified
                 from tb_folders
                 where dir = #{dto.dir}
@@ -40,7 +41,7 @@
             </otherwise>
         </choose>
         limit 18446744073709551615
-        ) t1
+                ) t1
                 union
                 select * from (
                 select file_id   as id,
@@ -49,6 +50,7 @@
                        size,
                        ''        as sizeStr,
                        dir       as path,
+                       file_type as type,
                        gmt_modified
                 from tb_files
                 where dir = #{dto.dir}
@@ -91,6 +93,6 @@
             </otherwise>
         </choose>
         limit 18446744073709551615
-        ) t2
+                ) t2
     </select>
 </mapper>

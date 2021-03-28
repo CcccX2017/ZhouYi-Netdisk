@@ -7,7 +7,7 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:21:29
  */
 public class IconDir {
-    private static final String DIRECTORY_PREFIX = "static/image/filetype/";
+    private static final String DIRECTORY_PREFIX = "static/images/filetype/";
 
     public static final String APK_ICON = DIRECTORY_PREFIX + "apk.png";
 
@@ -37,7 +37,7 @@ public class IconDir {
 
     public static final String VCF_ICON = DIRECTORY_PREFIX + "vcf.png";
 
-    public static final String VEDIO_ICON = DIRECTORY_PREFIX + "vedio.png";
+    public static final String VIDEO_ICON = DIRECTORY_PREFIX + "video.png";
 
     public static final String VSD_ICON = DIRECTORY_PREFIX + "vsd.png";
 
