@@ -50,8 +50,25 @@ export default {
 	name: 'AllFile',
 	data() {
 		return {
-			searchText: ''
-		};
+			searchText: '',
+			queryParam:{
+				page: 1,
+				limit: 100,
+				order: 'time',
+				desc: 1,
+				dir: '/'
+			}
+		}
+	},
+	created() {
+		this.getList()
+	},
+	methods:{
+		getList(){
+			this.getRequest('/portal/list/', this.queryParam).then(resp => {
+				
+			})
+		}
 	}
 };
 </script>
