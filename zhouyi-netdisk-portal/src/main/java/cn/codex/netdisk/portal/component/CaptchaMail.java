@@ -100,7 +100,7 @@ public class CaptchaMail {
             helper.setFrom(mailProperties.getUsername());
             // 收件人
             helper.setTo(to);
-            helper.setSubject("【" + portalConfig.getNameZh() + "】新用户");
+            helper.setSubject("【" + portalConfig.getNameZh() + "】欢迎新用户");
             // 发送日期
             helper.setSentDate(new Date());
             // 邮件内容
