@@ -3,13 +3,14 @@
 <mapper namespace="cn.codex.netdisk.dao.FileAndFolderMapper">
     <select id="getFolderAndFileVo" resultType="cn.codex.netdisk.model.vo.FolderAndFileVo">
         select * from (
-                select folder_id   as id,
-                       folder_name as name,
-                       1           as isDir,
-                       null        as size,
-                       '-'         as sizeStr,
-                       dir         as path,
-                       'folder'    as type,
+                select folder_id    as id,
+                       folder_name  as name,
+                       1            as isDir,
+                       null         as size,
+                       '-'          as sizeStr,
+                       dir          as path,
+                       'folder'     as type,
+                       'folder.png' as icon,
                        gmt_modified
                 from tb_folders
                 where dir = #{dto.dir}
@@ -51,6 +52,7 @@
                        ''        as sizeStr,
                        dir       as path,
                        file_type as type,
+                       icon,
                        gmt_modified
                 from tb_files
                 where dir = #{dto.dir}
