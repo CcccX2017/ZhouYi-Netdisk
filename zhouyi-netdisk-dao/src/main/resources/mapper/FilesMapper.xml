@@ -11,6 +11,7 @@
         <result column="short_url" property="shortUrl"/>
         <result column="size" property="size"/>
         <result column="file_type" property="fileType"/>
+        <result column="icon" property="icon"/>
         <result column="dir" property="dir"/>
         <result column="is_hidden" property="hidden"/>
         <result column="is_deleted" property="deleted"/>
@@ -29,6 +30,7 @@
         short_url,
         size,
         file_type,
+        icon,
         dir,
         is_hidden,
         is_deleted,

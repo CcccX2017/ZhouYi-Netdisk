@@ -30,6 +30,7 @@ CREATE TABLE `tb_files`
     `short_url`       varchar(255)                 DEFAULT NULL COMMENT '文件短地址',
     `size`            bigint(20)                   DEFAULT NULL COMMENT '文件大小',
     `file_type`       varchar(10)                  DEFAULT NULL COMMENT '文件类型',
+    `icon`            varchar(20)                  DEFAULT NULL COMMENT '文件图标',
     `dir`             text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '所属文件夹路径',
     `is_hidden`       tinyint(1)          NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
     `is_deleted`      tinyint(1)          NOT NULL DEFAULT '0' COMMENT '是否已删除（0-未删除，1-已删除）',

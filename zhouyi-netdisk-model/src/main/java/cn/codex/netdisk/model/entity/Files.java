@@ -50,6 +50,9 @@ public class Files implements Serializable {
 
     @ApiModelProperty(value = "文件类型")
     private String fileType;
+    
+    @ApiModelProperty(value = "文件图标")
+    private String icon;
 
     @ApiModelProperty(value = "所属文件夹路径")
     private String dir;
@@ -92,6 +95,8 @@ public class Files implements Serializable {
     public static final String SIZE = "size";
     
     public static final String FILE_TYPE = "file_type";
+    
+    public static final String ICON = "icon";
 
     public static final String DIR = "dir";
 
