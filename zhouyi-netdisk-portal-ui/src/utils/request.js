@@ -43,7 +43,7 @@ service.interceptors.response.use(response => {
             type: 'warning'
         }).then(() => {
             store.dispatch('LogOut').then(() => {
-                router.replace('/')
+                location.reload('/')
             })
         })
     } else if (code === 500 || code === 403) {

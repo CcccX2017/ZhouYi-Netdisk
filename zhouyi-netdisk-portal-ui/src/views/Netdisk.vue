@@ -49,7 +49,9 @@
         },
         created() {
             this.initMenu()
-            this.getStorage()
+            this.$nextTick(() => {
+                this.getStorage()
+            })
         },
         methods: {
             // 获取存储空间信息

@@ -73,7 +73,7 @@ export default {
 				}).then(() => {
 					// 注销登录
 					this.$store.dispatch('LogOut').then(() => {
-						this.$router.replace('/login')
+						location.reload('/')
 					})
 				}).catch(() => {
 					

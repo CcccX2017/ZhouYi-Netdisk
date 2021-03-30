@@ -1,9 +1,6 @@
-import {
-	constantRoutes
-} from "@/router"
-import {
-	getRequest
-} from '@/api'
+import {constantRoutes} from "@/router"
+import {getRequest} from '@/api'
+import {encrypt, decrypt} from '@/utils/jsencrypt'
 
 const menus = {
 	state: {

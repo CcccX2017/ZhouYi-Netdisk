@@ -15,11 +15,19 @@
 	font-weight: normal;
 	font-style: normal;
 }
+@font-face {
+	font-family: 'tahoma';
+	src: url('./assets/font/tahoma.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, Tahoma, serif;
+}
+body, html{
+	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, tahoma, serif;
 }
 .clearfix {
 	zoom: 1;
