@@ -1,6 +1,7 @@
 package cn.codex.netdisk.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -45,6 +46,8 @@ public class GeneralConfig {
     public ObjectMapper jacksonObjectMapperCustomization(){
         return new Jackson2ObjectMapperBuilder()
                 .timeZone(TimeZone.getDefault())
+                // 解决long类型传递到前端的精度问题
+                .serializerByType(Long.class, ToStringSerializer.instance)
                 .build();
     }
 }
