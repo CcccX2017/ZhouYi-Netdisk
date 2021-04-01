@@ -57,7 +57,7 @@
             // 获取存储空间信息
             getStorage(){
                 this.getRequest('/portal/user/storage').then(resp => {
-                    this.percentage = resp.data.percent
+                    this.percentage = parseFloat(resp.data.percent)
                     this.storage.usedStorageSpace = resp.data.usedStorageSpace
                     this.storage.maxStorageSpace = resp.data.maxStorageSpace
                 })
