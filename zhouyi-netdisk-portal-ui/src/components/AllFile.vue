@@ -33,16 +33,16 @@
 			<div class="file-list">
 				<div class="list-title">
 					<ul class="title-ul">
-						<li data-key="name" style="width: 60%;padding-left: 16px;" @click="changeOrder('name')">
+						<li data-key="name" style="width: 60%;padding-left: 16px;" @click.stop="changeOrder('name')">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
 							<span style="padding-left: 10px;">文件名</span>
 							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'name'"></i>
 						</li>
-						<li data-key="size" style="width: 16%;" @click="changeOrder('size')">
+						<li data-key="size" style="width: 16%;" @click.stop="changeOrder('size')">
 							<span>大小</span>
 							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'size'"></i>
 						</li>
-						<li data-key="time" style="width: 23%;" @click="changeOrder('time')">
+						<li data-key="time" style="width: 23%;" @click.stop="changeOrder('time')">
 							<span>修改日期</span>
 							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'time'"></i>
 						</li>
@@ -101,20 +101,42 @@ export default {
 		};
 	},
 	created() {
+		this.initOrder();
 		this.getList();
 	},
 	methods: {
+		// 排序历史
+		initOrder() {
+			let order = localStorage.getItem('order');
+			let desc = localStorage.getItem('desc');
+			if (order) {
+				this.queryParam.order = order;
+			} else {
+				// 设置localStorage
+				localStorage.setItem('order', this.queryParam.order);
+			}
+
+			if (desc) {
+				this.queryParam.desc = desc;
+			} else {
+				// 设置localStorage
+				localStorage.setItem('desc', this.queryParam.desc);
+			}
+		},
 		// 排序
 		changeOrder(order) {
 			if (this.queryParam.order === order) {
 				// 点击的是同一个分类，修改降序和升序
 				if (this.queryParam.desc === 1) {
 					this.queryParam.desc = 0;
+					localStorage.setItem('desc', 0);
 				} else {
 					this.queryParam.desc = 1;
+					localStorage.setItem('desc', 1);
 				}
 			} else {
 				this.queryParam.order = order;
+				localStorage.setItem('order', order);
 			}
 			// 重新查询数据
 			this.queryParam.page = 1;
