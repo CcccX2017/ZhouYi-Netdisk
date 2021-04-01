@@ -27,18 +27,25 @@
 		<div class="file-container">
 			<div class="title-info clearfix">
 				<span class="menu-tag">全部文件</span>
-				<span class="load-count" v-if="isAll == 1">已全部加载，共{{count}}个</span>
-				<span class="load-count" v-else>已加载{{count}}个</span>
+				<span class="load-count" v-if="isAll == 1">已全部加载，共{{ count }}个</span>
+				<span class="load-count" v-else>已加载{{ count }}个</span>
 			</div>
 			<div class="file-list">
 				<div class="list-title">
 					<ul class="title-ul">
-						<li data-key="name" style="width: 60%;padding-left: 16px;">
+						<li data-key="name" style="width: 60%;padding-left: 16px;" @click="changeOrder('name')">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
 							<span style="padding-left: 10px;">文件名</span>
+							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'name'"></i>
 						</li>
-						<li data-key="size" style="width: 16%;">大小</li>
-						<li data-key="time" style="width: 23%;">修改日期</li>
+						<li data-key="size" style="width: 16%;" @click="changeOrder('size')">
+							<span>大小</span>
+							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'size'"></i>
+						</li>
+						<li data-key="time" style="width: 23%;" @click="changeOrder('time')">
+							<span>修改日期</span>
+							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'time'"></i>
+						</li>
 					</ul>
 				</div>
 				<div class="list-content">
@@ -46,19 +53,19 @@
 						<div class="content-row clearfix" :key="item.id" @click.prevent="checkOne(item.id)">
 							<div class="left content-col content-flex" style="width: 60%;padding-left: 16px;">
 								<el-checkbox-group v-model="checkedList">
-									<el-checkbox :label="item.id" @click.native="stopDefault($event)">{{''}}</el-checkbox>
+									<el-checkbox :label="item.id" @click.native="stopDefault($event)">{{ '' }}</el-checkbox>
 								</el-checkbox-group>
-								<img :src="require('../assets/filetype/' + item.icon)">
+								<img :src="require('../assets/filetype/' + item.icon)" />
 								<span class="txtSpan" style="padding-left: 10px;">
-									<a href="javascript:;" v-if="item.isDir" @click.stop="openDir(item.path)">{{item.name}}</a>
-									<span v-else>{{item.name}}</span>
+									<a href="javascript:;" v-if="item.isDir" @click.stop="openDir(item.path)">{{ item.name }}</a>
+									<span v-else>{{ item.name }}</span>
 								</span>
 							</div>
 							<div class="left content-col" style="width: 16%">
-								<span class="txtSpan">{{item.sizeStr}}</span>
+								<span class="txtSpan">{{ item.sizeStr }}</span>
 							</div>
 							<div class="left content-col" style="width: 23%">
-								<span class="txtSpan">{{item.gmtModified}}</span>
+								<span class="txtSpan">{{ item.gmtModified }}</span>
 							</div>
 						</div>
 					</template>
@@ -76,82 +83,98 @@ export default {
 			checkAll: false,
 			isIndeterminate: false,
 			searchText: '',
-			queryParam:{
+			queryParam: {
 				page: 1,
 				limit: 100,
 				order: 'time',
-				desc: 1,
+				desc: 0,
 				dir: '/'
 			},
 			list: [],
 			count: null,
 			isAll: null,
 			checkedList: [],
-			btnGroup:{
+			btnGroup: {
 				show: false,
 				disabled: false
 			}
-		}
+		};
 	},
 	created() {
-		this.getList()
+		this.getList();
 	},
-	methods:{
-		// 打开目录
-		openDir(dir){
-			console.log(dir)
+	methods: {
+		// 排序
+		changeOrder(order) {
+			if (this.queryParam.order === order) {
+				// 点击的是同一个分类，修改降序和升序
+				if (this.queryParam.desc === 1) {
+					this.queryParam.desc = 0;
+				} else {
+					this.queryParam.desc = 1;
+				}
+			} else {
+				this.queryParam.order = order;
+			}
+			// 重新查询数据
+			this.queryParam.page = 1;
+			this.getList();
 		},
-		checkOne(val){
+		// 打开目录
+		openDir(dir) {
+			console.log(dir);
+		},
+		checkOne(val) {
 			if (this.checkedList.indexOf(val) === -1) {
-				this.checkedList = [val]
+				this.checkedList = [val];
 			}
 		},
-		handleCheckAllChange(val){
+		handleCheckAllChange(val) {
 			if (val) {
 				// 全选
 				for (let index = 0; index < this.list.length; index++) {
 					const element = this.list[index];
-					this.checkedList.push(element.id)
+					this.checkedList.push(element.id);
 				}
 			} else {
 				// 取消全选
-				this.checkedList = []
+				this.checkedList = [];
 			}
 		},
-		getList(){
+		getList() {
 			this.getRequest('/portal/list/', this.queryParam).then(resp => {
-				this.list = resp.data.list
-				this.count = resp.data.count
-				this.isAll = resp.data.isAll
-			})
+				this.list = resp.data.list;
+				this.count = resp.data.count;
+				this.isAll = resp.data.isAll;
+			});
 		},
 		stopDefault(e) {
 			e.stopPropagation();
 		}
 	},
 	watch: {
-		checkedList:{
-			handler(){
+		checkedList: {
+			handler() {
 				if (this.checkedList.length > 0) {
-					this.btnGroup.show = true
+					this.btnGroup.show = true;
 					if (this.checkedList.length > 1) {
-						this.btnGroup.disabled = true
+						this.btnGroup.disabled = true;
 					} else {
-						this.btnGroup.disabled = false
+						this.btnGroup.disabled = false;
 					}
 
 					if (this.checkedList.length < this.count) {
-						this.checkAll = false
-						this.isIndeterminate = true
+						this.checkAll = false;
+						this.isIndeterminate = true;
 					} else {
-						this.isIndeterminate = false
-						this.checkAll = true
+						this.isIndeterminate = false;
+						this.checkAll = true;
 					}
 				} else {
-					this.btnGroup.show = false
-					this.btnGroup.disabled = false
-					this.isIndeterminate = false
-					this.checkAll = false
+					this.btnGroup.show = false;
+					this.btnGroup.disabled = false;
+					this.isIndeterminate = false;
+					this.checkAll = false;
 				}
 			},
 			deep: true
@@ -187,7 +210,7 @@ export default {
 		}
 		.plain-btn.is-plain {
 			background: #fff;
-			&:hover:not(.is-disabled)  {
+			&:hover:not(.is-disabled) {
 				background: #409eff;
 			}
 		}
@@ -274,16 +297,22 @@ export default {
 					cursor: pointer;
 					font-size: 12px;
 					padding-left: 10px;
+					user-select: none;
 					&:hover {
 						background-color: rgba(179, 216, 255, 0.2);
 					}
 				}
+				.sortIcon {
+					font-weight: 700;
+					color: #409eff;
+					margin-left: 5px;
+				}
 			}
 		}
-		.list-content{
+		.list-content {
 			height: auto;
-			font: 12px/1.5 tahoma,arial !important;
-			.content-row{
+			font: 12px/1.5 tahoma, arial !important;
+			.content-row {
 				height: 44px;
 				line-height: 44px;
 				border-bottom: 1px solid rgba(179, 216, 255, 0.2);
@@ -291,51 +320,51 @@ export default {
 				text-overflow: ellipsis;
 				position: relative;
 				cursor: pointer;
-					&:hover{
-						background: rgba(179, 216, 255, 0.2);
-						border-bottom: 1px solid rgba(179, 216, 255, 0.6);
-						&::before{
-							content: "";
-							border-top: 1px solid rgba(179, 216, 255, 0.6);
-							position: absolute;
-							top: -1px;
-							display: block;
-							width: 100%;
-							z-index: 1;
-							visibility: visible;
-						}
+				&:hover {
+					background: rgba(179, 216, 255, 0.2);
+					border-bottom: 1px solid rgba(179, 216, 255, 0.6);
+					&::before {
+						content: '';
+						border-top: 1px solid rgba(179, 216, 255, 0.6);
+						position: absolute;
+						top: -1px;
+						display: block;
+						width: 100%;
+						z-index: 1;
+						visibility: visible;
 					}
-				.left{
+				}
+				.left {
 					float: left;
 				}
-				.content-flex{
+				.content-flex {
 					display: flex;
 					align-items: center;
 				}
-				.content-col{
+				.content-col {
 					height: 44px;
 					line-height: 44px;
 					padding-left: 10px;
-					font-family: tahoma,arial !important;
+					font-family: tahoma, arial !important;
 					margin-top: -1px;
-					.txtSpan{
-						color: #424e67;;
+					.txtSpan {
+						color: #424e67;
 						text-decoration: none;
 						display: inline-block;
 						cursor: default;
-						a{
-							color: #424e67;;
-							&:hover{
-								color:#09AAFF;
+						a {
+							color: #424e67;
+							&:hover {
+								color: #09aaff;
 							}
 						}
 					}
-					img{
+					img {
 						width: 25px;
 						height: 25px;
 						cursor: default;
 					}
-					.el-checkbox{
+					.el-checkbox {
 						margin-top: 4px;
 					}
 				}
