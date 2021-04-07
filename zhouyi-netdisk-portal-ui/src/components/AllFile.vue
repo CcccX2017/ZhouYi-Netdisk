@@ -147,6 +147,7 @@ export default {
 			}
 			// 重新查询数据
 			this.queryParam.page = 1;
+			this.list = []
 			this.getList();
 		},
 		// 打开目录
@@ -172,7 +173,7 @@ export default {
 		},
 		getList() {
 			this.getRequest('/portal/list/', this.queryParam).then(resp => {
-				this.list = resp.data.list;
+				this.list.push(...resp.data.list);
 				this.count = resp.data.count;
 				this.isAll = resp.data.isAll;
 			});
@@ -188,6 +189,11 @@ export default {
 			});
 		},
 		handleScroll(vertical) {
+			console.log(vertical.process);
+			if (vertical.process > 0.95 && this.isAll === 0) {
+				this.queryParam.page += 1;
+				this.getList();
+			}
 		}
 	},
 	watch: {
