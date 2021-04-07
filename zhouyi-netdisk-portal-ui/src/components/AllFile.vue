@@ -48,27 +48,29 @@
 						</li>
 					</ul>
 				</div>
-				<div class="list-content">
-					<template v-for="item in list">
-						<div class="content-row clearfix" :key="item.id" @click.prevent="checkOne(item.id)">
-							<div class="left content-col content-flex" style="width: 60%;padding-left: 16px;">
-								<el-checkbox-group v-model="checkedList">
-									<el-checkbox :label="item.id" @click.native="stopDefault($event)">{{ '' }}</el-checkbox>
-								</el-checkbox-group>
-								<img :src="require('../assets/filetype/' + item.icon)" />
-								<span class="txtSpan" style="padding-left: 10px;">
-									<a href="javascript:;" v-if="item.isDir" @click.stop="openDir(item.path)">{{ item.name }}</a>
-									<span v-else>{{ item.name }}</span>
-								</span>
+				<div class="list-content" :style="content">
+					<vue-scroll ref="vs" style="top: -1px;border: none;" @handle-scroll="handleScroll">
+						<template v-for="(item, index) in list">
+							<div class="content-row clearfix" :key="item.id" @click.prevent="checkOne(item.id)" :class="index == 0 ? 'first' : ''">
+								<div class="left content-col content-flex" style="width: 60%;padding-left: 16px;">
+									<el-checkbox-group v-model="checkedList">
+										<el-checkbox :label="item.id" @click.native="stopDefault($event)">{{ '' }}</el-checkbox>
+									</el-checkbox-group>
+									<img :src="require('../assets/filetype/' + item.icon)" />
+									<span class="txtSpan" style="padding-left: 10px;">
+										<a href="javascript:;" v-if="item.isDir" @click.stop="openDir(item.path)">{{ item.name }}</a>
+										<span v-else>{{ item.name }}</span>
+									</span>
+								</div>
+								<div class="left content-col" style="width: 16%">
+									<span class="txtSpan">{{ item.sizeStr }}</span>
+								</div>
+								<div class="left content-col" style="width: 23%">
+									<span class="txtSpan">{{ item.gmtModified }}</span>
+								</div>
 							</div>
-							<div class="left content-col" style="width: 16%">
-								<span class="txtSpan">{{ item.sizeStr }}</span>
-							</div>
-							<div class="left content-col" style="width: 23%">
-								<span class="txtSpan">{{ item.gmtModified }}</span>
-							</div>
-						</div>
-					</template>
+						</template>
+					</vue-scroll>
 				</div>
 			</div>
 		</div>
@@ -97,10 +99,15 @@ export default {
 			btnGroup: {
 				show: false,
 				disabled: false
+			},
+			content: {
+				height: ''
 			}
 		};
 	},
 	created() {
+		window.addEventListener('resize', this.transferHeight);
+		this.transferHeight();
 		this.initOrder();
 		this.getList();
 	},
@@ -172,6 +179,15 @@ export default {
 		},
 		stopDefault(e) {
 			e.stopPropagation();
+		},
+		transferHeight() {
+			this.content.height = window.innerHeight - 187 + 'px';
+			// 刷新滚动条
+			this.$nextTick(() => {
+				this.$refs['vs'].refresh();
+			});
+		},
+		handleScroll(vertical) {
 		}
 	},
 	watch: {
@@ -342,6 +358,9 @@ export default {
 				text-overflow: ellipsis;
 				position: relative;
 				cursor: pointer;
+				&.first:hover::before {
+					top: 0;
+				}
 				&:hover {
 					background: rgba(179, 216, 255, 0.2);
 					border-bottom: 1px solid rgba(179, 216, 255, 0.6);

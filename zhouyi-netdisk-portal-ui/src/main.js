@@ -13,9 +13,19 @@ import {
     getRequest,
     deleteRequest
 } from "./api";
+import vuescroll from 'vuescroll';
 
 Vue.use(ElementUI, {
     size: 'medium'
+})
+
+Vue.use(vuescroll, {
+	ops: {
+		bar: {
+			keepShow: true,
+			background: "rgba(120, 120, 120, 0.4)"
+		}
+	}
 })
 
 Vue.config.productionTip = false
