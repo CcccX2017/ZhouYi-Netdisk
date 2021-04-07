@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 export default {
 	name: 'AllFile',
 	data() {
@@ -102,7 +103,8 @@ export default {
 			},
 			content: {
 				height: ''
-			}
+			},
+			loading: null
 		};
 	},
 	created() {
@@ -112,6 +114,18 @@ export default {
 		this.getList();
 	},
 	methods: {
+		// loading效果
+		startLoading() {
+			this.loading = Loading.service({ target: '.list-content' });
+		},
+		// 关闭loading效果
+		closeLoading() {
+			if (this.loading) {
+				this.$nextTick(() => {
+					this.loading.close();
+				});
+			}
+		},
 		// 排序历史
 		initOrder() {
 			let order = localStorage.getItem('order');
@@ -134,7 +148,7 @@ export default {
 		changeOrder(order) {
 			if (this.queryParam.order === order) {
 				// 点击的是同一个分类，修改降序和升序
-				if (this.queryParam.desc === 1) {
+				if (parseInt(this.queryParam.desc) === 1) {
 					this.queryParam.desc = 0;
 					localStorage.setItem('desc', 0);
 				} else {
@@ -147,18 +161,20 @@ export default {
 			}
 			// 重新查询数据
 			this.queryParam.page = 1;
-			this.list = []
+			this.list = [];
 			this.getList();
 		},
 		// 打开目录
 		openDir(dir) {
 			console.log(dir);
 		},
+		// 单选
 		checkOne(val) {
 			if (this.checkedList.indexOf(val) === -1) {
 				this.checkedList = [val];
 			}
 		},
+		// 全选反选
 		handleCheckAllChange(val) {
 			if (val) {
 				// 全选
@@ -171,16 +187,21 @@ export default {
 				this.checkedList = [];
 			}
 		},
+		// 获取列表数据
 		getList() {
+			this.startLoading();
 			this.getRequest('/portal/list/', this.queryParam).then(resp => {
 				this.list.push(...resp.data.list);
 				this.count = resp.data.count;
 				this.isAll = resp.data.isAll;
+				this.closeLoading();
 			});
 		},
+		// 禁止时间冒泡
 		stopDefault(e) {
 			e.stopPropagation();
 		},
+		// 自适应文件列表高度
 		transferHeight() {
 			this.content.height = window.innerHeight - 187 + 'px';
 			// 刷新滚动条
@@ -188,11 +209,12 @@ export default {
 				this.$refs['vs'].refresh();
 			});
 		},
+		// 滚动加载数据
 		handleScroll(vertical) {
-			console.log(vertical.process);
-			if (vertical.process > 0.95 && this.isAll === 0) {
+			if (vertical.process === 1 && this.isAll === 0) {
 				this.queryParam.page += 1;
 				this.getList();
+				this.$refs['vs'].refresh();
 			}
 		}
 	},
