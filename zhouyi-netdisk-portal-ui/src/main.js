@@ -7,16 +7,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import './permission'
 import {
-    postRequest,
-    putRequest,
+	postRequest,
+	putRequest,
 	postParamsRequest,
-    getRequest,
-    deleteRequest
+	getRequest,
+	deleteRequest
 } from "./api";
 import vuescroll from 'vuescroll';
 
 Vue.use(ElementUI, {
-    size: 'medium'
+	size: 'medium'
 })
 
 Vue.use(vuescroll, {
@@ -38,7 +38,7 @@ Vue.prototype.deleteRequest = deleteRequest
 Vue.prototype.getRequest = getRequest
 
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+	router,
+	store,
+	render: h => h(App)
 }).$mount('#app')

@@ -3,7 +3,7 @@
 		<div class="file-fun-area">
 			<div class="fun-btn">
 				<el-button type="primary" icon="el-icon-upload">上传</el-button>
-				<el-button type="primary" plain icon="el-icon-folder-add" class="plain-btn">新建文件夹</el-button>
+				<el-button type="primary" plain icon="el-icon-folder-add" class="plain-btn" @click="openCreateFolderDialog">新建文件夹</el-button>
 				<el-button-group class="btn-group" v-if="btnGroup.show">
 					<el-button type="primary" plain icon="iconfont icon-share" class="plain-btn">分享</el-button>
 					<el-button type="primary" plain icon="el-icon-download" class="plain-btn">下载</el-button>
@@ -48,10 +48,10 @@
 						</li>
 					</ul>
 				</div>
-				<div class="list-content" :style="content">
+				<div id="fileDiv" class="list-content" :style="content">
 					<vue-scroll ref="vs" style="top: -1px;border: none;" @handle-scroll="handleScroll">
 						<template v-for="(item, index) in list">
-							<div class="content-row clearfix" :key="item.id" @click.prevent="checkOne(item.id)" :class="index == 0 ? 'first' : ''">
+							<div class="content-row clearfix" :key="index" @click.prevent="checkOne(item.id)" :class="index == 0 ? 'first' : ''">
 								<div class="left content-col content-flex" style="width: 60%;padding-left: 16px;">
 									<el-checkbox-group v-model="checkedList">
 										<el-checkbox :label="item.id" @click.native="stopDefault($event)">{{ '' }}</el-checkbox>
@@ -74,6 +74,19 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- 新建文件夹弹出框 -->
+		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px">
+			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
+				<el-form-item prop="folderName">
+					<el-input v-model="folderForm.folderName" placeholder="请输入文件夹名称" prefix-icon="el-icon-folder-add" @keyup.enter.native="createFolder"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogFolderVisible = false">取 消</el-button>
+				<el-button type="primary" @click="createFolder">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
@@ -83,6 +96,7 @@ export default {
 	name: 'AllFile',
 	data() {
 		return {
+			dialogFolderVisible: false,
 			checkAll: false,
 			isIndeterminate: false,
 			searchText: '',
@@ -104,19 +118,60 @@ export default {
 			content: {
 				height: ''
 			},
-			loading: null
+			loading: null,
+			folderForm: {
+				folderName: ''
+			},
+			folderRules:{
+				folderName:[
+					{ required: true, message: '请输入文件夹名称', trigger: 'blur' },
+					{ min: 1, max: 255, message: '文件夹名称不能超过255个字节', trigger: 'blur' }
+				]
+			}
 		};
 	},
 	created() {
 		window.addEventListener('resize', this.transferHeight);
 		this.transferHeight();
 		this.initOrder();
+	},
+	mounted() {
 		this.getList();
 	},
 	methods: {
+		// 重置参数
+		resetQueryParam(){
+			this.queryParam.page = 1
+		},
+		// 新建文件夹
+		createFolder() {
+			this.$refs.folderForm.validate(valid => {
+				if(valid){
+					let param = {
+						folderName: this.folderForm.folderName,
+						dir: this.queryParam.dir
+					}
+					// 发送新增文件夹请求
+					this.postRequest("/portal/folders/", param).then(resp => {
+						if(resp){
+							this.resetQueryParam()
+							this.getList()
+							this.dialogFolderVisible = false
+						}
+					})
+				}
+			})
+		},
+		// 打开新建文件夹弹出框
+		openCreateFolderDialog(){
+			if(this.$refs.folderForm){
+				this.$refs.folderForm.resetFields()
+			}
+			this.dialogFolderVisible = true
+		},
 		// loading效果
 		startLoading() {
-			this.loading = Loading.service({ target: '.list-content' });
+			this.loading = Loading.service({ target: '#fileDiv', fullscreen: false });
 		},
 		// 关闭loading效果
 		closeLoading() {
@@ -160,8 +215,7 @@ export default {
 				localStorage.setItem('order', order);
 			}
 			// 重新查询数据
-			this.queryParam.page = 1;
-			this.list = [];
+			this.resetQueryParam();
 			this.getList();
 		},
 		// 打开目录
@@ -188,13 +242,18 @@ export default {
 			}
 		},
 		// 获取列表数据
-		getList() {
+		getList(isScroll = false) {
 			this.startLoading();
 			this.getRequest('/portal/list/', this.queryParam).then(resp => {
-				this.list.push(...resp.data.list);
+				this.closeLoading();
+				if(isScroll){
+					this.list.push(...resp.data.list);
+				}else{
+					this.list = resp.data.list
+				}
+				
 				this.count = resp.data.count;
 				this.isAll = resp.data.isAll;
-				this.closeLoading();
 			});
 		},
 		// 禁止时间冒泡
@@ -213,8 +272,10 @@ export default {
 		handleScroll(vertical) {
 			if (vertical.process === 1 && this.isAll === 0) {
 				this.queryParam.page += 1;
-				this.getList();
-				this.$refs['vs'].refresh();
+				this.getList(true);
+				this.$nextTick(() => {
+					this.$refs['vs'].refresh();
+				});
 			}
 		}
 	},
@@ -278,6 +339,10 @@ export default {
 			background: #fff;
 			&:hover:not(.is-disabled) {
 				background: #409eff;
+			}
+			&:active,
+			&:focus {
+				color: #409eff;
 			}
 		}
 	}
