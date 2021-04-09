@@ -79,7 +79,13 @@
 		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px">
 			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
 				<el-form-item prop="folderName">
-					<el-input v-model="folderForm.folderName" placeholder="请输入文件夹名称" prefix-icon="el-icon-folder-add" @keyup.enter.native="createFolder"></el-input>
+					<el-input
+						v-model="folderForm.folderName"
+						placeholder="请输入文件夹名称"
+						prefix-icon="el-icon-folder-add"
+						@keyup.enter.native="createFolder"
+						ref="folderInput"
+					></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -122,11 +128,8 @@ export default {
 			folderForm: {
 				folderName: ''
 			},
-			folderRules:{
-				folderName:[
-					{ required: true, message: '请输入文件夹名称', trigger: 'blur' },
-					{ min: 1, max: 255, message: '文件夹名称不能超过255个字节', trigger: 'blur' }
-				]
+			folderRules: {
+				folderName: [{ required: true, message: '请输入文件夹名称', trigger: 'blur' }, { min: 1, max: 255, message: '文件夹名称不能超过255个字节', trigger: 'blur' }]
 			}
 		};
 	},
@@ -140,34 +143,37 @@ export default {
 	},
 	methods: {
 		// 重置参数
-		resetQueryParam(){
-			this.queryParam.page = 1
+		resetQueryParam() {
+			this.queryParam.page = 1;
 		},
 		// 新建文件夹
 		createFolder() {
 			this.$refs.folderForm.validate(valid => {
-				if(valid){
+				if (valid) {
 					let param = {
 						folderName: this.folderForm.folderName,
 						dir: this.queryParam.dir
-					}
+					};
 					// 发送新增文件夹请求
-					this.postRequest("/portal/folders/", param).then(resp => {
-						if(resp){
-							this.resetQueryParam()
-							this.getList()
-							this.dialogFolderVisible = false
+					this.postRequest('/portal/folders/', param).then(resp => {
+						if (resp) {
+							this.resetQueryParam();
+							this.getList();
+							this.dialogFolderVisible = false;
 						}
-					})
+					});
 				}
-			})
+			});
 		},
 		// 打开新建文件夹弹出框
-		openCreateFolderDialog(){
-			if(this.$refs.folderForm){
-				this.$refs.folderForm.resetFields()
+		openCreateFolderDialog() {
+			if (this.$refs.folderForm) {
+				this.$refs.folderForm.resetFields();
 			}
-			this.dialogFolderVisible = true
+			this.dialogFolderVisible = true;
+			this.$nextTick(() => {
+				this.$refs.folderInput.$el.children[0].focus()
+			})
 		},
 		// loading效果
 		startLoading() {
@@ -220,7 +226,9 @@ export default {
 		},
 		// 打开目录
 		openDir(dir) {
-			console.log(dir);
+			this.queryParam.dir = dir;
+			this.queryParam.page = 1;
+			this.getList();
 		},
 		// 单选
 		checkOne(val) {
@@ -246,12 +254,12 @@ export default {
 			this.startLoading();
 			this.getRequest('/portal/list/', this.queryParam).then(resp => {
 				this.closeLoading();
-				if(isScroll){
+				if (isScroll) {
 					this.list.push(...resp.data.list);
-				}else{
-					this.list = resp.data.list
+				} else {
+					this.list = resp.data.list;
 				}
-				
+
 				this.count = resp.data.count;
 				this.isAll = resp.data.isAll;
 			});
