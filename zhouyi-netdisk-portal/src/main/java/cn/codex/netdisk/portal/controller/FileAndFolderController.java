@@ -9,15 +9,17 @@ import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.dtos.PageResult;
 import cn.codex.netdisk.model.vo.FolderAndFileVo;
 import cn.codex.netdisk.service.IFileAndFolderService;
+import cn.codex.netdisk.service.IFilesService;
+import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件和文件夹管理
@@ -28,10 +30,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/portal/list")
 @Api(tags = "文件和文件夹管理")
+@Transactional(rollbackFor = Exception.class)
 public class FileAndFolderController {
     
     @Autowired
     private IFileAndFolderService fileAndFolderService;
+    
+    @Autowired
+    private IFilesService filesService;
+    
+    @Autowired
+    private IFoldersService foldersService;
     
     @ApiOperation(value = "获取文件夹和文件列表")
     @GetMapping("/")
@@ -64,4 +73,40 @@ public class FileAndFolderController {
         
         return ServerResponse.createBySuccess(pageResult);
     }
+    
+    @ApiOperation(value = "批量删除")
+    @DeleteMapping("/")
+    public ServerResponse batchDelete(@RequestBody Map<String, List<Long>> map) {
+        try {
+            List<Long> fileIds = map.get("fileIds");
+            List<Long> folderIds = map.get("folderIds");
+            // 删除文件
+            if (fileIds != null) {
+                if (fileIds.size() == 1) {
+                    // 删除单个
+                    filesService.removeById(folderIds.get(0));
+                } else if (fileIds.size() > 1) {
+                    // 批量删除
+                    filesService.removeByIds(fileIds);
+                }
+            }
+            
+            // 删除文件夹
+            if (folderIds != null) {
+                if (folderIds.size() == 1) {
+                    // 删除单个
+                    foldersService.removeById(folderIds.get(0));
+                } else if (folderIds.size() > 1) {
+                    // 批量删除
+                    foldersService.removeByIds(folderIds);
+                }
+            }
+            
+            return ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
+        }
+    }
+    
 }
