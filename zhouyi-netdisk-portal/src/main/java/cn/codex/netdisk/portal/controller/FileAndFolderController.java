@@ -49,7 +49,7 @@ public class FileAndFolderController {
             if ("/".equals(folderAndFileVo.getPath())) {
                 folderAndFileVo.setPath("/" + folderAndFileVo.getName());
             } else {
-                folderAndFileVo.setPath(folderAndFileVo.getPath() + folderAndFileVo.getName());
+                folderAndFileVo.setPath(folderAndFileVo.getPath() + "/" + folderAndFileVo.getName());
             }
             if (folderAndFileVo.getIsDir() == 0) {
                 folderAndFileVo.setSizeStr(FileUtil.byteCountToDisplaySize(folderAndFileVo.getSize()));
