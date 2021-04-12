@@ -11,7 +11,7 @@
 }
 @font-face {
 	font-family: 'PingFangSC-Regular';
-	src: url('./assets/font/PingFang-SC-Regular.ttf');
+	src: url('./assets/font/PingFang-Regular.ttf');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -27,7 +27,7 @@
 	box-sizing: border-box;
 }
 body, html{
-	font-family: PingFangSC-Regular, Microsoft YaHei, SimHei, tahoma, serif;
+	font-family: PingFangSC-Regular, Microsoft YaHei, Arial, SimHei, tahoma, serif;
 }
 .clearfix {
 	zoom: 1;

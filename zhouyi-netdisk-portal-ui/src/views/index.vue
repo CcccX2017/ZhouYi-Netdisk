@@ -218,7 +218,6 @@ export default {
 					a {
 						color: #333;
 						font-size: 12px;
-						font-weight: 600;
 						background: linear-gradient(-139deg, #f0d7a3 0, #efcb85 100%) #f0d7a3;
 						border-radius: 100px;
 						padding: 5px 15px;

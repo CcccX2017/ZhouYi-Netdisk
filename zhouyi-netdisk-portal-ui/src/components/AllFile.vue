@@ -26,9 +26,24 @@
 		</div>
 		<div class="file-container">
 			<div class="title-info clearfix">
-				<span class="menu-tag">全部文件</span>
-				<span class="load-count" v-if="isAll == 1">已全部加载，共{{ count }}个</span>
-				<span class="load-count" v-else>已加载{{ count }}个</span>
+				<span class="menu-tag">
+					<span v-show="queryParam.dir === '/'" class="textSpan">全部文件</span>
+					<ul class="breadcrumbUl" v-show="queryParam.dir !== '/'">
+						<li>
+							<el-link type="primary" @click.native="goBack(null)">返回上一级</el-link>
+							<span style="color: #c5d8f3;padding: 0 3px;vertical-align: middle;">|</span>
+						</li>
+						<li>
+							<template v-for="(item, index) in breadcrumb">
+								<el-link type="primary" v-if="index != breadcrumb.length - 1 && item != '...'" @click="goBack(item.path)">{{ item.name }}</el-link>
+								<span class="breadcrumbTxtSpan" v-else>{{ item.name }}</span>
+								<span style="color: #c5d8f3;padding: 0 5px" v-if="index != breadcrumb.length - 1">></span>
+							</template>
+						</li>
+					</ul>
+				</span>
+				<span class="load-count textSpan" v-if="isAll == 1">已全部加载，共{{ count }}个</span>
+				<span class="load-count textSpan" v-else>已加载{{ count }}个</span>
 			</div>
 			<div class="file-list">
 				<div class="list-title">
@@ -76,7 +91,7 @@
 		</div>
 
 		<!-- 新建文件夹弹出框 -->
-		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px">
+		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog">
 			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
 				<el-form-item prop="folderName">
 					<el-input
@@ -130,7 +145,9 @@ export default {
 			},
 			folderRules: {
 				folderName: [{ required: true, message: '请输入文件夹名称', trigger: 'blur' }, { min: 1, max: 255, message: '文件夹名称不能超过255个字节', trigger: 'blur' }]
-			}
+			},
+			// 面包屑导航数组
+			breadcrumb: []
 		};
 	},
 	created() {
@@ -142,6 +159,23 @@ export default {
 		this.getList();
 	},
 	methods: {
+		// 面包屑导航
+		goBack(path) {
+			if (path) {
+				this.queryParam.dir = path;
+			} else {
+				// 返回上一级
+				let index = this.queryParam.dir.lastIndexOf('/');
+				if (index === 0) {
+					this.queryParam.dir = '/';
+				} else {
+					this.queryParam.dir = this.queryParam.dir.substr(0, index);
+				}
+			}
+			this.assembleDir(this.queryParam.dir);
+			this.resetQueryParam();
+			this.getList();
+		},
 		// 重置参数
 		resetQueryParam() {
 			this.queryParam.page = 1;
@@ -172,8 +206,8 @@ export default {
 			}
 			this.dialogFolderVisible = true;
 			this.$nextTick(() => {
-				this.$refs.folderInput.$el.children[0].focus()
-			})
+				this.$refs.folderInput.$el.children[0].focus();
+			});
 		},
 		// loading效果
 		startLoading() {
@@ -228,7 +262,35 @@ export default {
 		openDir(dir) {
 			this.queryParam.dir = dir;
 			this.queryParam.page = 1;
+			this.checkedList = [];
+			this.isIndeterminate = false;
+			this.assembleDir(dir);
 			this.getList();
+		},
+		// 封装面包屑导航路径
+		assembleDir(dir) {
+			this.breadcrumb = [];
+			let dirArr = dir.split('/');
+			let dirLength = dirArr.length;
+			if (dirLength <= 4) {
+				for (let i = 0; i < dirLength; i++) {
+					let obj = {}
+					if (dirArr[i] == '') {
+						obj.name = '全部文件'
+						obj.path = '/'
+					} else {
+						obj.name = dirArr[i]
+						obj.path = dir.substr(0, dir.lastIndexOf(dirArr[i]) + dirArr[i].length)
+					}
+					this.breadcrumb.push(obj);
+				}
+			} else {
+				this.breadcrumb.push({name: '...', path: 'null'});
+				for (let i = dirLength - 4; i < dirLength; i++) {
+					this.breadcrumb.push({name: dirArr[i], path: dir.substr(0, dir.lastIndexOf(dirArr[i]) + dirArr[i].length)});
+				}
+			}
+			console.log(this.breadcrumb)
 		},
 		// 单选
 		checkOne(val) {
@@ -414,10 +476,22 @@ export default {
 		margin-bottom: 5px;
 		span {
 			font-size: 12px;
-			color: #666;
+			&.textSpan {
+				color: #666;
+			}
 		}
 		.menu-tag {
 			float: left;
+			.breadcrumbUl {
+				li {
+					float: left;
+				}
+				.breadcrumbTxtSpan {
+					font-size: 12px;
+					vertical-align: middle;
+					color: #666;
+				}
+			}
 		}
 		.load-count {
 			float: right;
@@ -512,6 +586,16 @@ export default {
 				}
 			}
 		}
+	}
+}
+.folderDialog {
+	.el-dialog__body {
+		padding-top: 10px;
+		padding-bottom: 0;
+	}
+	.el-dialog__footer {
+		padding-top: 0;
+		padding-bottom: 15px;
 	}
 }
 </style>

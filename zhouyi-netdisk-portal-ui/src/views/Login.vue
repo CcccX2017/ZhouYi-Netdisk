@@ -81,7 +81,8 @@
             },
             login() {
                 this.$refs.loginForm.validate(valid => {
-                    if (valid) {
+					// 解决多次点击多次登录的问题
+                    if (valid && !this.loading) {
                         this.loading = true;
                         if (this.loginForm.rememberMe) {
                             Cookies.set('username', this.loginForm.username, {expires: 30});
