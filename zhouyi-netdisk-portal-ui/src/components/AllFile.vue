@@ -34,8 +34,10 @@
 							<span style="color: #c5d8f3;padding: 0 3px;vertical-align: middle;">|</span>
 						</li>
 						<li>
+							<el-link type="primary" @click.native="goBack('/')">全部文件</el-link>
+							<span style="color: #c5d8f3;padding: 0 5px">></span>
 							<template v-for="(item, index) in breadcrumb">
-								<el-link type="primary" v-if="index != breadcrumb.length - 1 && item != '...'" @click="goBack(item.path)">{{ item.name }}</el-link>
+								<el-link type="primary" v-if="index != breadcrumb.length - 1 && item.name != '...'" @click="goBack(item.path)">{{ item.name }}</el-link>
 								<span class="breadcrumbTxtSpan" v-else>{{ item.name }}</span>
 								<span style="color: #c5d8f3;padding: 0 5px" v-if="index != breadcrumb.length - 1">></span>
 							</template>
@@ -274,15 +276,12 @@ export default {
 			let dirLength = dirArr.length;
 			if (dirLength <= 4) {
 				for (let i = 0; i < dirLength; i++) {
-					let obj = {}
-					if (dirArr[i] == '') {
-						obj.name = '全部文件'
-						obj.path = '/'
-					} else {
+					if (dirArr[i] !== '') {
+						let obj = {}
 						obj.name = dirArr[i]
 						obj.path = dir.substr(0, dir.lastIndexOf(dirArr[i]) + dirArr[i].length)
+						this.breadcrumb.push(obj);
 					}
-					this.breadcrumb.push(obj);
 				}
 			} else {
 				this.breadcrumb.push({name: '...', path: 'null'});
