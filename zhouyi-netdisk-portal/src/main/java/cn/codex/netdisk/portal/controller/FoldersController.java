@@ -5,6 +5,7 @@ import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
+import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -28,10 +29,10 @@ import java.util.List;
 @RequestMapping("/portal/folders")
 @Api(tags = "文件夹管理")
 public class FoldersController {
-    
+
     @Autowired
     private IFoldersService foldersService;
-    
+
     @ApiOperation("获取文件夹列表")
     @GetMapping("/")
     public ServerResponse<List<Folders>> getFolders(String dir) {
@@ -43,31 +44,25 @@ public class FoldersController {
                         SecurityUtil.getUsername()));
         return ServerResponse.createBySuccess(list);
     }
-    
+
     @ApiOperation("新建文件夹")
     @PostMapping("/")
     public ServerResponse addFolder(@RequestBody Folders folders) {
         return foldersService.addFolder(folders.getFolderName(), folders.getDir());
     }
-    
+
     @ApiOperation("移动文件夹")
     @PostMapping("/move")
     public ServerResponse move(Long[] folderId, String dir) {
         return foldersService.move(folderId, dir);
     }
-    
+
     @ApiOperation("重命名文件夹")
     @PutMapping("/rename/{folderId}")
-    public ServerResponse rename(@PathVariable Long folderId, String dir, String newFolderName) {
-        return foldersService.rename(folderId, dir, newFolderName);
+    public ServerResponse rename(@PathVariable Long folderId, @RequestBody FileRenameDto dto) {
+        return foldersService.rename(folderId, dto);
     }
-    
-    @ApiOperation("重命名文件夹(文件夹名重复)")
-    @PutMapping("/rename/repeat/{folderId}")
-    public ServerResponse renameRepeat(@PathVariable Long folderId, String dir, String newFolderName) {
-        return foldersService.renameRepeat(folderId, dir, newFolderName);
-    }
-    
+
     @ApiOperation("删除文件夹")
     @DeleteMapping("/{folderId}")
     public ServerResponse delete(@PathVariable Long folderId) {

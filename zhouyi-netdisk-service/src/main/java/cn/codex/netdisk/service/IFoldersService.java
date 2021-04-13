@@ -1,6 +1,7 @@
 package cn.codex.netdisk.service;
 
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.entity.Folders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,7 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-01-28
  */
 public interface IFoldersService extends IService<Folders> {
-    
+
     /**
      * 新建文件夹
      *
@@ -22,7 +23,7 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse addFolder(String folderName, String dir);
-    
+
     /**
      * 新建文件夹
      *
@@ -32,27 +33,25 @@ public interface IFoldersService extends IService<Folders> {
      * @return 结果
      */
     ServerResponse addFolder(String folderName, String dir, String username);
-    
+
     /**
      * 重命名文件夹
      *
-     * @param folderId      文件夹ID
-     * @param dir           目录
-     * @param newFolderName 新文件夹名称
+     * @param folderId 文件夹ID
+     * @param dto      文件重命名数据传输对象
      * @return 结果
      */
-    ServerResponse rename(Long folderId, String dir, String newFolderName);
-    
+    ServerResponse rename(Long folderId, FileRenameDto dto);
+
     /**
      * 重命名文件夹(文件夹名重复处理)
      *
-     * @param folderId      文件夹ID
-     * @param dir           目录
-     * @param newFolderName 新文件夹名称
+     * @param folderId 文件夹ID
+     * @param dto      文件重命名数据传输对象
      * @return 结果
      */
-    ServerResponse renameRepeat(Long folderId, String dir, String newFolderName);
-    
+    ServerResponse retryRename(Long folderId, FileRenameDto dto);
+
     /**
      * 移动文件夹
      *

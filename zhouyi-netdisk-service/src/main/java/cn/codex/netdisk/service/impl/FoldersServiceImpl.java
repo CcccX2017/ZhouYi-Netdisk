@@ -8,6 +8,7 @@ import cn.codex.netdisk.common.exception.ErrorException;
 import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FoldersMapper;
+import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.service.IFoldersService;
 import cn.hutool.core.date.DateUtil;
@@ -32,13 +33,13 @@ import java.util.Date;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> implements IFoldersService {
-    
+
     @Autowired
     private FoldersMapper foldersMapper;
-    
+
     @Autowired
     private Snowflake snowflake;
-    
+
     /**
      * 新建文件夹
      *
@@ -51,7 +52,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         String username = SecurityUtil.getUsername();
         return addFolder(folderName, dir, username);
     }
-    
+
     /**
      * 新建文件夹
      *
@@ -66,13 +67,13 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         if (responseServer != null) {
             return responseServer;
         }
-        
+
         // 判断文件夹名称是否重复，重复则重新命名
         Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
                 folderName).eq(Folders.DIR, dir).eq(Folders.CREATOR, username));
-    
+
         Folders folders = new Folders();
-    
+
         if (count > 0) {
             // 重命名文件夹名称为：文件夹名称_年月日_时分秒
             String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
@@ -83,65 +84,60 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         folders.setFolderId(snowflake.nextId());
         folders.setCreator(username);
         folders.setDir(dir);
-    
+
         return foldersMapper.insert(folders) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.CREATE_FOLDER_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.CREATE_FOLDER_ERROR);
     }
-    
+
     /**
      * 重命名文件夹
      *
-     * @param folderId      文件夹ID
-     * @param dir           目录
-     * @param newFolderName 新文件夹名称
+     * @param folderId 文件夹ID
+     * @param dto      文件重命名数据传输对象
      * @return 结果
      */
     @Override
-    public ServerResponse rename(Long folderId, String dir, String newFolderName) {
-        ServerResponse responseServer = checkData(dir, newFolderName);
+    public ServerResponse rename(Long folderId, FileRenameDto dto) {
+        ServerResponse responseServer = checkData(dto.getDir(), dto.getNewName());
         if (responseServer != null) {
             return responseServer;
         }
-        
-        // 判断文件夹名称是否重复，重复则重新命名
-        Integer count =
-                foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, newFolderName).eq(Folders.DIR, dir).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
-        if (count > 0) {
-            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(), ResponseCode.FOLDER_NAME_REPEAT.getDesc());
+
+        // 第一次重命名
+        if (Strings.isNullOrEmpty(dto.getType())) {
+            return firstRename(folderId, dto);
+        } else if (Const.NEW_COPY.equals(dto.getType())) {
+            // 出现同名文件时，用户选择保留两者之后的第二次尝试重命名
+            return retryRename(folderId, dto);
+        } else {
+            return ServerResponse.createByErrorMessage(ReturnMessage.ILLEGAL_REQUEST);
         }
-        
-        Folders folders = new Folders();
-        folders.setFolderId(folderId);
-        folders.setFolderName(newFolderName);
-        return foldersMapper.updateById(folders) > 0
-                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
-                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
     }
-    
+
     /**
      * 重命名文件夹(文件夹名重复处理)
      *
-     * @param folderId      文件夹ID
-     * @param dir           目录
-     * @param newFolderName 新文件夹名称
+     * @param folderId 文件夹ID
+     * @param dto      文件重命名数据传输对象
      * @return 结果
      */
     @Override
-    public ServerResponse renameRepeat(Long folderId, String dir, String newFolderName) {
-        ServerResponse responseServer = checkData(dir, newFolderName);
+    public ServerResponse retryRename(Long folderId, FileRenameDto dto) {
+        ServerResponse responseServer = checkData(dto.getDir(), dto.getNewName());
         if (responseServer != null) {
             return responseServer;
         }
-        
+
         Folders folders = new Folders();
         folders.setFolderId(folderId);
-        
+
         // 重命名文件夹名称
         try {
-            int count = foldersMapper.selectRenameCount(folderId, newFolderName, dir, SecurityUtil.getUsername());
-            folders.setFolderName(newFolderName + "(" + count + ")");
-            
+            int count = foldersMapper.selectRenameCount(folderId, dto.getNewName(), dto.getDir(),
+                    SecurityUtil.getUsername());
+            folders.setFolderName(dto.getNewName() + "(" + count + ")");
+
             return foldersMapper.updateById(folders) > 0
                     ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                     : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
@@ -149,8 +145,8 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
             return ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
         }
     }
-    
-    
+
+
     /**
      * 移动文件夹
      *
@@ -163,34 +159,54 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         if (folderId == null || folderId.length == 0 || Strings.isNullOrEmpty(dir)) {
             throw new ErrorException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        
+
         if (folderId.length == 1) {
             return foldersMapper.moveFolder(folderId[0], dir) > 0
                     ? ServerResponse.createBySuccessMessage(ReturnMessage.MOVE_FOLDER_SUCCESS)
                     : ServerResponse.createByErrorMessage(ReturnMessage.MOVE_FOLDER_ERROR);
         }
-        
+
         return foldersMapper.batchMoveFolder(folderId, dir) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.MOVE_FOLDER_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.MOVE_FOLDER_ERROR);
     }
-    
+
+    /**
+     * 第一次重命名
+     */
+    private ServerResponse<?> firstRename(Long folderId, FileRenameDto dto) {
+        // 判断文件夹名称是否重复，重复则重新命名
+        Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, dto.getNewName()).eq(Folders.DIR, dto.getDir()).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
+        if (count != null && count > 0) {
+            // 存在重名文件，提示用户是否保留两者
+            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
+                    ResponseCode.FOLDER_NAME_REPEAT.getDesc());
+        }
+        // 不存在重名文件夹，重命名文件夹
+        Folders folders = new Folders();
+        folders.setFolderId(folderId);
+        folders.setFolderName(dto.getNewName());
+        return foldersMapper.updateById(folders) > 0
+                ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+    }
+
     private ServerResponse checkData(String dir, String newFolderName) {
         if (Strings.isNullOrEmpty(newFolderName.trim())) {
             return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMPTY);
         }
-        
+
         if (dir == null) {
             return ServerResponse.createByErrorMessage(ReturnMessage.DIR_NOT_BE_EMPTY);
         }
-        
+
         // 判断文件夹名称是否超长
         if (newFolderName.getBytes().length > Const.MAX_FILE_NAME_LENGTH) {
             return ServerResponse.createByErrorMessage("文件夹名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
         }
 
         // 判断文件名是否合法
-        if (!RegexUtil.isFileNameHaveSpecialCharacters(newFolderName)){
+        if (!RegexUtil.isFileNameHaveSpecialCharacters(newFolderName)) {
             return ServerResponse.createByErrorMessage(ReturnMessage.FILE_NAME_ILLEGAL);
         }
 
