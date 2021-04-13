@@ -5,6 +5,7 @@ import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.ErrorException;
+import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FoldersMapper;
 import cn.codex.netdisk.model.entity.Folders;
@@ -187,6 +188,12 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         if (newFolderName.getBytes().length > Const.MAX_FILE_NAME_LENGTH) {
             return ServerResponse.createByErrorMessage("文件夹名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
         }
+
+        // 判断文件名是否合法
+        if (!RegexUtil.isFileNameHaveSpecialCharacters(newFolderName)){
+            return ServerResponse.createByErrorMessage(ReturnMessage.FILE_NAME_ILLEGAL);
+        }
+
         return null;
     }
 }

@@ -29,6 +29,12 @@ public class FolderAndFileQueryDto implements Serializable {
     
     @ApiModelProperty("是否降序 1-降序，0-升序")
     private Integer desc;
+
+    @ApiModelProperty("关键字搜索")
+    private String keyword;
+
+    @ApiModelProperty("是否搜索")
+    private Integer isSearch;
     
     public Long getPage() {
         if (page == null || page <= 0) {
@@ -74,5 +80,21 @@ public class FolderAndFileQueryDto implements Serializable {
     
     public void setDesc(Integer desc) {
         this.desc = desc;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public Integer getIsSearch() {
+        return isSearch;
+    }
+
+    public void setIsSearch(Integer isSearch) {
+        this.isSearch = isSearch;
     }
 }

@@ -9,7 +9,7 @@ import cn.hutool.core.util.ReUtil;
  * @since 2021-02-23 16:36:57
  */
 public class RegexUtil {
-    
+
     /**
      * 验证输入的邮箱格式是否正确
      *
@@ -21,7 +21,7 @@ public class RegexUtil {
                 "+[\\w](?:[\\w-]*[\\w])?";
         return ReUtil.isMatch(pattern, email);
     }
-    
+
     /**
      * 账号是否合法(字母开头，允许5-16字节，允许字母数字下划线组合)
      *
@@ -32,7 +32,7 @@ public class RegexUtil {
         String pattern = "^[a-zA-Z]\\w{4,15}$";
         return ReUtil.isMatch(pattern, account);
     }
-    
+
     /**
      * 验证用户昵称是否合法(中英文、下划线、数字，长度1到12位)
      *
@@ -41,7 +41,18 @@ public class RegexUtil {
      */
     public static boolean isNicknameLegal(String nickname) {
         String pattern = "^[\\u4E00-\\u9FA5\\w]{1,12}$";
-        
+
         return ReUtil.isMatch(pattern, nickname);
+    }
+
+    /**
+     * 验证文件名是否含有特殊字符
+     *
+     * @param name 文件名
+     * @return true - 不含有, false - 含有
+     */
+    public static boolean isFileNameHaveSpecialCharacters(String name) {
+        String pattern = "[^/<>|*?]*";
+        return ReUtil.isMatch(pattern, name);
     }
 }

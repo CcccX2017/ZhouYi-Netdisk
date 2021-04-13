@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2021-03-27
  */
 public interface FileAndFolderMapper {
-    
+
     /**
      * 获取文件夹和文件列表
      *
@@ -25,5 +25,16 @@ public interface FileAndFolderMapper {
     IPage<FolderAndFileVo> getFolderAndFileVo(Page<FolderAndFileVo> page,
                                               @Param("username") String username,
                                               @Param("dto") FolderAndFileQueryDto dto);
-    
+
+    /**
+     * 条件查询
+     *
+     * @param page     分页对象
+     * @param username 用户名
+     * @param dto      查询对象
+     * @return 查询结果
+     */
+    IPage<FolderAndFileVo> search(Page<FolderAndFileVo> page,
+                                  @Param("username") String username,
+                                  @Param("dto") FolderAndFileQueryDto dto);
 }

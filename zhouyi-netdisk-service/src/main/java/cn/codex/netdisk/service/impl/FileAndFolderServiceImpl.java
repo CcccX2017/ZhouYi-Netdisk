@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class FileAndFolderServiceImpl implements IFileAndFolderService {
-    
+
     @Autowired
     private FileAndFolderMapper fileAndFolderMapper;
-    
+
     /**
      * 获取文件夹和文件列表
      *
@@ -34,5 +34,18 @@ public class FileAndFolderServiceImpl implements IFileAndFolderService {
     public IPage<FolderAndFileVo> getList(String username, FolderAndFileQueryDto dto) {
         Page<FolderAndFileVo> page = new Page<>(dto.getPage(), dto.getLimit());
         return fileAndFolderMapper.getFolderAndFileVo(page, username, dto);
+    }
+
+    /**
+     * 条件查询
+     *
+     * @param username 用户名
+     * @param dto      文件夹和文件查询实体类
+     * @return 查询结果
+     */
+    @Override
+    public IPage<FolderAndFileVo> search(String username, FolderAndFileQueryDto dto) {
+        Page<FolderAndFileVo> page = new Page<>(dto.getPage(), dto.getLimit());
+        return fileAndFolderMapper.search(page, username, dto);
     }
 }

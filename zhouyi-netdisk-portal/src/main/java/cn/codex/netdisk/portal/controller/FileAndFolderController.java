@@ -2,6 +2,7 @@ package cn.codex.netdisk.portal.controller;
 
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
+import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.utils.FileUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
@@ -32,16 +33,16 @@ import java.util.Map;
 @Api(tags = "文件和文件夹管理")
 @Transactional(rollbackFor = Exception.class)
 public class FileAndFolderController {
-    
+
     @Autowired
     private IFileAndFolderService fileAndFolderService;
-    
+
     @Autowired
     private IFilesService filesService;
-    
+
     @Autowired
     private IFoldersService foldersService;
-    
+
     @ApiOperation(value = "获取文件夹和文件列表")
     @GetMapping("/")
     public ServerResponse getFolderAndFilesList(FolderAndFileQueryDto dto) {
@@ -52,9 +53,20 @@ public class FileAndFolderController {
         // 分页条件
         Long page = dto.getPage();
         Long limit = dto.getLimit();
-        IPage<FolderAndFileVo> pageData = fileAndFolderService.getList(SecurityUtil.getUsername(), dto);
+        if (dto.getIsSearch() == null) {
+            throw new CustomException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        IPage<FolderAndFileVo> pageData;
+        if (dto.getIsSearch() == 0) {
+            pageData = fileAndFolderService.getList(SecurityUtil.getUsername(), dto);
+        } else if (dto.getIsSearch() == 1) {
+            pageData = fileAndFolderService.search(SecurityUtil.getUsername(), dto);
+        } else {
+            throw new CustomException(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
         List<FolderAndFileVo> records = pageData.getRecords();
         records.forEach(folderAndFileVo -> {
+            folderAndFileVo.setDir(folderAndFileVo.getPath());
             if ("/".equals(folderAndFileVo.getPath())) {
                 folderAndFileVo.setPath("/" + folderAndFileVo.getName());
             } else {
@@ -64,16 +76,16 @@ public class FileAndFolderController {
                 folderAndFileVo.setSizeStr(FileUtil.byteCountToDisplaySize(folderAndFileVo.getSize()));
             }
         });
-        
+
         pageResult.setList(records);
         // 已加载数 = 当前查询到的记录数 + 之前已经加载的记录数 (page - 1) * limit
         pageResult.setCount(records.size() + (int) ((page - 1) * limit));
         // 是否全部加载 = 已加载数 == 总记录数 ? 1 : 0
         pageResult.setIsAll(pageResult.getCount() == pageData.getTotal() ? 1 : 0);
-        
+
         return ServerResponse.createBySuccess(pageResult);
     }
-    
+
     @ApiOperation(value = "批量删除")
     @DeleteMapping("/")
     public ServerResponse batchDelete(@RequestBody Map<String, List<Long>> map) {
@@ -90,7 +102,7 @@ public class FileAndFolderController {
                     filesService.removeByIds(fileIds);
                 }
             }
-            
+
             // 删除文件夹
             if (folderIds != null) {
                 if (folderIds.size() == 1) {
@@ -101,12 +113,11 @@ public class FileAndFolderController {
                     foldersService.removeByIds(folderIds);
                 }
             }
-            
+
             return ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             return ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
         }
     }
-    
 }

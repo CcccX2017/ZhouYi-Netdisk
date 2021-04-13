@@ -35,7 +35,10 @@ public class FolderAndFileVo implements Serializable {
     
     @ApiModelProperty("格式化后的文件大小")
     private String sizeStr;
-    
+
+    @ApiModelProperty("所在目录")
+    private String dir;
+
     @ApiModelProperty("路径")
     private String path;
     

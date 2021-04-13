@@ -20,5 +20,13 @@ public interface IFileAndFolderService {
      * @return 查询结果
      */
     IPage<FolderAndFileVo> getList(String username, FolderAndFileQueryDto dto);
-    
+
+    /**
+     * 条件查询
+     *
+     * @param username 用户名
+     * @param dto      文件夹和文件查询实体类
+     * @return 查询结果
+     */
+    IPage<FolderAndFileVo> search(String username, FolderAndFileQueryDto dto);
 }

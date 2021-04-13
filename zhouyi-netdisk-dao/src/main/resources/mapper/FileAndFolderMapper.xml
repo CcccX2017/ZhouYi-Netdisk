@@ -98,4 +98,102 @@
         limit 18446744073709551615
                 ) t2
     </select>
+
+    <select id="search" resultType="cn.codex.netdisk.model.vo.FolderAndFileVo">
+        select * from (
+                select folder_id    as id,
+                       folder_name  as name,
+                       1            as isDir,
+                       null         as size,
+                       '-'          as sizeStr,
+                       dir          as path,
+                       'folder'     as type,
+                       'folder.png' as icon,
+                       gmt_modified
+                from tb_folders
+                where creator = #{username}
+                  and is_deleted = 0
+                  and folder_name like concat(#{dto.keyword}, '%')
+        <choose>
+            <when test="dto.desc != null and dto.desc == 1">
+                <choose>
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by folder_name desc
+                    </when>
+                    <when test="dto.order == 'time' or dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified desc
+                    </when>
+                </choose>
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by folder_name asc
+                    </when>
+                    <when test="dto.order == 'time' or dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified asc
+                    </when>
+                </choose>
+            </otherwise>
+        </choose>
+        limit 18446744073709551615
+                ) t1
+                union
+                select * from (
+                select file_id   as id,
+                       real_name as name,
+                       0         as dir,
+                       size,
+                       ''        as sizeStr,
+                       dir       as path,
+                       file_type as type,
+                       icon,
+                       gmt_modified
+                from tb_files
+                where creator = #{username}
+                  and is_deleted = 0
+                  and real_name like concat(#{dto.keyword}, '%')
+        <choose>
+            <when test="dto.desc != null and dto.desc == 1">
+                <choose>
+                    <!--@ignoreSql-->
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by real_name desc
+                    </when>
+                    <when test="dto.order == 'time'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified desc
+                    </when>
+                    <when test="dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by size desc
+                    </when>
+                </choose>
+            </when>
+            <otherwise>
+                <choose>
+                    <!--@ignoreSql-->
+                    <when test="dto.order == 'name'">
+                        <!--@ignoreSql-->
+                        order by real_name asc
+                    </when>
+                    <when test="dto.order == 'time'">
+                        <!--@ignoreSql-->
+                        order by gmt_modified asc
+                    </when>
+                    <when test="dto.order == 'size'">
+                        <!--@ignoreSql-->
+                        order by size asc
+                    </when>
+                </choose>
+            </otherwise>
+        </choose>
+        limit 18446744073709551615
+                ) t2
+    </select>
 </mapper>
