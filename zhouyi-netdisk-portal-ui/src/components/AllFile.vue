@@ -54,7 +54,8 @@
 						</li>
 					</ul>
 				</span>
-				<span class="load-count textSpan" v-if="isAll == 1">已全部加载，共{{ count }}个</span>
+				<span class="load-count textSpan" v-if="loading != null">获取更多数据...</span>
+				<span class="load-count textSpan" v-else-if="isAll == 1">已全部加载，共{{ count }}个</span>
 				<span class="load-count textSpan" v-else>已加载{{ count }}个</span>
 			</div>
 			<div class="file-list">
@@ -320,6 +321,7 @@ export default {
 			if (this.loading) {
 				this.$nextTick(() => {
 					this.loading.close();
+					this.loading = null;
 				});
 			}
 		},
