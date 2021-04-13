@@ -8,7 +8,7 @@
 					<el-button type="primary" plain icon="iconfont icon-share" class="plain-btn">分享</el-button>
 					<el-button type="primary" plain icon="el-icon-download" class="plain-btn">下载</el-button>
 					<el-button type="primary" plain icon="el-icon-delete" class="plain-btn" @click.native.stop="deleteFile">删除</el-button>
-					<el-button type="primary" plain class="plain-btn" :disabled="btnGroup.disabled">重命名</el-button>
+					<el-button type="primary" plain class="plain-btn" :disabled="btnGroup.disabled" @click.native.stop="rename">重命名</el-button>
 					<el-button type="primary" plain class="plain-btn">复制到</el-button>
 					<el-button type="primary" plain class="plain-btn">移动到</el-button>
 				</el-button-group>
@@ -124,14 +124,13 @@
 			</div>
 		</div>
 
-		<!-- 新建文件夹弹出框 -->
-		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
+		<!-- 新建文件夹/重命名弹出框 -->
+		<el-dialog :title="dialogTitle" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
 			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
 				<el-form-item prop="folderName">
 					<el-input
 						v-model="folderForm.folderName"
-						placeholder="请输入文件夹名称"
-						prefix-icon="el-icon-folder-add"
+						:placeholder="placeholder"
 						@keyup.enter.native="createFolder"
 						ref="folderInput"
 					></el-input>
@@ -152,6 +151,8 @@ export default {
 	name: 'AllFile',
 	data() {
 		return {
+			dialogTitle: '',
+			placeholder: '',
 			dialogFolderVisible: false,
 			checkAll: false,
 			isIndeterminate: false,
@@ -187,11 +188,11 @@ export default {
 			},
 			folderRules: {
 				folderName: [
-					{ required: true, message: '请输入文件夹名称', trigger: 'blur' },
+					{ required: true, message: '请输入文件(夹)名称', trigger: 'blur' },
 					{
 						min: 1,
 						max: 255,
-						message: '文件夹名称不能超过255个字节',
+						message: '文件(夹)名称不能超过255个字节',
 						trigger: 'blur'
 					}
 				]
@@ -214,6 +215,18 @@ export default {
 		this.getList();
 	},
 	methods: {
+		// 重命名
+		rename() {
+			if (this.$refs.folderForm) {
+				this.$refs.folderForm.resetFields();
+			}
+			this.dialogTitle = '重命名';
+			this.placeholder = '请输入文件(夹)名称';
+			this.dialogFolderVisible = true;
+			this.$nextTick(() => {
+				this.$refs.folderInput.$el.children[0].focus();
+			});
+		},
 		// 组装所在目录
 		assembleDirectory(dir) {
 			if (dir == '/') {
@@ -245,24 +258,22 @@ export default {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
-			})
-				.then(() => {
-					this.deleteRequest('/portal/list/', this.checkList).then(resp => {
-						if (resp) {
-							this.resetQueryParam();
-							this.checkedList = [];
-							this.checkList.fileIds = [];
-							this.checkList.folderIds = [];
-							this.getList();
-						}
-					});
-				})
-				.catch(() => {});
+			}).then(() => {
+				this.deleteRequest('/portal/list/', this.checkList).then(resp => {
+					if (resp) {
+						this.resetQueryParam();
+						this.checkedList = [];
+						this.checkList.fileIds = [];
+						this.checkList.folderIds = [];
+						this.getList();
+					}
+				});
+			}).catch(() => {});
 		},
 		// 面包屑导航
 		goBack(path) {
-			if(this.isSearch == 1){
-				this.isSearch = 0
+			if (this.isSearch == 1) {
+				this.isSearch = 0;
 			}
 			if (path) {
 				this.queryParam.dir = path;
@@ -307,6 +318,8 @@ export default {
 			if (this.$refs.folderForm) {
 				this.$refs.folderForm.resetFields();
 			}
+			this.dialogTitle = '新建文件夹';
+			this.placeholder = '请输入文件夹名称';
 			this.dialogFolderVisible = true;
 			this.$nextTick(() => {
 				this.$refs.folderInput.$el.children[0].focus();
@@ -542,20 +555,20 @@ export default {
 				}
 				return val;
 			}
-			
-			if(deep > 3){
+
+			if (deep > 3) {
 				if (val.length > 10) {
 					return val.substr(0, 5) + '...';
 				}
 				return val;
 			}
 		},
-		directoryFilter: function(val){
-			if(val.length > 15){
+		directoryFilter: function(val) {
+			if (val.length > 15) {
 				return val.substr(0, 15) + '...';
 			}
-			
-			return val
+
+			return val;
 		}
 	}
 };
