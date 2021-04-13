@@ -11,6 +11,7 @@
                        dir          as path,
                        'folder'     as type,
                        'folder.png' as icon,
+                       '-'          as suffix,
                        gmt_modified
                 from tb_folders
                 where dir = #{dto.dir}
@@ -54,6 +55,7 @@
                        dir       as path,
                        file_type as type,
                        icon,
+                       extension as suffix,
                        gmt_modified
                 from tb_files
                 where dir = #{dto.dir}
@@ -109,6 +111,7 @@
                        dir          as path,
                        'folder'     as type,
                        'folder.png' as icon,
+                       '-'          as suffix,
                        gmt_modified
                 from tb_folders
                 where creator = #{username}
@@ -152,6 +155,7 @@
                        dir       as path,
                        file_type as type,
                        icon,
+                       extension as suffix,
                        gmt_modified
                 from tb_files
                 where creator = #{username}
