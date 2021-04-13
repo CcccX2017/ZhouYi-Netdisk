@@ -128,12 +128,7 @@
 		<el-dialog :title="dialogTitle" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
 			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
 				<el-form-item prop="folderName">
-					<el-input
-						v-model="folderForm.folderName"
-						:placeholder="placeholder"
-						@keyup.enter.native="createFolder"
-						ref="folderInput"
-					></el-input>
+					<el-input v-model="folderForm.folderName" :placeholder="placeholder" @keyup.enter.native="createFolder" ref="folderInput"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -203,7 +198,9 @@ export default {
 			checkList: {
 				fileIds: [],
 				folderIds: []
-			}
+			},
+			// 选择的文件名称，供重命名使用
+			checkedFileName: ''
 		};
 	},
 	created() {
@@ -223,6 +220,7 @@ export default {
 			this.dialogTitle = '重命名';
 			this.placeholder = '请输入文件(夹)名称';
 			this.dialogFolderVisible = true;
+			this.folderForm.folderName = this.checkedFileName
 			this.$nextTick(() => {
 				this.$refs.folderInput.$el.children[0].focus();
 			});
@@ -258,17 +256,19 @@ export default {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
-			}).then(() => {
-				this.deleteRequest('/portal/list/', this.checkList).then(resp => {
-					if (resp) {
-						this.resetQueryParam();
-						this.checkedList = [];
-						this.checkList.fileIds = [];
-						this.checkList.folderIds = [];
-						this.getList();
-					}
-				});
-			}).catch(() => {});
+			})
+				.then(() => {
+					this.deleteRequest('/portal/list/', this.checkList).then(resp => {
+						if (resp) {
+							this.resetQueryParam();
+							this.checkedList = [];
+							this.checkList.fileIds = [];
+							this.checkList.folderIds = [];
+							this.getList();
+						}
+					});
+				})
+				.catch(() => {});
 		},
 		// 面包屑导航
 		goBack(path) {
@@ -418,6 +418,7 @@ export default {
 				} else {
 					this.checkList.fileIds.push(obj.id);
 				}
+				this.checkedFileName = obj.name;
 			}
 		},
 		// 点击复选框多选
@@ -428,11 +429,20 @@ export default {
 				} else {
 					this.checkList.fileIds.push(obj.id);
 				}
+				this.checkedFileName = obj.name;
 			} else {
 				if (obj.isDir === 1) {
 					this.checkList.folderIds.splice(this.checkList.folderIds.indexOf(obj.id), 1);
 				} else {
 					this.checkList.fileIds.splice(this.checkList.folderIds.indexOf(obj.id), 1);
+				}
+				if(this.checkedList.length === 1){
+					this.list.forEach(item => {
+						if(item.id === this.checkedList[0]){
+							this.checkedFileName = item.name
+							return
+						}
+					})
 				}
 			}
 		},
