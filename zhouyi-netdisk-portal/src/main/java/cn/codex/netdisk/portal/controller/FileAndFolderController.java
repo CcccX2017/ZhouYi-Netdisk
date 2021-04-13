@@ -84,7 +84,7 @@ public class FileAndFolderController {
             if (fileIds != null) {
                 if (fileIds.size() == 1) {
                     // 删除单个
-                    filesService.removeById(folderIds.get(0));
+                    filesService.removeById(fileIds.get(0));
                 } else if (fileIds.size() > 1) {
                     // 批量删除
                     filesService.removeByIds(fileIds);
