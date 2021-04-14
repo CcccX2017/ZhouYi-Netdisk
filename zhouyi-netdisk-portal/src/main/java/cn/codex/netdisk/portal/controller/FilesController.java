@@ -1,13 +1,11 @@
 package cn.codex.netdisk.portal.controller;
 
 
-import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.ErrorException;
 import cn.codex.netdisk.model.dtos.FileCopyDto;
-import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.entity.Files;
 import cn.codex.netdisk.service.IFilesService;
@@ -64,24 +62,6 @@ public class FilesController {
     @PostMapping("/copy/{fileId}")
     public ServerResponse copy(@PathVariable Long fileId, @RequestBody FileCopyDto fileCopyDto) {
         return filesService.copy(fileId, fileCopyDto);
-    }
-    
-    @ApiOperation(value = "重命名文件")
-    @PostMapping("/rename/{fileId}")
-    public ServerResponse rename(@PathVariable Long fileId, @RequestBody FileRenameDto fileRenameDto) {
-        if (Strings.isNullOrEmpty(fileRenameDto.getDir())) {
-            return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
-        }
-        
-        if (Strings.isNullOrEmpty(fileRenameDto.getNewName())) {
-            return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMPTY);
-        }
-        
-        if (fileRenameDto.getNewName().length() > Const.MAX_FILE_NAME_LENGTH) {
-            return ServerResponse.createByErrorMessage("文件名称长度不能超过" + Const.MAX_FILE_NAME_LENGTH);
-        }
-        
-        return filesService.rename(fileId, fileRenameDto);
     }
     
     @ApiOperation(value = "删除文件")

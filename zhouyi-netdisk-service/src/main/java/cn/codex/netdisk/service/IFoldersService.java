@@ -44,15 +44,6 @@ public interface IFoldersService extends IService<Folders> {
     ServerResponse rename(Long folderId, FileRenameDto dto);
 
     /**
-     * 重命名文件夹(文件夹名重复处理)
-     *
-     * @param folderId 文件夹ID
-     * @param dto      文件重命名数据传输对象
-     * @return 结果
-     */
-    ServerResponse retryRename(Long folderId, FileRenameDto dto);
-
-    /**
      * 移动文件夹
      *
      * @param folderId 文件夹ID

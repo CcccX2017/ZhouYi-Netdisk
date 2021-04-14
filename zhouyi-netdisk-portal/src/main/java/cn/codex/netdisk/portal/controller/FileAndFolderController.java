@@ -1,11 +1,14 @@
 package cn.codex.netdisk.portal.controller;
 
+import cn.codex.netdisk.common.constants.Const;
 import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.exception.CustomException;
 import cn.codex.netdisk.common.utils.FileUtil;
+import cn.codex.netdisk.common.utils.RegexUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
+import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.dtos.PageResult;
 import cn.codex.netdisk.model.vo.FolderAndFileVo;
@@ -13,6 +16,7 @@ import cn.codex.netdisk.service.IFileAndFolderService;
 import cn.codex.netdisk.service.IFilesService;
 import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,5 +123,40 @@ public class FileAndFolderController {
             e.printStackTrace();
             return ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
         }
+    }
+
+    @ApiOperation(value = "重命名")
+    @PutMapping("/{id}/{isDir}")
+    public ServerResponse rename(@PathVariable Long id,
+                                 @PathVariable Integer isDir,
+                                 @RequestBody FileRenameDto dto) {
+
+        if (Strings.isNullOrEmpty(dto.getNewName().trim())) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.FILENAME_NOT_BE_EMPTY);
+        }
+
+        if (dto.getDir() == null) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.DIR_NOT_BE_EMPTY);
+        }
+
+        // 判断文件夹名称是否超长
+        if (dto.getNewName().getBytes().length > Const.MAX_FILE_NAME_LENGTH) {
+            return ServerResponse.createByErrorMessage("文件(夹)名称不能超过" + Const.MAX_FILE_NAME_LENGTH + "字节");
+        }
+
+        // 判断文件名是否合法
+        if (!RegexUtil.isFileNameHaveSpecialCharacters(dto.getNewName())) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.FILE_NAME_ILLEGAL);
+        }
+
+        if (isDir == 1) {
+            return foldersService.rename(id, dto);
+        }
+
+        if (isDir == 0) {
+            return filesService.rename(id, dto);
+        }
+
+        return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
     }
 }

@@ -99,11 +99,6 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      */
     @Override
     public ServerResponse rename(Long folderId, FileRenameDto dto) {
-        ServerResponse responseServer = checkData(dto.getDir(), dto.getNewName());
-        if (responseServer != null) {
-            return responseServer;
-        }
-
         // 第一次重命名
         if (Strings.isNullOrEmpty(dto.getType())) {
             return firstRename(folderId, dto);
@@ -114,38 +109,6 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
             return ServerResponse.createByErrorMessage(ReturnMessage.ILLEGAL_REQUEST);
         }
     }
-
-    /**
-     * 重命名文件夹(文件夹名重复处理)
-     *
-     * @param folderId 文件夹ID
-     * @param dto      文件重命名数据传输对象
-     * @return 结果
-     */
-    @Override
-    public ServerResponse retryRename(Long folderId, FileRenameDto dto) {
-        ServerResponse responseServer = checkData(dto.getDir(), dto.getNewName());
-        if (responseServer != null) {
-            return responseServer;
-        }
-
-        Folders folders = new Folders();
-        folders.setFolderId(folderId);
-
-        // 重命名文件夹名称
-        try {
-            int count = foldersMapper.selectRenameCount(folderId, dto.getNewName(), dto.getDir(),
-                    SecurityUtil.getUsername());
-            folders.setFolderName(dto.getNewName() + "(" + count + ")");
-
-            return foldersMapper.updateById(folders) > 0
-                    ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
-                    : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
-        } catch (Exception e) {
-            return ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
-        }
-    }
-
 
     /**
      * 移动文件夹
@@ -189,6 +152,27 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         return foldersMapper.updateById(folders) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+    }
+
+    /**
+     * 第二次重命名
+     */
+    private ServerResponse retryRename(Long folderId, FileRenameDto dto) {
+        Folders folders = new Folders();
+        folders.setFolderId(folderId);
+
+        // 重命名文件夹名称
+        try {
+            int count = foldersMapper.selectRenameCount(folderId, dto.getNewName(), dto.getDir(),
+                    SecurityUtil.getUsername());
+            folders.setFolderName(dto.getNewName() + "(" + count + ")");
+
+            return foldersMapper.updateById(folders) > 0
+                    ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                    : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        } catch (Exception e) {
+            return ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
+        }
     }
 
     private ServerResponse checkData(String dir, String newFolderName) {

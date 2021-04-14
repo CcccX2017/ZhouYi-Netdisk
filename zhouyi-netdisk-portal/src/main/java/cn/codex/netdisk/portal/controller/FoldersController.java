@@ -5,7 +5,6 @@ import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
-import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.service.IFoldersService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -55,12 +54,6 @@ public class FoldersController {
     @PostMapping("/move")
     public ServerResponse move(Long[] folderId, String dir) {
         return foldersService.move(folderId, dir);
-    }
-
-    @ApiOperation("重命名文件夹")
-    @PutMapping("/rename/{folderId}")
-    public ServerResponse rename(@PathVariable Long folderId, @RequestBody FileRenameDto dto) {
-        return foldersService.rename(folderId, dto);
     }
 
     @ApiOperation("删除文件夹")

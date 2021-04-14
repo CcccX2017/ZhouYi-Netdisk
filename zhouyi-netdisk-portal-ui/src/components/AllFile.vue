@@ -8,7 +8,7 @@
 					<el-button type="primary" plain icon="iconfont icon-share" class="plain-btn">分享</el-button>
 					<el-button type="primary" plain icon="el-icon-download" class="plain-btn">下载</el-button>
 					<el-button type="primary" plain icon="el-icon-delete" class="plain-btn" @click.native.stop="deleteFile">删除</el-button>
-					<el-button type="primary" plain class="plain-btn" :disabled="btnGroup.disabled" @click.native.stop="rename">重命名</el-button>
+					<el-button type="primary" plain class="plain-btn" :disabled="btnGroup.disabled" @click.native.stop="openRenameDialog">重命名</el-button>
 					<el-button type="primary" plain class="plain-btn">复制到</el-button>
 					<el-button type="primary" plain class="plain-btn">移动到</el-button>
 				</el-button-group>
@@ -124,16 +124,29 @@
 			</div>
 		</div>
 
-		<!-- 新建文件夹/重命名弹出框 -->
-		<el-dialog :title="dialogTitle" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
+		<!-- 新建文件夹 -->
+		<el-dialog title="新建文件夹" :visible.sync="dialogFolderVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
 			<el-form :model="folderForm" :rules="folderRules" ref="folderForm">
 				<el-form-item prop="folderName">
-					<el-input v-model="folderForm.folderName" :placeholder="placeholder" @keyup.enter.native="createFolder" ref="folderInput"></el-input>
+					<el-input v-model="folderForm.folderName" placeholder="请输入文件夹名称" @keyup.enter.native="createFolder" ref="folderInput"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogFolderVisible = false">取 消</el-button>
 				<el-button type="primary" @click="createFolder">确 定</el-button>
+			</span>
+		</el-dialog>
+
+		<!-- 重命名 -->
+		<el-dialog title="重命名" :visible.sync="dialogRenameVisible" width="350px" custom-class="folderDialog" :close-on-click-modal="false">
+			<el-form :model="renameForm" :rules="renameRules" ref="renameForm">
+				<el-form-item prop="fileName">
+					<el-input v-model="renameForm.fileName" placeholder="请输入文件(夹)名称" @keyup.enter.native="rename" ref="renameInput"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogRenameVisible = false">取 消</el-button>
+				<el-button type="primary" @click="rename">确 定</el-button>
 			</span>
 		</el-dialog>
 	</div>
@@ -146,8 +159,6 @@ export default {
 	name: 'AllFile',
 	data() {
 		return {
-			dialogTitle: '',
-			placeholder: '',
 			dialogFolderVisible: false,
 			checkAll: false,
 			isIndeterminate: false,
@@ -200,7 +211,22 @@ export default {
 				folderIds: []
 			},
 			// 选择的文件名称，供重命名使用
-			checkedFileName: ''
+			checkedFileName: '',
+			dialogRenameVisible: false,
+			renameForm: {
+				fileName: ''
+			},
+			renameRules: {
+				fileName: [
+					{ required: true, message: '请输入文件(夹)名称', trigger: 'blur' },
+					{
+						min: 1,
+						max: 255,
+						message: '文件(夹)名称不能超过255个字节',
+						trigger: 'blur'
+					}
+				]
+			}
 		};
 	},
 	created() {
@@ -214,15 +240,87 @@ export default {
 	methods: {
 		// 重命名
 		rename() {
-			if (this.$refs.folderForm) {
-				this.$refs.folderForm.resetFields();
+			this.$refs.renameForm.validate(valid => {
+				if (valid) {
+					let param = {
+						newName: this.renameForm.fileName,
+						dir: this.queryParam.dir
+					};
+
+					let id, isDir;
+
+					let fileIds = this.checkList.fileIds;
+					let folderIds = this.checkList.folderIds;
+					if (fileIds.length > 0) {
+						id = fileIds[0];
+						isDir = 0;
+					} else if (folderIds.length > 0) {
+						id = folderIds[0];
+						isDir = 1;
+					} else {
+						return;
+					}
+					let msg = this.$message({
+						message: '正在重命名文件，请稍后...',
+						iconClass: 'el-icon-loading',
+						duration: 0
+					})
+					// 发送重命名请求
+					this.putRequest(`/portal/list/${id}/${isDir}`, param).then(resp => {
+						msg.close()
+						if (resp) {
+							if (resp.status !== 20) {
+								this.resetQueryParam();
+								this.checkedFileName = '';
+								this.checkedList = [];
+								this.checkList.fileIds = [];
+								this.checkList.folderIds = [];
+								this.getList();
+								this.dialogRenameVisible = false;
+							} else {
+								this.$confirm(`${resp.msg}`, '提示', {
+									confirmButtonText: '保留两个文件',
+									cancelButtonText: '取消',
+									type: 'warning'
+								}).then(() => {
+									msg = this.$message({
+										message: '正在重命名文件，请稍后...',
+										iconClass: 'el-icon-loading',
+										duration: 0
+									})
+									param.type = 'newCopy'
+									this.putRequest(`/portal/list/${id}/${isDir}`, param).then(resp => {
+										if(resp){
+											msg.close()
+											this.resetQueryParam();
+											this.checkedFileName = '';
+											this.checkedList = [];
+											this.checkList.fileIds = [];
+											this.checkList.folderIds = [];
+											this.getList();
+											this.dialogRenameVisible = false;
+										}
+									})
+								})
+								.catch(() => {});
+							}
+							
+						}
+					});
+				}
+			});
+		},
+		// 重命名弹出框
+		openRenameDialog() {
+			if (this.$refs.renameForm) {
+				this.$refs.renameForm.resetFields();
 			}
-			this.dialogTitle = '重命名';
-			this.placeholder = '请输入文件(夹)名称';
-			this.dialogFolderVisible = true;
-			this.folderForm.folderName = this.checkedFileName
+			this.renameForm.fileName = this.checkedFileName;
+			this.dialogRenameVisible = true;
 			this.$nextTick(() => {
-				this.$refs.folderInput.$el.children[0].focus();
+				let el = this.$refs.renameInput.$el.children[0];
+				el.select();
+				el.selectionEnd = this.renameForm.fileName.lastIndexOf('.');
 			});
 		},
 		// 组装所在目录
@@ -318,8 +416,6 @@ export default {
 			if (this.$refs.folderForm) {
 				this.$refs.folderForm.resetFields();
 			}
-			this.dialogTitle = '新建文件夹';
-			this.placeholder = '请输入文件夹名称';
 			this.dialogFolderVisible = true;
 			this.$nextTick(() => {
 				this.$refs.folderInput.$el.children[0].focus();
@@ -436,13 +532,13 @@ export default {
 				} else {
 					this.checkList.fileIds.splice(this.checkList.folderIds.indexOf(obj.id), 1);
 				}
-				if(this.checkedList.length === 1){
+				if (this.checkedList.length === 1) {
 					this.list.forEach(item => {
-						if(item.id === this.checkedList[0]){
-							this.checkedFileName = item.name
-							return
+						if (item.id === this.checkedList[0]) {
+							this.checkedFileName = item.name;
+							return;
 						}
-					})
+					});
 				}
 			}
 		},

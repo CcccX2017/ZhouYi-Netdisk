@@ -86,7 +86,8 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
             return ServerResponse.createByErrorMessage(ReturnMessage.ILLEGAL_REQUEST);
         }
     }
-    
+
+
     /**
      * 获取文件列表
      *
@@ -148,7 +149,9 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
         }
         Files files = new Files();
         files.setFileId(fileId);
-        files.setRealName(fileRenameDto.getNewName() + "(" + (count + 1) + ")");
+        String newName = fileRenameDto.getNewName().substring(0, fileRenameDto.getNewName().lastIndexOf('.'));
+        String suffix = fileRenameDto.getNewName().substring(fileRenameDto.getNewName().lastIndexOf('.'));
+        files.setRealName(newName + "(" + (count + 1) + ")" + suffix);
         // 重命名文件
         return baseMapper.updateById(files) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
