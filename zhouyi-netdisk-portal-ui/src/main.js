@@ -13,13 +13,14 @@ import {
 	getRequest,
 	deleteRequest
 } from "./api";
-import vuescroll from 'vuescroll';
+import vueScroll from 'vuescroll';
+import uploader from "vue-simple-uploader";
 
 Vue.use(ElementUI, {
 	size: 'medium'
 })
 
-Vue.use(vuescroll, {
+Vue.use(vueScroll, {
 	ops: {
 		bar: {
 			keepShow: true,
@@ -27,6 +28,8 @@ Vue.use(vuescroll, {
 		}
 	}
 })
+
+Vue.use(uploader)
 
 Vue.config.productionTip = false
 

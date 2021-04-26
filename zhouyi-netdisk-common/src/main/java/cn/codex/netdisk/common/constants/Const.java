@@ -7,6 +7,12 @@ package cn.codex.netdisk.common.constants;
  * @since 2020-11-03 22:00:49
  */
 public class Const {
+    
+    /**
+     * 根目录
+     */
+    public static final String ROOT_DIR = "/";
+    
     /**
      * 保存两者
      */

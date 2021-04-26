@@ -1,7 +1,6 @@
 package cn.codex.netdisk.portal.controller;
 
 
-import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.SecurityUtil;
@@ -54,14 +53,6 @@ public class FoldersController {
     @PostMapping("/move")
     public ServerResponse move(Long[] folderId, String dir) {
         return foldersService.move(folderId, dir);
-    }
-
-    @ApiOperation("删除文件夹")
-    @DeleteMapping("/{folderId}")
-    public ServerResponse delete(@PathVariable Long folderId) {
-        return foldersService.removeById(folderId)
-                ? ServerResponse.createBySuccessMessage(ReturnMessage.DELETE_SUCCESS)
-                : ServerResponse.createByErrorMessage(ReturnMessage.DELETE_ERROR);
     }
 }
 

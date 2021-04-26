@@ -71,10 +71,10 @@ public class FileAndFolderController {
         List<FolderAndFileVo> records = pageData.getRecords();
         records.forEach(folderAndFileVo -> {
             folderAndFileVo.setDir(folderAndFileVo.getPath());
-            if ("/".equals(folderAndFileVo.getPath())) {
-                folderAndFileVo.setPath("/" + folderAndFileVo.getName());
+            if (Const.ROOT_DIR.equals(folderAndFileVo.getPath())) {
+                folderAndFileVo.setPath(Const.ROOT_DIR + folderAndFileVo.getName());
             } else {
-                folderAndFileVo.setPath(folderAndFileVo.getPath() + "/" + folderAndFileVo.getName());
+                folderAndFileVo.setPath(folderAndFileVo.getPath() + Const.ROOT_DIR + folderAndFileVo.getName());
             }
             if (folderAndFileVo.getIsDir() == 0) {
                 folderAndFileVo.setSizeStr(FileUtil.byteCountToDisplaySize(folderAndFileVo.getSize()));
