@@ -1,7 +1,10 @@
 <template>
 	<div id="uploader-panel" v-show="isUpload">
-		<uploader>
+		<uploader ref="uploader" :autoStart="false" :options="options" @file-added="onFileAdded">
 			<uploader-unsupport></uploader-unsupport>
+
+			<uploader-btn id="uploader-btn" ref="uploadBtn">选择文件</uploader-btn>
+
 			<uploader-list>
 				<el-card class="box-card">
 					<div slot="header" class="clearfix">
@@ -19,11 +22,14 @@
 							<li class="file-path" style="width: 10%;">上传目录</li>
 						</ul>
 						<div class="file-list" style="height: 314px;">
-							<ul class="fileContainer clearfix" id="fileContainer">
-								<div class="clearfix file-box" v-for="item in 20">
-									<li class="file-info file-name">发生的缓解康复哈萨克的恢复数据库的话费卡技术得分卡接收到.jpg</li>
-									<li class="file-info file-size">921.9M</li>
-									<li class="file-info file-path"><a href="#">全部文件</a></li>
+							<ul class="fileContainer clearfix" id="fileContainer" v-for="(item, index) in fileList" :key="index">
+								<div class="clearfix file-box">
+									<li class="file-info file-name">
+										<img :src="require('../../assets/filetype/' + item.icon)" alt="" width="25" height="25" style="vertical-align: middle;">
+										{{item.name}}
+									</li>
+									<li class="file-info file-size">{{item.size}}</li>
+									<li class="file-info file-path"><a href="#">{{item.path}}</a></li>
 									<div class="file-status">50%(1.5 MB/s)</div>
 									<div class="file-operate">
 										<i class="iconfont icon-zanting" style="margin-right: 10px;"></i>
@@ -41,6 +47,9 @@
 </template>
 
 <script>
+import bus from '@/utils/bus.js';
+import { getToken } from '@/utils/token';
+
 export default {
 	name: 'index',
 	data() {
@@ -48,11 +57,55 @@ export default {
 			fileListHeight: 'height: 350px',
 			isMaximize: true,
 			isUpload: true,
-			fileList: []
+			fileList: [],
+			options: {
+				target: '/portal/files/',
+				chunkSize: '2048000',
+				fileParameterName: 'upfile',
+				maxChunkRetries: 3,
+				testChunks: true, //是否开启服务器分片校验
+				// 服务器分片校验函数，秒传及断点续传基础
+				checkChunkUploadedByResponse: function(chunk, message) {
+					let objMessage = JSON.parse(message);
+					if (objMessage.skipUpload) {
+						return true;
+					}
+					return (objMessage.uploaded || []).indexOf(chunk.offset + 1) >= 0;
+				},
+				headers: {
+					Authorization: 'Bearer ' + getToken()
+				},
+				query() {}
+			}
 		};
 	},
 	created() {},
+	mounted() {
+		bus.$on('openUploader', query => {
+			this.params = query || {};
+			if (this.$refs.uploadBtn) {
+				document.getElementById('uploader-btn').click();
+			}
+		});
+	},
 	methods: {
+		// 选择文件
+		onFileAdded(file) {
+			let size = this.converSize(file.size);
+			let fileObj = {
+				name: file.name,
+				size: size,
+				path: "全部文件"
+			}
+			this.getRequest(`/portal/list/${file.getExtension()}`).then(response => {
+				fileObj.icon = response.data
+				this.fileList.push(fileObj)
+			}).catch(() => {
+				fileObj.icon = "unknow.png"
+				this.fileList.push(fileObj)
+			})
+			
+		},
 		// 关闭上传组件
 		closeUploadPanel() {
 			this.isUpload = false;
@@ -70,8 +123,17 @@ export default {
 			setTimeout(() => {
 				this.isMaximize = true;
 			}, 500);
+		},
+		// 格式化文件大小
+		converSize(size) {
+			if (size === 0) return '0B';
+			let sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+			let k = 1024;
+			let i = Math.floor(Math.log(size) / Math.log(1024));
+			return (size / Math.pow(k, i)).toPrecision(3) + sizes[i];
 		}
-	}
+	},
+	computed: {}
 };
 </script>
 
@@ -175,6 +237,10 @@ export default {
 				}
 			}
 		}
+	}
+
+	#uploader-btn {
+		display: none;
 	}
 }
 </style>

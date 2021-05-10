@@ -2,7 +2,7 @@
     <div>
         <div class="file-fun-area">
             <div class="fun-btn">
-                <el-button type="primary" icon="el-icon-upload">上传</el-button>
+                <el-button type="primary" icon="el-icon-upload" @click="uploader">上传</el-button>
                 <el-button type="primary" plain icon="el-icon-folder-add" class="plain-btn"
                            @click="openCreateFolderDialog">新建文件夹
                 </el-button>
@@ -180,6 +180,8 @@
 <script>
     import {Loading} from 'element-ui';
     
+	import bus from '@/utils/bus.js'
+	
     export default {
         name: 'AllFile',
         data() {
@@ -263,6 +265,11 @@
             this.getList();
         },
         methods: {
+			// 上传文件
+			uploader(){
+				console.log(bus)
+				bus.$emit('openUploader', null)
+			},
             // 重命名
             rename() {
                 this.$refs.renameForm.validate(valid => {

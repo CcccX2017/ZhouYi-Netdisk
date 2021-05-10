@@ -159,4 +159,11 @@ public class FileAndFolderController {
 
         return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
     }
+
+    @ApiOperation(value = "根据后缀名获取图标")
+    @GetMapping("/{extension}")
+    public ServerResponse getIcon(@PathVariable String extension){
+        String fileIcon = FileUtil.getFileIcon(extension);
+        return ServerResponse.createBySuccess(fileIcon);
+    }
 }
