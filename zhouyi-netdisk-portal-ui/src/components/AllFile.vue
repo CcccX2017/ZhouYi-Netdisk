@@ -267,8 +267,10 @@
         methods: {
 			// 上传文件
 			uploader(){
-				console.log(bus)
-				bus.$emit('openUploader', null)
+				bus.$emit('openUploader', {
+					path: this.assembleDirectory(this.queryParam.dir),
+					targetPath: this.queryParam.dir
+				})
 			},
             // 重命名
             rename() {

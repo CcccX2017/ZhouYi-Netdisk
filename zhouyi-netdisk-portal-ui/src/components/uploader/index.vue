@@ -18,23 +18,25 @@
 					<div class="file-list-parent" :style="fileListHeight">
 						<ul class="file-header clearfix">
 							<li class="file-name">文件名</li>
-							<li class="file-size" style="width: 9%;">大小</li>
-							<li class="file-path" style="width: 10%;">上传目录</li>
+							<li class="file-size" style="width: 9%">大小</li>
+							<li class="file-path" style="width: 10%">上传目录</li>
 						</ul>
-						<div class="file-list" style="height: 314px;">
+						<div class="file-list" style="height: 314px">
 							<ul class="fileContainer clearfix" id="fileContainer" v-for="(item, index) in fileList" :key="index">
 								<div class="clearfix file-box">
-									<li class="file-info file-name">
-										<img :src="require('../../assets/filetype/' + item.icon)" alt="" width="25" height="25" style="vertical-align: middle;">
-										{{item.name}}
+									<li class="file-info file-name" :title="item.name">
+										<img :src="require('../../assets/filetype/' + item.icon)" :alt="item.name" width="25" height="25" style="vertical-align: middle" />
+										{{ item.name }}
 									</li>
-									<li class="file-info file-size">{{item.size}}</li>
-									<li class="file-info file-path"><a href="#">{{item.path}}</a></li>
-									<div class="file-status">50%(1.5 MB/s)</div>
+									<li class="file-info file-size" :title="item.size">{{ item.size }}</li>
+									<li class="file-info file-path" :title="item.path">
+										<a :href="item.targetPath">{{ item.path }}</a>
+									</li>
+									<div class="file-status" :title="item.status">{{ item.status }}</div>
 									<div class="file-operate">
-										<i class="iconfont icon-zanting" style="margin-right: 10px;"></i>
-										<i class="iconfont icon-kaishi" style="margin-right: 10px;"></i>
-										<i class="iconfont icon-cancel"></i>
+										<i class="iconfont icon-zanting" style="margin-right: 10px" v-if="!item.pause" title="暂停"></i>
+										<i class="iconfont icon-kaishi" style="margin-right: 10px" v-else title="开始"></i>
+										<i class="iconfont icon-cancel" title="取消" @click="cancelUploader(item.id)"></i>
 									</div>
 								</div>
 							</ul>
@@ -56,7 +58,7 @@ export default {
 		return {
 			fileListHeight: 'height: 350px',
 			isMaximize: true,
-			isUpload: true,
+			isUpload: false,
 			fileList: [],
 			options: {
 				target: '/portal/files/',
@@ -76,7 +78,8 @@ export default {
 					Authorization: 'Bearer ' + getToken()
 				},
 				query() {}
-			}
+			},
+			params: null
 		};
 	},
 	created() {},
@@ -89,26 +92,51 @@ export default {
 		});
 	},
 	methods: {
+		// 取消文件上传
+		cancelUploader(id){
+			for(let i = 0;i < this.uploader.fileList.length; i++){
+				if(this.uploader.fileList[i].id === id){
+					this.uploader.fileList[i].cancel()
+				}
+			}
+			this.fileList.forEach((file, index) => {
+				if(file.id === id){
+					this.fileList.splice(index, 1)
+				}
+			})
+			if(this.uploader.fileList.length === 0){
+				this.isUpload = false
+			}
+		},
 		// 选择文件
 		onFileAdded(file) {
 			let size = this.converSize(file.size);
 			let fileObj = {
+				id: file.id,
 				name: file.name,
 				size: size,
-				path: "全部文件"
-			}
-			this.getRequest(`/portal/list/${file.getExtension()}`).then(response => {
-				fileObj.icon = response.data
-				this.fileList.push(fileObj)
-			}).catch(() => {
-				fileObj.icon = "unknow.png"
-				this.fileList.push(fileObj)
-			})
-			
+				path: this.params.path,
+				targetPath: this.params.targetPath,
+				pause: true
+			};
+			this.getRequest(`/portal/list/${file.getExtension()}`)
+				.then(response => {
+					fileObj.icon = response.data;
+					this.fileList.push(fileObj);
+					this.setStatus(file.id, 'md5');
+				})
+				.catch(() => {
+					fileObj.icon = 'unknow.png';
+					this.fileList.push(fileObj);
+					this.setStatus(file.id, 'md5');
+				});
+			this.isUpload = true;
 		},
 		// 关闭上传组件
 		closeUploadPanel() {
 			this.isUpload = false;
+			this.fileList = [];
+			this.uploader.cancel();
 		},
 		// 最小化
 		minimize() {
@@ -131,9 +159,29 @@ export default {
 			let k = 1024;
 			let i = Math.floor(Math.log(size) / Math.log(1024));
 			return (size / Math.pow(k, i)).toPrecision(3) + sizes[i];
+		},
+		// 设置上传状态
+		setStatus(id, status) {
+			let statusMap = {
+				md5: '校验MD5...',
+				merging: '合并中...',
+				transcoding: '转码中...',
+				failed: '上传失败'
+			};
+			for (let i = 0; i < this.fileList.length; i++) {
+				if (this.fileList[i].id === id) {
+					this.fileList[i].status = statusMap[status];
+					return;
+				}
+			}
 		}
 	},
-	computed: {}
+	computed: {
+		// 返回uploader实例
+		uploader() {
+			return this.$refs.uploader.uploader;
+		}
+	}
 };
 </script>
 
