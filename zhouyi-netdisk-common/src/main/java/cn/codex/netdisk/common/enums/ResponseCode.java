@@ -40,7 +40,9 @@ public enum ResponseCode {
      */
     FORBIDDEN(403, "权限不足，请联系管理员"),
     
-    FOLDER_NAME_REPEAT(20, "此目录下已存在同名文件，是否要保存两个文件");
+    FOLDER_NAME_REPEAT(20, "此目录下已存在同名文件，是否要保存两个文件"),
+
+    FILE_SIZE_OUT_OF_LIMIT(30, "上传的文件大小超限");
 
     private final int code;
     private final String desc;

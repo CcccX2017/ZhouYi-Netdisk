@@ -168,7 +168,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
         Integer count = baseMapper.selectCount(queryWrapper);
         if (count != null && count > 0) {
             // 存在重名文件，提示用户是否保留两者
-            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
                     ResponseCode.FOLDER_NAME_REPEAT.getDesc());
         }
         // 不存在重名文件，重命名文件

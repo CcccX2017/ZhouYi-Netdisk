@@ -1,6 +1,10 @@
 <template>
    <div id="uploader-panel" v-show="isUpload">
-      <uploader ref="uploader" :autoStart="false" :options="options" @file-added="onFileAdded">
+      <uploader ref="uploader"
+                :autoStart="false"
+                :options="options"
+                @file-added="onFileAdded"
+                @file-success="onFileSuccess">
          <uploader-unsupport></uploader-unsupport>
 
          <uploader-btn id="uploader-btn" ref="uploadBtn">选择文件</uploader-btn>
@@ -73,10 +77,11 @@
             fileList: [],
             options: {
                target: `${process.env.VUE_APP_BASE_API}/portal/upload/`,
-               chunkSize: '2048000',
+               chunkSize: '10485760',
                fileParameterName: 'file',
                maxChunkRetries: 3,
                testChunks: true, //是否开启服务器分片校验
+               enableOnceCheck: true,
                // 服务器分片校验函数，秒传及断点续传基础
                checkChunkUploadedByResponse: function (chunk, message) {
                   let objMessage = JSON.parse(message);
@@ -105,6 +110,10 @@
          });
       },
       methods: {
+         // 上传成功回调
+         onFileSuccess(rootFile, file, response, chunk){
+            console.log('complete', rootFile, file, response, chunk)
+         },
          // 取消文件上传
          cancelUploader(id) {
             for (let i = 0; i < this.uploader.fileList.length; i++) {

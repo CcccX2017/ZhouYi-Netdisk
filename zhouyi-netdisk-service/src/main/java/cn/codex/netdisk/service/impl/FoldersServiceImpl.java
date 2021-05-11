@@ -142,7 +142,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, dto.getNewName()).eq(Folders.DIR, dto.getDir()).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
         if (count != null && count > 0) {
             // 存在重名文件，提示用户是否保留两者
-            return ServerResponse.createByErrorCodeMeaage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
                     ResponseCode.FOLDER_NAME_REPEAT.getDesc());
         }
         // 不存在重名文件夹，重命名文件夹

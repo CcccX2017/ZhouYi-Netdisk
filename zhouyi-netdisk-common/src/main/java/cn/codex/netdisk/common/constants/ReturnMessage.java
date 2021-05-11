@@ -8,6 +8,8 @@ package cn.codex.netdisk.common.constants;
  */
 public class ReturnMessage {
 
+    public static final String INSUFFICIENT_SPACE = "剩余空间不足";
+
     public static final String FILE_NAME_ILLEGAL = "文件名不能包含以下字符：<,>,|,*,?,/";
 
     public static final String COPY_FILE_SUCCESS = "复制文件(夹)成功";

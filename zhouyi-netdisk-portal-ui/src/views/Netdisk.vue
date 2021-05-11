@@ -58,7 +58,7 @@
             getStorage(){
                 this.getRequest('/portal/user/storage').then(resp => {
                     this.percentage = parseFloat(resp.data.percent)
-                    this.storage.usedStorageSpace = resp.data.usedStorageSpace
+                    this.storage.usedStorageSpace = resp.data.usedStorageSpaceStr
                     this.storage.maxStorageSpace = resp.data.maxStorageSpace
                 })
             },
@@ -87,7 +87,7 @@
 <style lang="less" scoped="scoped">
     .container {
         margin-top: 62px;
-        
+
         .aside {
             position: absolute;
             width: 194px;
@@ -95,11 +95,11 @@
             left: 0;
             bottom: 0;
             padding-top: 10px;
-            
+
             .submenu_title:hover, .submenu_children:hover{
                 background: rgba(0,0,0,.05);
             }
-            
+
             .submenu_title a, .submenu_children a{
                 display: block;
                 height: 45px;
@@ -123,7 +123,7 @@
                     }
                 }
             }
-         
+
             ul{
                 li{
                     &.active{
@@ -147,7 +147,7 @@
                     }
                 }
             }
-            
+
             .progress-bar{
                 position: absolute;
                 width: 100%;
@@ -155,7 +155,7 @@
                 padding: 0 20px;
             }
         }
-        
+
         .main {
             position: absolute;
             background-color: #fff;

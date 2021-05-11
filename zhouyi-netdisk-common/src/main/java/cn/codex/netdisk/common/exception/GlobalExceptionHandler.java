@@ -4,8 +4,6 @@ import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,19 +28,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ServerResponse<String> baseException(CustomException e) {
         log.error(e.getMessage());
-        return ServerResponse.createByErrorCodeMeaage(e.getExceptionCode(), e.getMessage());
+        return ServerResponse.createByErrorCodeMessage(e.getExceptionCode(), e.getMessage());
     }
     
     @ExceptionHandler(NoHandlerFoundException.class)
     public ServerResponse<String> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
-        return ServerResponse.createByErrorCodeMeaage(ResponseCode.NOT_FOUND.getCode(), "路径不存在，请检查路径是否正确");
+        return ServerResponse.createByErrorCodeMessage(ResponseCode.NOT_FOUND.getCode(), "路径不存在，请检查路径是否正确");
     }
     
     @ExceptionHandler(AccessDeniedException.class)
     public ServerResponse<String> handleAuthorizationException(AccessDeniedException e) {
         log.error(e.getMessage());
-        return ServerResponse.createByErrorCodeMeaage(ResponseCode.FORBIDDEN.getCode(), ResponseCode.FORBIDDEN.getDesc());
+        return ServerResponse.createByErrorCodeMessage(ResponseCode.FORBIDDEN.getCode(), ResponseCode.FORBIDDEN.getDesc());
     }
     
     @ExceptionHandler(AccountExpiredException.class)
