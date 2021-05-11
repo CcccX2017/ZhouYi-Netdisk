@@ -2,6 +2,7 @@ package cn.codex.netdisk.service;
 
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.dtos.UploadDto;
+import cn.codex.netdisk.model.entity.Files;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -21,4 +22,12 @@ public interface IUploadService {
      * @return 上传结果
      */
     ServerResponse upload(MultipartFile file, UploadDto dto, String storeDirectory);
+    
+    /**
+     * 秒传
+     *
+     * @param files    文件表
+     * @param filename 文件名
+     */
+    void skipUpload(Files files, String filename);
 }

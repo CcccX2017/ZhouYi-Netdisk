@@ -124,10 +124,10 @@ public class UserController {
         if (usedStorageSpace.equals(0L)){
             map.put("usedStorageSpace", "0");
         }else{
-            map.put("usedStorageSpaceStr", FileUtil.unreservedDecimalPoint(usedStorageSpace));
+            map.put("usedStorageSpace", FileUtil.unreservedDecimalPoint(usedStorageSpace));
         }
         map.put("maxStorageSpace", FileUtil.unreservedDecimalPoint(maxStorageSpace));
-        map.put("percent", usedStorageSpace / maxStorageSpace * 100);
+        map.put("percent", usedStorageSpace / (double)maxStorageSpace * 100);
         
         return ServerResponse.createBySuccess(map);
     }

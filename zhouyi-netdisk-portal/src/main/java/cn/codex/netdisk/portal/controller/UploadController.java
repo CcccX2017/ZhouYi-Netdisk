@@ -8,6 +8,7 @@ import cn.codex.netdisk.portal.config.PortalConfig;
 import cn.codex.netdisk.service.IChunkService;
 import cn.codex.netdisk.service.IFilesService;
 import cn.codex.netdisk.service.IUploadService;
+import cn.hutool.core.io.file.FileNameUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,32 +34,39 @@ import java.util.stream.Collectors;
 @RequestMapping("/portal/upload")
 @Api(tags = "文件上传")
 public class UploadController {
-
+    
     @Autowired
     private IFilesService filesService;
-
+    
     @Autowired
     private IChunkService chunkService;
-
+    
     @Autowired
     private IUploadService uploadService;
+    
     @ApiOperation(value = "上传文件")
     @PostMapping("/")
     public ServerResponse upload(MultipartFile file, UploadDto dto) {
         return uploadService.upload(file, dto, PortalConfig.getUploadPath());
     }
-
+    
     @ApiOperation(value = "上传文件")
     @GetMapping("/")
-    public ServerResponse upload(UploadDto dto, HttpServletResponse response) {
-
+    public ServerResponse upload(UploadDto dto) {
+        
+        String extName = FileNameUtil.extName(dto.getFilename());
+        
         // 校验文件是否已经存在
-        int count = filesService.count(new QueryWrapper<Files>().eq(Files.ENCRYPTION_NAME, dto.getIdentifier()));
+        List<Files> filesList = filesService.list(new QueryWrapper<Files>().eq(Files.ENCRYPTION_NAME,
+                dto.getIdentifier() + "." + extName));
         Map<String, Object> map = Maps.newHashMap();
-        if (count > 0) {
+        if (filesList.size() > 0) {
             // 文件已经完全上传，秒传
+            Files files = filesList.get(0);
+            uploadService.skipUpload(files, dto.getFilename());
+            
             map.put("skipUpload", true);
-            map.put("url", "");
+            map.put("url", files.getStoragePath());
         } else {
             // 文件还未完全，获取已经上传的分片
             List<Chunk> list = chunkService.list(new QueryWrapper<Chunk>().eq(Chunk.MD5, dto.getIdentifier()));

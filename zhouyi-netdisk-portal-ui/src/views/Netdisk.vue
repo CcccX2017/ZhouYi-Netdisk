@@ -58,7 +58,7 @@
             getStorage(){
                 this.getRequest('/portal/user/storage').then(resp => {
                     this.percentage = parseFloat(resp.data.percent)
-                    this.storage.usedStorageSpace = resp.data.usedStorageSpaceStr
+                    this.storage.usedStorageSpace = resp.data.usedStorageSpace
                     this.storage.maxStorageSpace = resp.data.maxStorageSpace
                 })
             },

@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <router-view/>
+        <router-view ref="routeChild"></router-view>
         <uploader></uploader>
     </div>
 </template>
@@ -11,6 +11,15 @@
     export default {
         components: {
             uploader
+        },
+        methods:{
+            test(){
+                this.$refs.routeChild.$children.forEach(component => {
+                    if (component['getStorage']){
+                        component['getStorage']();
+                    }
+                })
+            }
         }
     }
 </script>
