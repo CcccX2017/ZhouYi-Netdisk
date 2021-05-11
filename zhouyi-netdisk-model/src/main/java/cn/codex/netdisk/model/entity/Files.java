@@ -33,7 +33,7 @@ public class Files implements Serializable {
     @ApiModelProperty(value = "文件真实名称")
     private String realName;
 
-    @ApiModelProperty(value = "加密后的名称")
+    @ApiModelProperty(value = "文件MD5")
     private String encryptionName;
 
     @ApiModelProperty(value = "文件存储路径")

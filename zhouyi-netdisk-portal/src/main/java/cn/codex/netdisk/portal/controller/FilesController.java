@@ -25,15 +25,7 @@ public class FilesController {
     
     @Autowired
     private IFilesService filesService;
-    
-    // TODO 下载文件、在线预览
-    
-    @ApiOperation(value = "上传文件")
-    @PostMapping("/")
-    public ServerResponse upload(){
-        return null;
-    }
-    
+
     @ApiOperation(value = "获取文件列表")
     @GetMapping("/{fileType}")
     public ServerResponse getList(@PathVariable String fileType, FolderAndFileQueryDto dto) {

@@ -16,6 +16,21 @@ CREATE DATABASE /*!32312 IF NOT EXISTS */`netdisk` /*!40100 DEFAULT CHARACTER SE
 
 USE `netdisk`;
 
+/*Table structure for table `tb_chunk` */
+
+DROP TABLE IF EXISTS `tb_chunk`;
+
+CREATE TABLE `tb_chunk`
+(
+    `id`    bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+    `md5`   varchar(64) DEFAULT NULL COMMENT '文件md5',
+    `chunk` int(11)     DEFAULT NULL COMMENT '已上传的分片',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='存储已经上传的分片';
+
+/*Data for the table `tb_chunk` */
+
 /*Table structure for table `tb_files` */
 
 DROP TABLE IF EXISTS `tb_files`;
@@ -23,20 +38,20 @@ DROP TABLE IF EXISTS `tb_files`;
 CREATE TABLE `tb_files`
 (
     `file_id`         bigint(20) unsigned NOT NULL COMMENT '文件id',
-    `real_name`       varchar(255)                 DEFAULT NULL COMMENT '文件真实名称',
-    `encryption_name` varchar(64)                  DEFAULT NULL COMMENT '加密后的名称',
-    `storage_path`    varchar(255)                 DEFAULT NULL COMMENT '文件存储路径',
-    `extension`       varchar(10)                  DEFAULT NULL COMMENT '文件扩展名',
-    `short_url`       varchar(255)                 DEFAULT NULL COMMENT '文件短地址',
-    `size`            bigint(20)                   DEFAULT NULL COMMENT '文件大小',
-    `file_type`       varchar(10)                  DEFAULT NULL COMMENT '文件类型',
-    `icon`            varchar(20)                  DEFAULT NULL COMMENT '文件图标',
+    `real_name`       varchar(255)                                           DEFAULT NULL COMMENT '文件真实名称',
+    `encryption_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '文件md5',
+    `storage_path`    varchar(255)                                           DEFAULT NULL COMMENT '文件存储路径',
+    `extension`       varchar(10)                                            DEFAULT NULL COMMENT '文件扩展名',
+    `short_url`       varchar(255)                                           DEFAULT NULL COMMENT '文件短地址',
+    `size`            bigint(20)                                             DEFAULT NULL COMMENT '文件大小',
+    `file_type`       varchar(10)                                            DEFAULT NULL COMMENT '文件类型',
     `dir`             text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '所属文件夹路径',
-    `is_hidden`       tinyint(1)          NOT NULL DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
-    `is_deleted`      tinyint(1)          NOT NULL DEFAULT '0' COMMENT '是否已删除（0-未删除，1-已删除）',
-    `creator`         varchar(64)                  DEFAULT NULL COMMENT '创建者',
-    `gmt_create`      datetime                     DEFAULT NULL COMMENT '创建时间',
-    `gmt_modified`    datetime                     DEFAULT NULL COMMENT '更新时间',
+    `icon`            varchar(20)                                            DEFAULT NULL COMMENT '文件图标',
+    `is_hidden`       tinyint(1)          NOT NULL                           DEFAULT '0' COMMENT '是否隐藏（0-未隐藏，1-隐藏）',
+    `is_deleted`      tinyint(1)          NOT NULL                           DEFAULT '0' COMMENT '是否已删除（0-未删除，1-已删除）',
+    `creator`         varchar(64)                                            DEFAULT NULL COMMENT '创建者',
+    `gmt_create`      datetime                                               DEFAULT NULL COMMENT '创建时间',
+    `gmt_modified`    datetime                                               DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`file_id`),
     KEY `creator` (`creator`(20)),
     KEY `dir` (`dir`(20)) USING BTREE
@@ -66,6 +81,8 @@ CREATE TABLE `tb_folders`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   ROW_FORMAT = COMPACT COMMENT ='目录表';
+
+/*Data for the table `tb_folders` */
 
 /*Table structure for table `tb_friends` */
 
@@ -180,40 +197,32 @@ DROP TABLE IF EXISTS `tb_menu`;
 
 CREATE TABLE `tb_menu`
 (
-    `menu_id`      bigint NOT NULL COMMENT '主键ID',
+    `menu_id`      bigint(20) NOT NULL COMMENT '主键ID',
     `menu_title`   varchar(32)                                            DEFAULT NULL COMMENT '菜单标题',
     `icon_class`   varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '菜单图标',
     `path`         varchar(20)                                            DEFAULT NULL COMMENT '菜单路径',
     `component`    varchar(30)                                            DEFAULT NULL COMMENT '组件名称',
-    `level`        int                                                    DEFAULT NULL COMMENT '菜单层级',
-    `parent_id`    bigint                                                 DEFAULT NULL COMMENT '父菜单ID',
+    `level`        int(11)                                                DEFAULT NULL COMMENT '菜单层级',
+    `parent_id`    bigint(20)                                             DEFAULT NULL COMMENT '父菜单ID',
     `gmt_create`   datetime                                               DEFAULT NULL COMMENT '创建时间',
     `gmt_modified` datetime                                               DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`menu_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='菜单表';
 
-
 /*Data for the table `tb_menu` */
 
-INSERT INTO `tb_menu`
-VALUES (1001, '全部文件', 'el-icon-document-copy', '/', 'AllFile', 1, 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13');
-INSERT INTO `tb_menu`
-VALUES (1002, '图片', '', 'image', 'ImageCom', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31');
-INSERT INTO `tb_menu`
-VALUES (1003, '文档', '', 'doc', 'DocumentCom', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25');
-INSERT INTO `tb_menu`
-VALUES (1004, '视频', '', 'video', 'VideoCom', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46');
-INSERT INTO `tb_menu`
-VALUES (1005, '种子', '', 'seed', 'SeedCom', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18');
-INSERT INTO `tb_menu`
-VALUES (1006, '音乐', '', 'music', 'MusicCom', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39');
-INSERT INTO `tb_menu`
-VALUES (1007, '其它', '', 'other', 'OtherCom', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15');
-INSERT INTO `tb_menu`
-VALUES (1008, '我的分享', 'iconfont icon-share', 'myShare', 'MyShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08');
-INSERT INTO `tb_menu`
-VALUES (1009, '回收站', 'el-icon-delete', 'recycle', 'Recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
+insert into `tb_menu`(`menu_id`, `menu_title`, `icon_class`, `path`, `component`, `level`, `parent_id`, `gmt_create`,
+                      `gmt_modified`)
+values (1001, '全部文件', 'el-icon-document-copy', '/', 'AllFile', 1, 0, '2021-03-11 20:25:10', '2021-03-11 20:25:13'),
+       (1002, '图片', '', 'image', 'ImageCom', 2, 1001, '2021-03-11 20:26:28', '2021-03-11 20:26:31'),
+       (1003, '文档', '', 'doc', 'DocumentCom', 2, 1001, '2021-03-11 20:27:22', '2021-03-11 20:27:25'),
+       (1004, '视频', '', 'video', 'VideoCom', 2, 1001, '2021-03-11 20:27:43', '2021-03-11 20:27:46'),
+       (1005, '种子', '', 'seed', 'SeedCom', 2, 1001, '2021-03-11 20:28:16', '2021-03-11 20:28:18'),
+       (1006, '音乐', '', 'music', 'MusicCom', 2, 1001, '2021-03-11 20:28:37', '2021-03-11 20:28:39'),
+       (1007, '其它', '', 'other', 'OtherCom', 2, 1001, '2021-03-11 20:29:11', '2021-03-11 20:29:15'),
+       (1008, '我的分享', 'iconfont icon-share', 'myShare', 'MyShare', 1, 0, '2021-03-11 20:58:06', '2021-03-11 20:58:08'),
+       (1009, '回收站', 'el-icon-delete', 'recycle', 'Recycle', 1, 0, '2021-03-11 20:59:25', '2021-03-11 20:59:27');
 
 /*Table structure for table `tb_order` */
 
@@ -323,6 +332,8 @@ CREATE TABLE `tb_url_share_group`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='URL分享文件关系表';
 
+/*Data for the table `tb_url_share_group` */
+
 /*Table structure for table `tb_user` */
 
 DROP TABLE IF EXISTS `tb_user`;
@@ -353,6 +364,8 @@ CREATE TABLE `tb_user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   ROW_FORMAT = COMPACT COMMENT ='用户表';
+
+/*Data for the table `tb_user` */
 
 /*Table structure for table `tb_user_groups` */
 

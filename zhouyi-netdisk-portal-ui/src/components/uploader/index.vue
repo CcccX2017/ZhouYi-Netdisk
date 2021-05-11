@@ -72,18 +72,18 @@
             isUpload: false,
             fileList: [],
             options: {
-               target: '/portal/files/',
+               target: `${process.env.VUE_APP_BASE_API}/portal/upload/`,
                chunkSize: '2048000',
-               fileParameterName: 'upfile',
+               fileParameterName: 'file',
                maxChunkRetries: 3,
                testChunks: true, //是否开启服务器分片校验
                // 服务器分片校验函数，秒传及断点续传基础
                checkChunkUploadedByResponse: function (chunk, message) {
-                  // let objMessage = JSON.parse(message);
-                  // if (objMessage.skipUpload) {
-                  //    return true;
-                  // }
-                  // return (objMessage.uploaded || []).indexOf(chunk.offset + 1) >= 0;
+                  let objMessage = JSON.parse(message);
+                  if (objMessage.data.skipUpload) {
+                     return true;
+                  }
+                  return (objMessage.data.uploaded || []).indexOf(chunk.offset + 1) >= 0;
                },
                headers: {
                   Authorization: 'Bearer ' + getToken()
