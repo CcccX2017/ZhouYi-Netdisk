@@ -114,7 +114,7 @@
         methods: {
             // 上传成功回调
             onFileSuccess(rootFile, file, response, chunk) {
-                this.$parent.test()
+                this.$parent.getStorage()
                 //console.log('complete', rootFile, file, response, chunk)
             },
             // 取消文件上传

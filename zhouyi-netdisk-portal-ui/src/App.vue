@@ -13,7 +13,7 @@
             uploader
         },
         methods:{
-            test(){
+            getStorage(){
                 this.$refs.routeChild.$children.forEach(component => {
                     if (component['getStorage']){
                         component['getStorage']();
