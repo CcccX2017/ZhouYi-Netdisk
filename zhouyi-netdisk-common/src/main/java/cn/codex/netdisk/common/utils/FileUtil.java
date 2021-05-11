@@ -192,7 +192,7 @@ public class FileUtil {
             return "dwg.png";
         }
         
-        return "unknow.png";
+        return "unknown.png";
     }
     
     private static String getDisplaySize(long size, DecimalFormat df) {
