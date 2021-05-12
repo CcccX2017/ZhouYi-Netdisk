@@ -8,6 +8,10 @@ package cn.codex.netdisk.common.constants;
  */
 public class ReturnMessage {
 
+    public static final String UPLOAD_SUCCESS = "上传成功";
+    
+    public static final String UPLOAD_ERROR = "上传失败";
+    
     public static final String INSUFFICIENT_SPACE = "剩余空间不足";
 
     public static final String FILE_NAME_ILLEGAL = "文件名不能包含以下字符：<,>,|,*,?,/";
