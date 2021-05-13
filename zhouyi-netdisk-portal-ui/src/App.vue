@@ -12,11 +12,16 @@
         components: {
             uploader
         },
-        methods:{
-            getStorage(){
+        methods: {
+            getStorage() {
                 this.$refs.routeChild.$children.forEach(component => {
-                    if (component['getStorage']){
+                    if (component['getStorage']) {
                         component['getStorage']();
+                        component.$children.forEach(c => {
+                            if (c['getList']) {
+                                c['getList']()
+                            }
+                        })
                     }
                 })
             }
