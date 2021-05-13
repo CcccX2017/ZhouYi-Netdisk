@@ -1,5 +1,6 @@
 package cn.codex.netdisk.portal.controller;
 
+import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.model.dtos.UploadDto;
 import cn.codex.netdisk.model.entity.Chunk;
@@ -63,10 +64,12 @@ public class UploadController {
         if (filesList.size() > 0) {
             // 文件已经完全上传，秒传
             Files files = filesList.get(0);
-            uploadService.skipUpload(files, dto.getFilename());
-            
             map.put("skipUpload", true);
-            map.put("url", files.getStoragePath());
+            if (uploadService.skipUpload(files, dto.getFilename())) {
+                map.put("url", files.getStoragePath());
+            } else {
+                map.put("msg", ReturnMessage.INSUFFICIENT_SPACE);
+            }
         } else {
             // 文件还未完全，获取已经上传的分片
             List<Chunk> list = chunkService.list(new QueryWrapper<Chunk>().eq(Chunk.MD5, dto.getIdentifier()));

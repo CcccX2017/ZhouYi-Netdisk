@@ -12,12 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2021-05-11 15:02:42
  */
 public interface IUploadService {
-
+    
     /**
      * 文件上传
      *
-     * @param file 文件
-     * @param dto  文件上传数据传输对象
+     * @param file           文件
+     * @param dto            文件上传数据传输对象
      * @param storeDirectory 文件要存放的根目录
      * @return 上传结果
      */
@@ -28,6 +28,7 @@ public interface IUploadService {
      *
      * @param files    文件表
      * @param filename 文件名
+     * @return 是否能进行秒传 true - 是， false - 否
      */
-    void skipUpload(Files files, String filename);
+    boolean skipUpload(Files files, String filename);
 }

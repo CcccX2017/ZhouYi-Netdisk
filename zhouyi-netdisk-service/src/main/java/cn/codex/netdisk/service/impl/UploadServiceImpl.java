@@ -4,6 +4,7 @@ import cn.codex.netdisk.common.constants.ReturnMessage;
 import cn.codex.netdisk.common.dtos.LoginUser;
 import cn.codex.netdisk.common.dtos.ServerResponse;
 import cn.codex.netdisk.common.enums.ResponseCode;
+import cn.codex.netdisk.common.utils.FileUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FilesMapper;
 import cn.codex.netdisk.dao.UserMapper;
@@ -31,13 +32,13 @@ import java.util.Date;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class UploadServiceImpl implements IUploadService {
-
+    
     @Autowired
     private UserMapper userMapper;
-
+    
     @Autowired
     private FilesMapper filesMapper;
-
+    
     /**
      * 文件上传
      *
@@ -54,33 +55,106 @@ public class UploadServiceImpl implements IUploadService {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.FILE_SIZE_OUT_OF_LIMIT.getCode(),
                     ResponseCode.FILE_SIZE_OUT_OF_LIMIT.getDesc());
         }
-
+        
+        if (uploadToDisk(file, dto, storeDirectory)) {
+            // 判断用户是否有足够的可用空间
+            if (isExcessStorageSpace(dto.getTotalSize())) {
+                return ServerResponse.createByErrorCodeMessage(ResponseCode.FILE_SIZE_OUT_OF_LIMIT.getCode(), ReturnMessage.INSUFFICIENT_SPACE);
+            }
+            
+            // 更新已用空间
+            updateUsedStorageSpace(dto.getTotalSize());
+            
+            // 文件扩展名 不带 "."
+            String extName = FileNameUtil.extName(file.getOriginalFilename());
+            
+            // 新文件名
+            String newFileName = dto.getIdentifier() + "." + extName;
+            
+            String path = storeDirectory + genericPath(newFileName, storeDirectory);
+            
+            // 将文件信息保存到数据库中
+            Files files = new Files();
+            files.setRealName(dto.getFilename());
+            files.setEncryptionName(newFileName);
+            files.setStoragePath(genericPath(newFileName, storeDirectory) + "/" + newFileName);
+            files.setExtension(extName);
+            files.setShortUrl("");
+            files.setSize(dto.getTotalSize());
+            try {
+                files.setFileType(FileUtil.getFileType(new FileInputStream(new File(path, newFileName)), dto.getFilename()));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            files.setIcon(FileUtil.getFileIcon(extName));
+            files.setDir(dto.getTargetPath());
+            files.setHidden(false);
+            files.setDeleted(false);
+            files.setCreator(SecurityUtil.getUsername());
+            filesMapper.insert(files);
+        }
+    
+        return ServerResponse.createBySuccessMessage(ReturnMessage.UPLOAD_SUCCESS);
+    }
+    
+    /**
+     * 秒传
+     *
+     * @param files    文件表
+     * @param filename 文件名
+     */
+    @Override
+    public boolean skipUpload(Files files, String filename) {
+        if (isExcessStorageSpace(files.getSize())){
+            return false;
+        }
+        String extName = FileNameUtil.extName(filename);
+        files.setFileId(null);
+        String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
+        files.setRealName(FileNameUtil.mainName(filename) + suffix + "." + extName);
+        files.setGmtCreate(null);
+        files.setGmtModified(null);
+        filesMapper.insert(files);
+        // 更新已用空间
+        updateUsedStorageSpace(files.getSize());
+        return true;
+    }
+    
+    /**
+     * 将文件写道磁盘
+     *
+     * @param file           文件
+     * @param dto            文件上传数据传输对象
+     * @param storeDirectory 文件要存放的根目录
+     */
+    private boolean uploadToDisk(MultipartFile file, UploadDto dto, String storeDirectory) {
         OutputStream os = null;
         try {
             // 文件扩展名 不带 "."
             String extName = FileNameUtil.extName(file.getOriginalFilename());
-
+            
             // 新文件名
             String newFileName = dto.getIdentifier() + "." + extName;
-
+            
             // 计算文件的存放目录
             String path = storeDirectory + genericPath(newFileName, storeDirectory);
-
+            
             File targetFile = new File(path, newFileName);
-
+            
             if (dto.getTotalChunks() == 1) {
                 file.transferTo(targetFile);
+                return true;
             } else {
                 String tempPath = storeDirectory + "/tempDir/" + dto.getIdentifier();
                 File tempDir = new File(tempPath);
                 if (!tempDir.exists()) {
                     tempDir.mkdirs();
                 }
-
+                
                 for (int i = 0; i < dto.getTotalChunks(); i++) {
                     String tempFileName = dto.getChunkNumber() + "_" + dto.getIdentifier() + ".part";
                     File tempFile = new File(tempPath, tempFileName);
-                    if (!tempFile.exists()){
+                    if (!tempFile.exists()) {
                         file.transferTo(tempFile);
                     }
                 }
@@ -89,7 +163,7 @@ public class UploadServiceImpl implements IUploadService {
                     for (int i = 0; i < dto.getTotalChunks(); i++) {
                         String tempFileName = (i + 1) + "_" + dto.getIdentifier() + ".part";
                         File tempFile = new File(tempPath, tempFileName);
-                        while (!tempFile.exists()){
+                        while (!tempFile.exists()) {
                             Thread.sleep(100);
                         }
                         byte[] bytes = FileUtils.readFileToByteArray(tempFile);
@@ -99,11 +173,9 @@ public class UploadServiceImpl implements IUploadService {
                     }
                     os.flush();
                     tempDir.delete();
+                    return true;
                 }
             }
-
-            return ServerResponse.createBySuccessMessage(ReturnMessage.UPLOAD_SUCCESS);
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -115,29 +187,9 @@ public class UploadServiceImpl implements IUploadService {
                 }
             }
         }
-
-        return ServerResponse.createByErrorMessage(ReturnMessage.UPLOAD_ERROR);
+        return false;
     }
-
-    /**
-     * 秒传
-     *
-     * @param files    文件表
-     * @param filename 文件名
-     */
-    @Override
-    public void skipUpload(Files files, String filename) {
-        String extName = FileNameUtil.extName(filename);
-        files.setFileId(null);
-        String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
-        files.setRealName(FileNameUtil.mainName(filename) + suffix + "." + extName);
-        files.setGmtCreate(null);
-        files.setGmtModified(null);
-        filesMapper.insert(files);
-        // 更新已用空间
-        updateUsedStorageSpace(files.getSize());
-    }
-
+    
     /**
      * 判断文件大小是否超过剩余空间
      *
@@ -145,11 +197,12 @@ public class UploadServiceImpl implements IUploadService {
      * @return true - 超过， false - 未超过
      */
     private boolean isExcessStorageSpace(Long size) {
-        Long usedStorageSpace = SecurityUtil.getLoginUser().getUser().getUsedStorageSpace();
+        User user = userMapper.selectByUsername(SecurityUtil.getUsername());
+        Long usedStorageSpace = user.getUsedStorageSpace();
         Long maxStorageSpace = SecurityUtil.getLoginUser().getUser().getUserGroups().getMaxStorageSpace();
         return (usedStorageSpace + size) > maxStorageSpace;
     }
-
+    
     /**
      * 更新已用空间
      *
@@ -163,7 +216,7 @@ public class UploadServiceImpl implements IUploadService {
         updateUser.setUsedStorageSpace(user.getUsedStorageSpace() + size);
         userMapper.updateById(updateUser);
     }
-
+    
     /**
      * 计算文件的存放目录
      *
@@ -176,14 +229,14 @@ public class UploadServiceImpl implements IUploadService {
         int dir1 = hashCode & 0xf;
         // 二级目录
         int dir2 = (hashCode & 0xf0) >> 4;
-
+        
         String dir = "/" + dir1 + "/" + dir2;
-
+        
         File file = new File(storeDirectory, dir);
         if (!file.exists()) {
             file.mkdirs();
         }
-
+        
         return dir;
     }
 }

@@ -53,6 +53,7 @@ import bus from '@/utils/bus.js';
 import { getToken } from '@/utils/token';
 import SparkMd5 from 'spark-md5';
 import $ from 'jquery';
+import { Message } from 'element-ui'
 
 export default {
 	name: 'index',
@@ -62,6 +63,7 @@ export default {
 			isMaximize: true,
 			isUpload: false,
 			fileList: [],
+            isFirstTip: true,
 			options: {
 				target: `${process.env.VUE_APP_BASE_API}/portal/upload/`,
 				chunkSize: '10485760',
@@ -69,10 +71,14 @@ export default {
 				maxChunkRetries: 3,
 				testChunks: true, //是否开启服务器分片校验
 				simultaneousUploads: 5,
+                enableOnceCheck: true,
 				// 服务器分片校验函数，秒传及断点续传基础
 				checkChunkUploadedByResponse: function(chunk, message) {
 					let objMessage = JSON.parse(message);
 					if (objMessage.data.skipUpload) {
+					    if (objMessage.data.msg && chunk.offset == 1){
+					        Message.error(objMessage.data.msg)
+                        }
 						return true;
 					}
 					return (objMessage.data.uploaded || []).indexOf(chunk.offset + 1) >= 0;
