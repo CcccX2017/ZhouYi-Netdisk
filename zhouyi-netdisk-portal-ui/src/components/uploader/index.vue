@@ -35,19 +35,22 @@
                                         <template slot-scope="props">
                                             <div class="clearfix file-box">
                                                 <li class="file-info file-name" :title="item.name">
-                                                    <img :src="item.fileIcon"
+                                                    <img :src="fileList[index].fileIcon"
                                                          :alt="item.name"
                                                          width="25" height="25" style="vertical-align: middle"/>
                                                     {{ item.name }}
                                                 </li>
                                                 <li class="file-info file-size" :title="item.formatSize">
-                                                    {{item.formatSize}}
+                                                    {{ item.formatSize }}
                                                 </li>
                                                 <li class="file-info file-path" :title="item.path">
                                                     <a :href="item.targetPath">{{ item.path }}</a>
                                                 </li>
                                                 <div class="file-status" :title="item.status" :id="'status_' + item.id">
-                                                    {{ item.formatedAverageSpeed }}
+                                                    <span id="md5Span" v-show="item.paused"></span>
+                                                    <span id="speedSpan" v-show="!item.paused">
+                                                        {{ item.paused ? 0 : props.formatedAverageSpeed }}
+                                                    </span>
                                                 </div>
                                                 <div class="file-operate">
                                                     <i class="iconfont icon-zanting" style="margin-right: 10px"
@@ -167,8 +170,7 @@
                         file.path = this.params.path;
                         file.targetPath = this.params.targetPath;
                         file.paused = true;
-                        this.computeMD5(file);
-                        this.isUpload = true;
+                        this.fileList.push(file);
                     })
                     .catch(() => {
                         file.fileIcon = require('../../assets/filetype/unknown.png');
@@ -176,9 +178,12 @@
                         file.path = this.params.path;
                         file.targetPath = this.params.targetPath;
                         file.paused = true;
-                        this.computeMD5(file);
-                        this.isUpload = true;
+                        this.fileList.push(file);
                     });
+                this.$nextTick(() => {
+                    this.computeMD5(file);
+                });
+                this.isUpload = true;
             },
             // 关闭上传组件
             closeUploadPanel() {
@@ -225,7 +230,7 @@
             },
             removeStatus(id) {
                 this.$nextTick(() => {
-                    $('#status_' + id).text('');
+                    $('#status_' + id + ' #md5Span').text('');
                 });
             },
             // 计算文件md5
@@ -252,7 +257,7 @@
                         
                         // 显示计算进度
                         this.$nextTick(() => {
-                            $('#status_' + file.id).text('校验MD5(' + ((currentChunk / chunks) * 100).toFixed(0) + '%)');
+                            $('#status_' + file.id + ' #md5Span').text('校验MD5(' + ((currentChunk / chunks) * 100).toFixed(0) + '%)');
                         });
                     } else {
                         let md5 = spark.end();
