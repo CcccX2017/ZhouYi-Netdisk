@@ -1,7 +1,7 @@
 <template>
     <div id="uploader-panel" v-show="isUpload">
         <uploader ref="uploader" :autoStart="false" :options="options" @file-added="onFileAdded"
-                  @file-success="onFileSuccess">
+                  @file-success="onFileSuccess" @complete="onComplete">
             <uploader-unsupport></uploader-unsupport>
             
             <uploader-btn id="uploader-btn" ref="uploadBtn">选择文件</uploader-btn>
@@ -34,6 +34,7 @@
                                     <uploader-file :file="item" :list="true" ref="files">
                                         <template slot-scope="props">
                                             <div class="clearfix file-box">
+												<span class="file-process" :style="'width: ' + (props.progress * 100) + '%'"></span>
                                                 <li class="file-info file-name" :title="item.name">
                                                     <img :src="fileList[index].fileIcon"
                                                          :alt="item.name"
@@ -47,8 +48,8 @@
                                                     <a :href="item.targetPath">{{ item.path }}</a>
                                                 </li>
                                                 <div class="file-status" :title="item.status" :id="'status_' + item.id">
-                                                    <span id="md5Span" v-show="item.paused"></span>
-                                                    <span id="speedSpan" v-show="!item.paused">
+                                                    <span :id="'md5Span_' + item.id" v-show="item.paused"></span>
+                                                    <span :id="'speedSpan_' + item.id" v-show="!item.paused">
                                                         {{ item.paused ? 0 : props.formatedAverageSpeed }}
                                                     </span>
                                                 </div>
@@ -128,7 +129,6 @@
                     this.options.headers.Authorization = 'Bearer ' + token;
                 }
             }, 1000);
-            
         },
         mounted() {
             bus.$on('openUploader', query => {
@@ -141,6 +141,7 @@
         methods: {
             // 上传成功回调
             onFileSuccess(rootFile, file, response, chunk) {
+				this.setStatus(file.id,'success');
                 // this.$parent.getStorage();
                 //console.log('complete', rootFile, file, response, chunk)
             },
@@ -211,26 +212,23 @@
                 let sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
                 let k = 1024;
                 let i = Math.floor(Math.log(size) / Math.log(1024));
-                return (size / Math.pow(k, i)).toPrecision(3) + sizes[i];
+                return (size / Math.pow(k, i)).toFixed(0) + sizes[i];
             },
             // 设置上传状态
             setStatus(id, status) {
                 let statusMap = {
                     md5: '校验MD5...',
-                    merging: '合并中...',
-                    transcoding: '转码中...',
-                    failed: '上传失败'
+                    failed: '上传失败',
+					uploading: '正在上传',
+					paused: '已暂停',
+					waiting: '等待上传',
+					success: '上传成功'
                 };
-                for (let i = 0; i < this.fileList.length; i++) {
-                    if (this.fileList[i].id === id) {
-                        this.fileList[i].status = statusMap[status];
-                        return;
-                    }
-                }
+				$('#status_' + id + ' #speedSpan_' + file.id).text(statusMap[status]);
             },
             removeStatus(id) {
                 this.$nextTick(() => {
-                    $('#status_' + id + ' #md5Span').text('');
+                    $('#status_' + id + ' #md5Span_' + file.id).text('');
                 });
             },
             // 计算文件md5
@@ -242,8 +240,7 @@
                 const chunkSize = 10 * 1024 * 1000;
                 let chunks = Math.ceil(file.size / chunkSize);
                 let spark = new SparkMd5.ArrayBuffer();
-                
-                this.setStatus(file.id, 'md5');
+				
                 file.pause();
                 
                 loadNext();
@@ -257,7 +254,7 @@
                         
                         // 显示计算进度
                         this.$nextTick(() => {
-                            $('#status_' + file.id + ' #md5Span').text('校验MD5(' + ((currentChunk / chunks) * 100).toFixed(0) + '%)');
+                            $('#status_' + file.id + ' #md5Span_' + file.id).text('校验MD5(' + ((currentChunk / chunks) * 100).toFixed(0) + '%)');
                         });
                     } else {
                         let md5 = spark.end();
@@ -297,6 +294,9 @@
 </script>
 
 <style lang="less">
+	.uploader-file{
+		border-bottom: 1px solid rgba(179, 216, 255, 0.2) !important;
+	}
     #uploader-panel {
         position: fixed;
         right: 20px;
@@ -344,8 +344,7 @@
                         
                         .fileContainer {
                             .file-box {
-                                border-bottom: 1px solid rgba(179, 216, 255, 0.2);
-                                
+                                position: relative;
                                 .file-info {
                                     height: 50px;
                                     line-height: 50px;
@@ -371,6 +370,17 @@
                                         font-weight: 400;
                                     }
                                 }
+								
+								.file-process{
+									position: absolute;
+									background-color: #409eff;
+									opacity: .2;
+									height: 100%;
+									left: 0;
+									top: 0;
+									white-space: nowrap;
+									transition: width .6s ease;
+								}
                             }
                         }
                     }
