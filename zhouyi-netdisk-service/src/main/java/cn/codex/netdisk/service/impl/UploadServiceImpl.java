@@ -142,7 +142,9 @@ public class UploadServiceImpl implements IUploadService {
             File targetFile = new File(path, newFileName);
             
             if (dto.getTotalChunks() == 1) {
-                file.transferTo(targetFile);
+                if (!targetFile.exists()){
+                    file.transferTo(targetFile);
+                }
                 return true;
             } else {
                 String tempPath = storeDirectory + "/tempDir/" + dto.getIdentifier();

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class UploadController {
     
     @ApiOperation(value = "上传文件")
     @GetMapping("/")
-    public ServerResponse upload(UploadDto dto) {
+    public ServerResponse upload(UploadDto dto, HttpServletResponse response) {
         
         String extName = FileNameUtil.extName(dto.getFilename());
         
