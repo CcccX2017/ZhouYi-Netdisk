@@ -87,4 +87,10 @@
             border-bottom-color: #2fc7fe !important;
         }
     }
+	
+	.svip-dropdown {
+	    .popper__arrow::after {
+	        border-bottom-color: #dd6966 !important;
+	    }
+	}
 </style>

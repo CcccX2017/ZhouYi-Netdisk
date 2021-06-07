@@ -13,7 +13,7 @@
 					</div>
 				</div>
 				<div class="right-content">
-					<el-dropdown :show-timeout="50" :hide-timeout="50" placement="bottom-start" @command="commandHandler" @visible-change="dropdownChange">
+					<el-dropdown trigger="hover" :show-timeout="50" :hide-timeout="50" placement="bottom-start" @command="commandHandler" @visible-change="dropdownChange">
 						<div class="user-info">
 							<el-avatar size="large" :src="userInfo.avatar" class="avatar"></el-avatar>
 							<span style="margin-left: 10px;">
@@ -23,10 +23,9 @@
 						</div>
 						<el-dropdown-menu slot="dropdown" class="dropdown-info" :class="userType">
 							<el-dropdown-item class="user-item">
-								<el-avatar :size="45" :src="userInfo.avatar" class="avatar"></el-avatar>
-								<span style="margin-left: 10px;">
-									{{ userInfo.nickname }}
-								</span>
+								<i class="img-bg"></i>
+								<el-avatar :size="45" :src="userInfo.avatar" class="avatar" style="position: relative;z-index: 3;"></el-avatar>
+								<span style="margin-left: 10px;position: relative;z-index: 3;">{{ userInfo.nickname }}</span>
 							</el-dropdown-item>
 							<el-dropdown-item command="userinfo">个人资料</el-dropdown-item>
 							<el-dropdown-item command="logout">退出</el-dropdown-item>
@@ -70,14 +69,14 @@ export default {
 				this.$confirm('确定要退出舟意网盘吗?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消'
-				}).then(() => {
-					// 注销登录
-					this.$store.dispatch('LogOut').then(() => {
-						location.reload('/')
-					})
-				}).catch(() => {
-					
 				})
+					.then(() => {
+						// 注销登录
+						this.$store.dispatch('LogOut').then(() => {
+							location.reload('/');
+						});
+					})
+					.catch(() => {});
 			}
 		},
 		dropdownChange(val) {
@@ -91,18 +90,18 @@ export default {
 			this.activeIndex = this.$route.path.indexOf('/netdisk/') !== -1 ? '/netdisk/' : this.$route.path;
 		},
 		setUserInfo() {
-			this.userInfo.avatar = this.$store.getters.avatar
-			this.userInfo.username = this.$store.getters.name
-			this.userInfo.groupId = this.$store.getters.groupId
-			this.userInfo.nickname = this.$store.getters.nickname
+			this.userInfo.avatar = this.$store.getters.avatar;
+			this.userInfo.username = this.$store.getters.name;
+			this.userInfo.groupId = this.$store.getters.groupId;
+			this.userInfo.nickname = this.$store.getters.nickname;
 		}
 	},
-	computed:{
-		userType: function(){
-			if(this.userInfo.groupId === 1002){
-				return 'svip-dropdown'
+	computed: {
+		userType: function() {
+			if (this.userInfo.groupId === 1003) {
+				return 'svip-dropdown';
 			}
-			return 'normal-dropdown'
+			return 'normal-dropdown';
 		}
 	},
 	watch: {
@@ -256,20 +255,41 @@ export default {
 .dropdown-info {
 	width: 260px;
 	padding: 0;
-	li{
+	li {
 		line-height: 35px;
 	}
-	.user-item{
+	&.normal-dropdown {
+		.user-item {
+			background: url(../assets/images/vip-bg.png);
+		}
+	}
+	&.svip-dropdown {
+		.user-item {
+			background-color: #dd6966;
+		}
+		.img-bg {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			bottom: 0;
+			background: url(../assets/images/svip-bg.png);
+			background-size: cover;
+			background-position: center center;
+			opacity: 0.2;
+			z-index: 2;
+		}
+	}
+	.user-item {
 		display: flex;
 		align-items: center;
 		height: 80px;
-		background: url(../assets/images/vip-bg.png);
 		color: #fff;
 		cursor: default;
-		&:hover{
+		position: relative;
+		&:hover {
 			color: #fff;
 		}
 	}
 }
-
 </style>
