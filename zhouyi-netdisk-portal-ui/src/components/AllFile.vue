@@ -15,8 +15,31 @@
 			</div>
 			<div class="right-fun clearfix">
 				<div class="icon-fun-area">
-					<i class="iconfont icon-paixu"></i>
-					<i class="iconfont icon-viewgallery"></i>
+					<div class="paixu-div" @mouseenter="paixuMouseenter" @mouseleave="paixuMouseleave">
+						<i class="iconfont icon-paixu paixu-i"></i>
+						<ul class="paixu-ul" v-show="paixuUl" @mouseenter="paixuUlMouseenter" @mouseleave="paixuUlMouseleave">
+							<li class="paixu-li" @click.stop="changePaixu('name')">
+								<span>
+									<em class="el-icon-check" v-show="queryParam.order == 'name'"></em>
+									文件名
+								</span>
+							</li>
+							<li class="paixu-li" @click.stop="changePaixu('size')">
+								<span>
+									<em class="el-icon-check" v-show="queryParam.order == 'size'"></em>
+									大小
+								</span>
+							</li>
+							<li class="paixu-li" @click.stop="changePaixu('time')">
+								<span>
+									<em class="el-icon-check" v-show="queryParam.order == 'time'"></em>
+									修改日期
+								</span>
+							</li>
+						</ul>
+					</div>
+					<i class="iconfont icon-viewgallery paixu-i" v-if="isGridView" @click="changeView('gallery')"></i>
+					<i class="iconfont icon-viewlist paixu-i" v-else @click="changeView('list')"></i>
 				</div>
 				<div class="fun-search clearfix">
 					<el-input
@@ -66,7 +89,7 @@
 					<ul class="title-ul" v-if="isSearch == 0">
 						<li data-key="name" style="width: 60%;padding-left: 16px;" @click.stop="changeOrder('name')">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" @click.native="stopDefault($event)"></el-checkbox>
-							<span style="padding-left: 10px;">{{tableTitle}}</span>
+							<span style="padding-left: 10px;">{{ tableTitle }}</span>
 							<i :class="queryParam.desc == 1 ? 'el-icon-bottom' : 'el-icon-top'" class="sortIcon" v-if="queryParam.order == 'name'"></i>
 						</li>
 						<li data-key="size" style="width: 16%;" @click.stop="changeOrder('size')">
@@ -81,7 +104,7 @@
 					<ul class="title-ul" v-else>
 						<li data-key="name" style="width: 60%;padding-left: 16px;">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" @click.native="stopDefault($event)"></el-checkbox>
-							<span style="padding-left: 10px;">{{tableTitle}}</span>
+							<span style="padding-left: 10px;">{{ tableTitle }}</span>
 						</li>
 						<li data-key="size" style="width: 16%;"><span>大小</span></li>
 						<li data-key="time" style="width: 13%;"><span>修改日期</span></li>
@@ -157,7 +180,6 @@
 
 <script>
 import { Loading } from 'element-ui';
-
 import bus from '@/utils/bus.js';
 
 export default {
@@ -231,8 +253,18 @@ export default {
 						trigger: 'blur'
 					}
 				]
-			}
+			},
+			// 是否显示排序框
+			paixuUl: false,
+			// 鼠标是否在排序框内
+			mouseInUl: false,
+			// 鼠标是否在排序图标上
+			mouseInDiv: false,
+			isGridView: true
 		};
+	},
+	components:{
+		
 	},
 	created() {
 		window.addEventListener('resize', this.transferHeight);
@@ -245,13 +277,20 @@ export default {
 	computed: {
 		tableTitle() {
 			let count = this.checkedList.length;
-			if(count === 0){
-				return "文件名";
+			if (count === 0) {
+				return '文件名';
 			}
 			return `已选中${count}个文件/文件夹`;
 		}
 	},
 	methods: {
+		changeView(view){
+			if(view === "list"){
+				this.isGridView = true
+			}else if(view === "gallery"){
+				this.isGridView = false
+			}
+		},
 		// 上传文件
 		uploader() {
 			bus.$emit('openUploader', {
@@ -366,7 +405,7 @@ export default {
 				this.isSearch = 1;
 				this.searchParam.page = 1;
 				this.breadcrumb = [`搜索："${this.searchParam.keyword}"`];
-				console.log(this.breadcrumb)
+				console.log(this.breadcrumb);
 				this.getList();
 			}
 		},
@@ -620,7 +659,9 @@ export default {
 			this.content.height = window.innerHeight - 187 + 'px';
 			// 刷新滚动条
 			this.$nextTick(() => {
-				this.$refs['vs'].refresh();
+				if (this.$refs['vs']) {
+					this.$refs['vs'].refresh();
+				}
 			});
 		},
 		// 滚动加载数据
@@ -629,9 +670,40 @@ export default {
 				this.queryParam.page += 1;
 				this.getList(true);
 				this.$nextTick(() => {
-					this.$refs['vs'].refresh();
+					if (this.$refs['vs']) {
+						this.$refs['vs'].refresh();
+					}
 				});
 			}
+		},
+		paixuMouseenter() {
+			this.paixuUl = true;
+			this.mouseInDiv = true;
+		},
+		paixuMouseleave() {
+			this.mouseInDiv = false;
+			setTimeout(() => {
+				if (!this.mouseInUl) {
+					this.paixuUl = false;
+				}
+			}, 500);
+		},
+		paixuUlMouseenter() {
+			this.mouseInUl = true;
+		},
+		paixuUlMouseleave() {
+			this.mouseInUl = false;
+			setTimeout(() => {
+				if (!this.mouseInDiv) {
+					this.paixuUl = false;
+				}
+			}, 500);
+		},
+		changePaixu(order) {
+			this.changeOrder(order);
+			this.mouseInUl = false;
+			this.paixuUl = false;
+			this.mouseInDiv = false;
 		}
 	},
 	watch: {
@@ -792,6 +864,57 @@ export default {
 			display: flex;
 			height: 30px;
 			align-items: center;
+			.paixu-i {
+				&:hover {
+					color: #7f8da9;
+				}
+			}
+			.paixu-div {
+				position: relative;
+				.paixu-ul {
+					width: 100px;
+					height: auto;
+					position: absolute;
+					border: 1px solid #409eff;
+					right: 0;
+					background-color: #fff;
+					border-radius: 4px;
+					z-index: 9999;
+					.paixu-li {
+						padding: 5px 10px;
+						color: #409eff;
+						user-select: none;
+						cursor: pointer;
+						text-align: left;
+						font-size: 12px;
+						line-height: 1.5;
+						&:first-child {
+							border-top-left-radius: 4px;
+							border-top-right-radius: 4px;
+						}
+						&:last-child {
+							border-bottom-left-radius: 4px;
+							border-bottom-right-radius: 4px;
+						}
+						&:hover {
+							background: #f6faff;
+						}
+						span {
+							display: block;
+							text-indent: 23px;
+							position: relative;
+							text-align: left;
+							em {
+								font-weight: 700;
+								position: absolute;
+								left: 2px;
+								top: 4px;
+								text-indent: 0;
+							}
+						}
+					}
+				}
+			}
 
 			.iconfont {
 				cursor: pointer;
@@ -804,7 +927,7 @@ export default {
 				margin-right: 10px;
 			}
 
-			.icon-viewgallery {
+			.icon-viewgallery, .icon-viewlist {
 				font-size: 18px;
 				margin-right: 20px;
 				font-weight: 600;
