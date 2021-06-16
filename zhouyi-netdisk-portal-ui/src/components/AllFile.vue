@@ -328,28 +328,15 @@
     ></CreateFolder>
 
     <!-- 重命名 -->
-    <el-dialog
-      title="重命名"
+    <RenameCom
       :visible.sync="dialogRenameVisible"
-      width="350px"
-      custom-class="folderDialog"
-      :close-on-click-modal="false"
-    >
-      <el-form :model="renameForm" :rules="renameRules" ref="renameForm">
-        <el-form-item prop="fileName">
-          <el-input
-            v-model="renameForm.fileName"
-            placeholder="请输入文件(夹)名称"
-            @keyup.enter.native="rename"
-            ref="renameInput"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogRenameVisible = false">取 消</el-button>
-        <el-button type="primary" @click="rename">确 定</el-button>
-      </span>
-    </el-dialog>
+      :checkedFileName="checkedFileName"
+      :checkList="checkList"
+      :dir="queryParam.dir"
+      @resetQueryParam="resetQueryParam"
+      @resetCheckedList="resetCheckedList"
+      @getList="getList"
+    ></RenameCom>
   </div>
 </template>
 
@@ -357,11 +344,13 @@
 import { Loading } from 'element-ui'
 import bus from '@/utils/bus.js'
 import CreateFolder from '@/components/dialogComponents/CreateFolder'
+import RenameCom from '@/components/dialogComponents/Rename'
 
 export default {
   name: 'AllFile',
   components: {
     CreateFolder,
+    RenameCom,
   },
   data() {
     return {
@@ -405,20 +394,6 @@ export default {
       // 选择的文件名称，供重命名使用
       checkedFileName: '',
       dialogRenameVisible: false,
-      renameForm: {
-        fileName: '',
-      },
-      renameRules: {
-        fileName: [
-          { required: true, message: '请输入文件(夹)名称', trigger: 'blur' },
-          {
-            min: 1,
-            max: 255,
-            message: '文件(夹)名称不能超过255个字节',
-            trigger: 'blur',
-          },
-        ],
-      },
       // 是否显示排序框
       paixuUl: false,
       // 鼠标是否在排序框内
@@ -446,6 +421,12 @@ export default {
     },
   },
   methods: {
+    resetCheckedList() {
+      this.checkedFileName = ''
+      this.checkedList = []
+      this.checkList.fileIds = []
+      this.checkList.folderIds = []
+    },
     changeView(view) {
       if (view === 'list') {
         this.isGridView = true
@@ -460,92 +441,9 @@ export default {
         targetPath: this.queryParam.dir,
       })
     },
-    // 重命名
-    rename() {
-      this.$refs.renameForm.validate((valid) => {
-        if (valid) {
-          let param = {
-            newName: this.renameForm.fileName,
-            dir: this.queryParam.dir,
-          }
-
-          let id, isDir
-
-          let fileIds = this.checkList.fileIds
-          let folderIds = this.checkList.folderIds
-          if (fileIds.length > 0) {
-            id = fileIds[0]
-            isDir = 0
-          } else if (folderIds.length > 0) {
-            id = folderIds[0]
-            isDir = 1
-          } else {
-            return
-          }
-          let msg = this.$message({
-            message: '正在重命名文件，请稍后...',
-            iconClass: 'el-icon-loading',
-            duration: 0,
-          })
-          // 发送重命名请求
-          this.putRequest(`/portal/list/${id}/${isDir}`, param).then((resp) => {
-            msg.close()
-            if (resp) {
-              if (resp.status !== 20) {
-                this.resetQueryParam()
-                this.checkedFileName = ''
-                this.checkedList = []
-                this.checkList.fileIds = []
-                this.checkList.folderIds = []
-                this.getList()
-                this.dialogRenameVisible = false
-              } else {
-                this.$confirm(`${resp.msg}`, '提示', {
-                  confirmButtonText: '保留两个文件',
-                  cancelButtonText: '取消',
-                  type: 'warning',
-                })
-                  .then(() => {
-                    msg = this.$message({
-                      message: '正在重命名文件，请稍后...',
-                      iconClass: 'el-icon-loading',
-                      duration: 0,
-                    })
-                    param.type = 'newCopy'
-                    this.putRequest(`/portal/list/${id}/${isDir}`, param).then(
-                      (resp) => {
-                        if (resp) {
-                          msg.close()
-                          this.resetQueryParam()
-                          this.checkedFileName = ''
-                          this.checkedList = []
-                          this.checkList.fileIds = []
-                          this.checkList.folderIds = []
-                          this.getList()
-                          this.dialogRenameVisible = false
-                        }
-                      }
-                    )
-                  })
-                  .catch(() => {})
-              }
-            }
-          })
-        }
-      })
-    },
     // 重命名弹出框
     openRenameDialog() {
-      if (this.$refs.renameForm) {
-        this.$refs.renameForm.resetFields()
-      }
-      this.renameForm.fileName = this.checkedFileName
       this.dialogRenameVisible = true
-      this.$nextTick(() => {
-        let el = this.$refs.renameInput.$el.children[0]
-        el.select()
-        el.selectionEnd = this.renameForm.fileName.lastIndexOf('.')
-      })
     },
     // 组装所在目录
     assembleDirectory(dir) {
