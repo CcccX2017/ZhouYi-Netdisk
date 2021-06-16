@@ -64,7 +64,7 @@
             },
             changeView(path){
                 this.activeMenu = path
-                this.$router.push(path)
+                this.$router.push(path + '?vmode=list')
             },
             initMenu() {
                 this.activeMenu = this.$route.path.replace('/netdisk/','')
