@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Collection;
  * @since 2021-02-11
  */
 @ApiModel(value = "登录用户权限信息", description = "")
-public class LoginUser implements UserDetails {
+public class LoginUser implements Serializable, UserDetails {
     
     private static final long serialVersionUID = 1L;
     

@@ -13,7 +13,7 @@ public class Md5Util {
 
     /**
      * UTF-8 Md5加密
-     *
+     *chun
      * @param origin 需要加密的源数据
      * @return MD5加密后的字符串
      */

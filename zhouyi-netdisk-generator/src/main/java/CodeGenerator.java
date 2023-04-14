@@ -12,7 +12,6 @@ public class CodeGenerator {
     public static void main(String[] args) {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
-
         // 全局配置
         mpg.setGlobalConfig(Global.getGlobalConfig());
         // 数据源

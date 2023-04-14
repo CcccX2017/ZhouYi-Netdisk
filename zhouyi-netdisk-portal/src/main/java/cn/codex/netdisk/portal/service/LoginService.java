@@ -71,8 +71,7 @@ public class LoginService {
         Authentication authentication = null;
         try {
             authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
-                            loginDto.getPassword()));
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
                 throw new UserPasswordNotMatchException();
