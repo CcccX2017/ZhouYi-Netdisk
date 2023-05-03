@@ -64,3 +64,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# 忽略RestFul Fast Request插件配置文件
+.fastRequest
