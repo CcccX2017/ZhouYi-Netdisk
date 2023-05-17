@@ -69,7 +69,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
         }
 
         // 判断文件夹名称是否重复，重复则重新命名
-        Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
+        Long count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME,
                 folderName).eq(Folders.DIR, dir).eq(Folders.CREATOR, username));
 
         Folders folders = new Folders();
@@ -139,7 +139,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      */
     private ServerResponse<?> firstRename(Long folderId, FileRenameDto dto) {
         // 判断文件夹名称是否重复，重复则重新命名
-        Integer count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, dto.getNewName()).eq(Folders.DIR, dto.getDir()).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
+        Long count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, dto.getNewName()).eq(Folders.DIR, dto.getDir()).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
         if (count != null && count > 0) {
             // 存在重名文件，提示用户是否保留两者
             return ServerResponse.createByErrorCodeMessage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),

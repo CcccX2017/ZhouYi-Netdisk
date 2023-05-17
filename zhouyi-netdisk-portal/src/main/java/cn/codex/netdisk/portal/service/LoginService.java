@@ -152,7 +152,7 @@ public class LoginService {
             return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_ILLEGAL);
         }
         // 验证用户名是否已存在
-        Integer count = userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, registerDto.getUsername()));
+        Long count = userMapper.selectCount(new QueryWrapper<User>().eq(User.USERNAME, registerDto.getUsername()));
         if (count > 0) {
             return ServerResponse.createByErrorMessage(ReturnMessage.USERNAME_EXIST);
         }

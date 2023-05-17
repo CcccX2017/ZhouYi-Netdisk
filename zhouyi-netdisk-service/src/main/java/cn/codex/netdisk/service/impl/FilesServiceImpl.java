@@ -165,7 +165,7 @@ public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements
         // 判断当前文件夹下是否有重名文件
         QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Files.DIR, fileRenameDto.getDir()).eq(Files.REAL_NAME, fileRenameDto.getNewName()).eq(Files.CREATOR, SecurityUtil.getUsername()).ne(Files.FILE_ID, fileId);
-        Integer count = baseMapper.selectCount(queryWrapper);
+        Long count = baseMapper.selectCount(queryWrapper);
         if (count != null && count > 0) {
             // 存在重名文件，提示用户是否保留两者
             return ServerResponse.createByErrorCodeMessage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),

@@ -70,7 +70,7 @@ public class UserController {
             return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_ILLEGAL);
         }
         // 验证昵称是否已被使用
-        int count =
+        long count =
                 userService.count(new QueryWrapper<User>().eq(User.NICKNAME, updateUserInfoDto.getNickname()).ne(User.USER_ID, updateUserInfoDto.getUserId()));
         if (count > 0) {
             return ServerResponse.createByErrorMessage(ReturnMessage.NICKNAME_EXIST);

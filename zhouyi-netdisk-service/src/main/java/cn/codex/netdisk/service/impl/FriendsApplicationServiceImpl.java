@@ -84,7 +84,7 @@ public class FriendsApplicationServiceImpl extends ServiceImpl<FriendsApplicatio
         }
 
         // 判断是否已经是好友
-        Integer count =
+        Long count =
                 friendsMapper.selectCount(new QueryWrapper<Friends>().and(i -> i.eq(Friends.USERNAME, from).eq(Friends.FRIEND,
                         to)).or(i -> i.eq(Friends.USERNAME, to).eq(Friends.FRIEND, from)));
         if (count > 0) {
