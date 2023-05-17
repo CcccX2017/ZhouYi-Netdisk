@@ -74,7 +74,7 @@
                 const password = Cookies.get('password');
                 const rememberMe = Cookies.get('rememberMe');
                 this.loginForm = {
-                    username: username === undefined ? this.loginForm.username : decrypt(username),
+                    username: username === undefined ? this.loginForm.username : username,
                     password: password === undefined ? this.loginForm.password : decrypt(password),
                     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
                 };
