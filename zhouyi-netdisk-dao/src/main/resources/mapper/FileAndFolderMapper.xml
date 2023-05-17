@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codex.netdisk.dao.FileAndFolderMapper">
     <select id="getFolderAndFileVo" resultType="cn.codex.netdisk.model.vo.FolderAndFileVo">
-        select * from (
-                select folder_id    as id,
-                       folder_name  as name,
-                       1            as isDir,
-                       null         as size,
-                       '-'          as sizeStr,
-                       dir          as path,
-                       'folder'     as type,
-                       'folder.png' as icon,
-                       '-'          as suffix,
-                       gmt_modified
-                from tb_folders
-                where dir = #{dto.dir}
-                  and creator = #{username}
-                  and is_deleted = 0
+        select t.* from ((
+        select folder_id as id,
+        folder_name as name,
+        1 as isDir,
+        null as size,
+        '-' as sizeStr,
+        dir as path,
+        'folder' as type,
+        'folder.png' as icon,
+        '-' as suffix,
+        gmt_modified
+        from tb_folders
+        where dir = #{dto.dir}
+        and creator = #{username}
+        and is_deleted = 0
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
                 <choose>
@@ -43,24 +43,22 @@
                 </choose>
             </otherwise>
         </choose>
-        limit 18446744073709551615
-                ) t1
-                union
-                select * from (
-                select file_id   as id,
-                       real_name as name,
-                       0         as dir,
-                       size,
-                       ''        as sizeStr,
-                       dir       as path,
-                       file_type as type,
-                       icon,
-                       extension as suffix,
-                       gmt_modified
-                from tb_files
-                where dir = #{dto.dir}
-                  and creator = #{username}
-                  and is_deleted = 0
+        ) union
+        (
+        select file_id as id,
+        real_name as name,
+        0 as dir,
+        size,
+        '' as sizeStr,
+        dir as path,
+        file_type as type,
+        icon,
+        extension as suffix,
+        gmt_modified
+        from tb_files
+        where dir = #{dto.dir}
+        and creator = #{username}
+        and is_deleted = 0
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
                 <choose>
@@ -97,26 +95,25 @@
                 </choose>
             </otherwise>
         </choose>
-        limit 18446744073709551615
-                ) t2
+        )) as t
     </select>
 
     <select id="search" resultType="cn.codex.netdisk.model.vo.FolderAndFileVo">
-        select * from (
-                select folder_id    as id,
-                       folder_name  as name,
-                       1            as isDir,
-                       null         as size,
-                       '-'          as sizeStr,
-                       dir          as path,
-                       'folder'     as type,
-                       'folder.png' as icon,
-                       '-'          as suffix,
-                       gmt_modified
-                from tb_folders
-                where creator = #{username}
-                  and is_deleted = 0
-                  and folder_name like concat(#{dto.keyword}, '%')
+        select t.* from ((
+        select folder_id as id,
+        folder_name as name,
+        1 as isDir,
+        null as size,
+        '-' as sizeStr,
+        dir as path,
+        'folder' as type,
+        'folder.png' as icon,
+        '-' as suffix,
+        gmt_modified
+        from tb_folders
+        where creator = #{username}
+        and is_deleted = 0
+        and folder_name like concat(#{dto.keyword}, '%')
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
                 <choose>
@@ -143,24 +140,21 @@
                 </choose>
             </otherwise>
         </choose>
-        limit 18446744073709551615
-                ) t1
-                union
-                select * from (
-                select file_id   as id,
-                       real_name as name,
-                       0         as dir,
-                       size,
-                       ''        as sizeStr,
-                       dir       as path,
-                       file_type as type,
-                       icon,
-                       extension as suffix,
-                       gmt_modified
-                from tb_files
-                where creator = #{username}
-                  and is_deleted = 0
-                  and real_name like concat(#{dto.keyword}, '%')
+        ) union (
+        select file_id as id,
+        real_name as name,
+        0 as dir,
+        size,
+        '' as sizeStr,
+        dir as path,
+        file_type as type,
+        icon,
+        extension as suffix,
+        gmt_modified
+        from tb_files
+        where creator = #{username}
+        and is_deleted = 0
+        and real_name like concat(#{dto.keyword}, '%')
         <choose>
             <when test="dto.desc != null and dto.desc == 1">
                 <choose>
@@ -197,7 +191,6 @@
                 </choose>
             </otherwise>
         </choose>
-        limit 18446744073709551615
-                ) t2
+        )) as t
     </select>
 </mapper>
