@@ -34,7 +34,7 @@ export default {
 			// 用户注册
 			if (this.tagName === 'register') {
 				// 验证邮箱
-				this.$root.$children[0].$children[0].$refs.registerForm.validateField('email', valid => {
+				this.$parent.$parent.validateField('email', valid => {
 					if (valid) {
 						this.destoryCountDown();
 					} else {
@@ -52,7 +52,7 @@ export default {
 				});
 			} else if (this.tagName === 'forgot') {
 				// 忘记密码
-				this.$root.$children[0].$children[0].$refs.emailForm.validateField('email', valid => {
+				this.$parent.$parent.validateField('email', valid => {
 					if (valid) {
 						this.destoryCountDown();
 					} else {
