@@ -57,6 +57,7 @@ public class CaptchaController {
         
         lineCaptcha.setGenerator(new RandomGenerator(BASE_CHAR_NUMBER, Const.CAPTCHA_LENGTH));
         lineCaptcha.setFont(new Font("Arial,Courier", Font.BOLD, (int) (height * 0.78)));
+        lineCaptcha.setBackground(new Color(244, 240, 230));
         
         String uuid = IdUtil.simpleUUID();
         
