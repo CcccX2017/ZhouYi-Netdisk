@@ -2,24 +2,35 @@
   <div>
     <div class="file-fun-area">
       <div class="fun-btn">
-        <el-button type="primary" icon="el-icon-upload" @click="uploader"
-          >上传</el-button
+        <el-button
+          type="primary"
+          icon="el-icon-upload2"
+          round
+          @click="uploader"
+          size="small"
+          class="uploaderBtn"
         >
+          上传
+        </el-button>
         <el-button
           type="primary"
           plain
           icon="el-icon-folder-add"
           class="plain-btn"
           @click="openCreateFolderDialog"
+          size="small"
+          round
         >
           新建文件夹
         </el-button>
-        <el-button-group class="btn-group" v-if="btnGroup.show">
+        <el-button-group class="btn-group" v-if="btnGroup.show" size="small">
           <el-button
             type="primary"
             plain
             icon="iconfont icon-share"
             class="plain-btn"
+            size="small"
+            round
           >
             分享
           </el-button>
@@ -28,26 +39,37 @@
             plain
             icon="el-icon-download"
             class="plain-btn"
-            >下载</el-button
+            size="small"
           >
+            下载
+          </el-button>
           <el-button
             type="primary"
             plain
             icon="el-icon-delete"
             class="plain-btn"
+            size="small"
             @click.native.stop="deleteFile"
-            >删除</el-button
           >
+            删除
+          </el-button>
           <el-button
             type="primary"
             plain
             class="plain-btn"
             :disabled="btnGroup.disabled"
+            size="small"
             @click.native.stop="openRenameDialog"
-            >重命名</el-button
+            icon="el-icon-edit"
           >
-          <el-button type="primary" plain class="plain-btn">复制到</el-button>
-          <el-button type="primary" plain class="plain-btn">移动到</el-button>
+            重命名
+          </el-button>
+          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-document-copy">
+            复制到
+          </el-button>
+          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-rank" round>
+            移动到
+          </el-button>
         </el-button-group>
       </div>
       <div class="right-fun clearfix">
@@ -124,68 +146,69 @@
           <span
             v-show="queryParam.dir === '/' && isSearch === 0"
             class="textSpan"
-            >全部文件</span
           >
+            全部文件
+          </span>
           <ul
             class="breadcrumbUl"
             v-show="queryParam.dir !== '/' || isSearch === 1"
           >
             <li>
-              <el-link type="primary" @click.native="goBack(null)"
-                >返回上一级</el-link
-              >
+              <el-link type="primary" @click.native="goBack(null)">
+                返回上一级
+              </el-link>
               <span
                 style="color: #c5d8f3;padding: 0 3px;vertical-align: middle;"
-                >|</span
               >
+                |
+              </span>
             </li>
             <li>
               <el-link
                 type="primary"
                 @click.native="goBack('/')"
                 title="全部文件"
-                >全部文件</el-link
               >
+                全部文件
+              </el-link>
               <span style="color: #c5d8f3;padding: 0 5px">></span>
-              <template
-                v-for="(item, index) in breadcrumb"
-                v-show="isSearch === 0"
-              >
-                <el-link
+              <template v-for="(item, index) in breadcrumb">
+                <div
+                  v-show="isSearch === 0"
+                  style="display: inline-block;"
                   :key="index"
-                  type="primary"
-                  v-if="index != breadcrumb.length - 1 && item.name != '...'"
-                  @click="goBack(item.path)"
-                  :title="item.name"
                 >
-                  {{ item.name | breadcrumbFilter(breadcrumb.length) }}
-                </el-link>
-                <span
-                  :key="index"
-                  class="breadcrumbTxtSpan"
-                  v-else
-                  :title="item.name"
-                  >{{ item.name | breadcrumbFilter(breadcrumb.length) }}</span
-                >
-                <span
-                  :key="index"
-                  style="color: #c5d8f3;padding: 0 5px"
-                  v-if="index != breadcrumb.length - 1"
-                  >></span
-                >
+                  <el-link
+                    type="primary"
+                    v-if="index != breadcrumb.length - 1 && item.name != '...'"
+                    @click="goBack(item.path)"
+                    :title="item.name"
+                  >
+                    {{ item.name | breadcrumbFilter(breadcrumb.length) }}
+                  </el-link>
+                  <span class="breadcrumbTxtSpan" v-else :title="item.name">
+                    {{ item.name | breadcrumbFilter(breadcrumb.length) }}
+                  </span>
+                  <span
+                    style="color: #c5d8f3;padding: 0 5px"
+                    v-if="index != breadcrumb.length - 1"
+                  >
+                    &gt;
+                  </span>
+                </div>
               </template>
-              <span class="breadcrumbTxtSpan" v-show="isSearch === 1">{{
-                `搜索："${searchParam.keyword}"`
-              }}</span>
+              <span class="breadcrumbTxtSpan" v-show="isSearch === 1">
+                {{ `搜索："${searchParam.keyword}"` }}
+              </span>
             </li>
           </ul>
         </span>
-        <span class="load-count textSpan" v-if="loading != null"
-          >获取更多数据...</span
-        >
-        <span class="load-count textSpan" v-else-if="isAll == 1"
-          >已全部加载，共{{ count }}个</span
-        >
+        <span class="load-count textSpan" v-if="loading != null">
+          获取更多数据...
+        </span>
+        <span class="load-count textSpan" v-else-if="isAll == 1">
+          已全部加载，共{{ count }}个
+        </span>
         <span class="load-count textSpan" v-else>已加载{{ count }}个</span>
       </div>
       <div class="file-list">
@@ -271,8 +294,9 @@
                       :label="item.id"
                       @click.native="stopDefault($event)"
                       @change="(checked) => checkMore(checked, item)"
-                      >{{ '' }}</el-checkbox
                     >
+                      {{ '' }}
+                    </el-checkbox>
                   </el-checkbox-group>
                   <img :src="require('../assets/filetype/' + item.icon)" />
                   <span class="txtSpan" style="padding-left: 10px;">
@@ -280,8 +304,9 @@
                       href="javascript:;"
                       v-if="item.isDir"
                       @click.stop="openDir(item.path)"
-                      >{{ item.name }}</a
                     >
+                      {{ item.name }}
+                    </a>
                     <span v-else>{{ item.name }}</span>
                   </span>
                 </div>
@@ -607,6 +632,7 @@ export default {
           this.breadcrumb.push({ name: dirArr[i], path: path })
         }
       }
+      console.log(this.breadcrumb)
     },
     // 点击非复选框区域单选
     checkOne(obj) {
@@ -703,7 +729,7 @@ export default {
     },
     // 自适应文件列表高度
     transferHeight() {
-      this.content.height = window.innerHeight - 187 + 'px'
+      this.content.height = window.innerHeight - 178 + 'px'
       // 刷新滚动条
       this.$nextTick(() => {
         if (this.$refs['vs']) {
@@ -783,6 +809,7 @@ export default {
   },
   filters: {
     breadcrumbFilter: function(val, deep) {
+      console.log(deep)
       if (!val) return ''
       if (deep == 1) {
         if (val.length > 30) {
@@ -828,6 +855,19 @@ export default {
   margin-left: 5px;
 }
 
+.el-checkbox__inner {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  &::after {
+    left: 5px;
+    top: 2px;
+  }
+  &::before {
+    top: 6px !important;
+  }
+}
+
 .file-fun-area {
   display: flex;
   justify-content: space-between;
@@ -838,7 +878,7 @@ export default {
     padding: 11px 10px;
 
     .btn-group {
-      margin-top: -1px;
+      // margin-top: -1px;
       margin-left: 10px;
 
       .el-button--primary:first-child {
@@ -853,21 +893,14 @@ export default {
       .el-button--primary:last-child {
         border-left-color: #b3d8ff;
       }
+
+      .iconfont {
+        font-size: 12px;
+      }
     }
 
-    .plain-btn.is-plain {
-      background: #fff;
-      font-weight: normal;
-
-      &:hover:not(.is-disabled) {
-        background: #409eff;
-        color: #fff;
-      }
-
-      &:active,
-      &:focus {
-        color: #409eff;
-      }
+    .plain-btn.is-plain, .uploaderBtn {
+      font-weight: 700;
     }
   }
 
