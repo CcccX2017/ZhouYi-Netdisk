@@ -3,6 +3,7 @@ package cn.codex.netdisk.dao;
 import cn.codex.netdisk.model.entity.Friends;
 import cn.codex.netdisk.model.vo.FriendsVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author codex
  * @since 2021-01-28
  */
+@Mapper
 public interface FriendsMapper extends BaseMapper<Friends> {
 
     /**

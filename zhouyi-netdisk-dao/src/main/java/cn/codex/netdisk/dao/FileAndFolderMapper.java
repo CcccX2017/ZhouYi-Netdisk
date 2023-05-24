@@ -4,6 +4,7 @@ import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.vo.FolderAndFileVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author codex
  * @since 2021-03-27
  */
+@Mapper
 public interface FileAndFolderMapper {
 
     /**

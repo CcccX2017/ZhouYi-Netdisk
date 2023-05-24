@@ -2,6 +2,7 @@ package cn.codex.netdisk.dao;
 
 import cn.codex.netdisk.model.entity.Folders;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author codex
  * @since 2021-01-28
  */
+@Mapper
 public interface FoldersMapper extends BaseMapper<Folders> {
     
     /**
