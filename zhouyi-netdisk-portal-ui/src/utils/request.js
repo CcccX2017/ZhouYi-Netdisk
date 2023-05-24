@@ -5,6 +5,8 @@ import { getToken } from "@/utils/token"
 import errorCode from '@/utils/errorCode'
 import router from '@/router'
 
+export const isReLogin = { show: false }
+
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 // 实例化axios
@@ -37,15 +39,21 @@ service.interceptors.response.use(response => {
     // 获取错误信息
     const msg = errorCode[code] || response.data.msg || errorCode['default']
     if (code === 401) {
-        MessageBox.confirm('用户登录已过期, 您可以继续留在该页面，或者重新登录','系统提示', {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            store.dispatch('LogOut').then(() => {
-                location.reload('/')
+        if (!isReLogin.show) {
+            isReLogin.show = true
+            MessageBox.confirm('用户登录已过期, 您可以继续留在该页面，或者重新登录','系统提示', {
+                confirmButtonText: '重新登录',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                store.dispatch('LogOut').then(() => {
+                    location.reload('/')
+                })
+            }).catch(() => {
+                isReLogin.show = false
             })
-        })
+        }
+        
     } else if (code === 500 || code === 403) {
         if (response.data.data) {
             return response.data;

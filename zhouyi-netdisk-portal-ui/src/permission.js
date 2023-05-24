@@ -4,6 +4,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {getToken} from "./utils/token"
 import {Message} from "element-ui";
+import { isReLogin } from './utils/request'
 
 NProgress.configure({showSpinner: false})
 
@@ -24,7 +25,9 @@ router.beforeEach((to, from, next) => {
         } else {
             // 判断当前用户是否已经有用户信息
             if (!store.getters.role) {
+                isReLogin.show = true
                 store.dispatch('GetInfo').then(resp => {
+                    isReLogin.show = false
                     // 初始化菜单
                     store.dispatch('InitMenu').then(resp => {
                         router.addRoutes(resp)
