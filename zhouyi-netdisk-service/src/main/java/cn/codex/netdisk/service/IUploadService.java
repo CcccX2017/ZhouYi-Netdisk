@@ -28,7 +28,9 @@ public interface IUploadService {
      *
      * @param files    文件表
      * @param filename 文件名
+     * @param targetDir 目标目录
+     *
      * @return 是否能进行秒传 true - 是， false - 否
      */
-    boolean skipUpload(Files files, String filename);
+    boolean skipUpload(Files files, String filename, String targetDir);
 }

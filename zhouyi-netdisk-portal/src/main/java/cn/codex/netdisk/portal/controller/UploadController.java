@@ -66,7 +66,7 @@ public class UploadController {
             // 文件已经完全上传，秒传
             Files files = filesList.get(0);
             map.put("skipUpload", true);
-            if (uploadService.skipUpload(files, dto.getFilename())) {
+            if (uploadService.skipUpload(files, dto.getFilename(), dto.getTargetPath())) {
                 map.put("url", files.getStoragePath());
             } else {
                 map.put("msg", ReturnMessage.INSUFFICIENT_SPACE);

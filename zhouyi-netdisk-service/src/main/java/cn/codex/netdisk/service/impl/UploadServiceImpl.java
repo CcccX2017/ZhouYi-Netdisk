@@ -7,6 +7,7 @@ import cn.codex.netdisk.common.enums.ResponseCode;
 import cn.codex.netdisk.common.utils.FileUtil;
 import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.dao.FilesMapper;
+import cn.codex.netdisk.dao.FoldersMapper;
 import cn.codex.netdisk.dao.UserMapper;
 import cn.codex.netdisk.model.dtos.UploadDto;
 import cn.codex.netdisk.model.entity.Files;
@@ -14,6 +15,7 @@ import cn.codex.netdisk.model.entity.User;
 import cn.codex.netdisk.service.IUploadService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.file.FileNameUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class UploadServiceImpl implements IUploadService {
     
     @Autowired
     private FilesMapper filesMapper;
-    
+
     /**
      * 文件上传
      *
@@ -102,18 +104,28 @@ public class UploadServiceImpl implements IUploadService {
      *
      * @param files    文件表
      * @param filename 文件名
+     * @param targetDir 目标目录
      */
     @Override
-    public boolean skipUpload(Files files, String filename) {
+    public boolean skipUpload(Files files, String filename, String targetDir) {
         if (isExcessStorageSpace(files.getSize())){
             return false;
         }
-        String extName = FileNameUtil.extName(filename);
+
+        // 判断目标目录下是否有相同文件名的文件
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<Files>().eq(Files.REAL_NAME, filename).eq(Files.DIR, targetDir);
+        if (filesMapper.exists(queryWrapper)) {
+            String extName = FileNameUtil.extName(filename);
+            String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
+            files.setRealName(FileNameUtil.mainName(filename) + suffix + "." + extName);
+        } else {
+            files.setRealName(filename);
+        }
+
         files.setFileId(null);
-        String suffix = DateUtil.format(new Date(), "_yyyyMMdd_HHmmss");
-        files.setRealName(FileNameUtil.mainName(filename) + suffix + "." + extName);
         files.setGmtCreate(null);
         files.setGmtModified(null);
+        files.setDir(targetDir);
         filesMapper.insert(files);
         // 更新已用空间
         updateUsedStorageSpace(files.getSize());
