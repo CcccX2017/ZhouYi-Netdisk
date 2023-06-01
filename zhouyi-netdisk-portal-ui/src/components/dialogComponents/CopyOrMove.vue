@@ -3,7 +3,9 @@
       :title="title"
       :visible.sync="visible"
       custom-class="dialog-radius no-padding"
-      width="720px">
+      width="720px"
+      :before-close="beforeClose"
+  >
     <template v-slot:title>
       <div style="display: flex; align-items: center">
         <span style="font-weight: 700; font-size: 14px;">{{ title }}</span>
@@ -44,7 +46,7 @@
       </vuescroll>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" plain round>取 消</el-button>
+      <el-button type="primary" plain round @click="beforeClose">取 消</el-button>
       <el-button type="primary" round>{{ title }}此</el-button>
     </span>
   </el-dialog>
@@ -77,6 +79,9 @@ export default {
     this.getDirListByParentDir('/')
   },
   methods: {
+    beforeClose(){
+      this.$emit("update:visible", false)
+    },
     getDirListByParentDir(parentDir) {
       this.getRequest(`/portal/folders/?dir=${parentDir}`).then(resp => {
         this.dirs = resp.data;

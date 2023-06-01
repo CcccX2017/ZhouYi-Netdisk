@@ -64,11 +64,13 @@
           >
             重命名
           </el-button>
-          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-document-copy">
-            复制到
+          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-document-copy"
+                     @click.native="openCopyOrMove('复制到')">
+            复制
           </el-button>
-          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-rank" round>
-            移动到
+          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-rank" round
+                     @click.native="openCopyOrMove('移动到')">
+            移动
           </el-button>
         </el-button-group>
       </div>
@@ -386,8 +388,8 @@ export default {
   },
   data() {
     return {
-      copyOrMoveVisibleTitle: `复制到`,
-      copyOrMoveVisible: true,
+      copyOrMoveVisibleTitle: '',
+      copyOrMoveVisible: false,
       dialogFolderVisible: false,
       checkAll: false,
       isIndeterminate: false,
@@ -455,6 +457,10 @@ export default {
     },
   },
   methods: {
+    openCopyOrMove(title){
+      this.copyOrMoveVisibleTitle = title;
+      this.copyOrMoveVisible = true;
+    },
     resetCheckedList() {
       this.checkedFileName = ''
       this.checkedList = []
