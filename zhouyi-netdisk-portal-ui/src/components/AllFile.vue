@@ -507,7 +507,6 @@ export default {
         this.isSearch = 1
         this.searchParam.page = 1
         this.breadcrumb = [`搜索："${this.searchParam.keyword}"`]
-        console.log(this.breadcrumb)
         this.getList()
       }
     },
@@ -642,12 +641,11 @@ export default {
         }
       } else {
         this.breadcrumb.push({ name: '...', path: 'null' })
-        for (let i = dirLength - 4; i < dirLength; i++) {
+        for (let i = 1; i < dirLength; i++) {
           path += '/' + dirArr[i]
           this.breadcrumb.push({ name: dirArr[i], path: path })
         }
       }
-      console.log(this.breadcrumb)
     },
     // 点击非复选框区域单选
     checkOne(obj) {
@@ -824,39 +822,38 @@ export default {
   },
   filters: {
     breadcrumbFilter: function(val, deep) {
-      console.log(deep)
       if (!val) return ''
-      if (deep == 1) {
+      if (deep === 1) {
         if (val.length > 30) {
-          return val.substr(0, 30) + '...'
+          return val.substring(0, 30) + '...'
         }
         return val
       }
 
-      if (deep == 2) {
+      if (deep === 2) {
         if (val.length > 20) {
-          return val.substr(0, 10) + '...'
+          return val.substring(0, 10) + '...'
         }
         return val
       }
 
-      if (deep == 3) {
+      if (deep === 3) {
         if (val.length > 15) {
-          return val.substr(0, 8) + '...'
+          return val.substring(0, 8) + '...'
         }
         return val
       }
 
       if (deep > 3) {
         if (val.length > 10) {
-          return val.substr(0, 5) + '...'
+          return val.substring(0, 5) + '...'
         }
         return val
       }
     },
     directoryFilter: function(val) {
       if (val.length > 15) {
-        return val.substr(0, 15) + '...'
+        return val.substring(0, 15) + '...'
       }
 
       return val
