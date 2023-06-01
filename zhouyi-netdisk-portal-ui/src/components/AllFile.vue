@@ -628,8 +628,8 @@ export default {
       this.breadcrumb = []
       let dirArr = dir.split('/')
       let dirLength = dirArr.length
-      let path = ''
-      if (dirLength <= 4) {
+      let path = '', showLength = 3
+      if (dirLength <= showLength) {
         for (let i = 0; i < dirLength; i++) {
           if (dirArr[i] !== '') {
             let obj = {}
@@ -641,9 +641,13 @@ export default {
         }
       } else {
         this.breadcrumb.push({ name: '...', path: 'null' })
-        for (let i = 1; i < dirLength; i++) {
+        let prefixPath = ''
+        for (let i = 1; i < dirLength - showLength; i++) {
+          prefixPath += '/' + dirArr[i]
+        }
+        for (let i = dirLength - showLength; i < dirLength; i++) {
           path += '/' + dirArr[i]
-          this.breadcrumb.push({ name: dirArr[i], path: path })
+          this.breadcrumb.push({ name: dirArr[i], path: prefixPath + path })
         }
       }
     },
