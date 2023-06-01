@@ -362,6 +362,11 @@
       @resetCheckedList="resetCheckedList"
       @getList="getList"
     ></RenameCom>
+
+    <CopyOrMove
+      :title="copyOrMoveVisibleTitle"
+      :visible.sync="copyOrMoveVisible"
+    ></CopyOrMove>
   </div>
 </template>
 
@@ -370,15 +375,19 @@ import { Loading } from 'element-ui'
 import bus from '@/utils/bus.js'
 import CreateFolder from '@/components/dialogComponents/CreateFolder'
 import RenameCom from '@/components/dialogComponents/Rename'
+import CopyOrMove from "@/components/dialogComponents/CopyOrMove";
 
 export default {
   name: 'AllFile',
   components: {
+    CopyOrMove,
     CreateFolder,
     RenameCom,
   },
   data() {
     return {
+      copyOrMoveVisibleTitle: `复制到`,
+      copyOrMoveVisible: true,
       dialogFolderVisible: false,
       checkAll: false,
       isIndeterminate: false,
