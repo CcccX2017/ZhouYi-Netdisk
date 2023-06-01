@@ -626,28 +626,27 @@ export default {
     // 封装面包屑导航路径
     assembleDir(dir) {
       this.breadcrumb = []
-      let dirArr = dir.split('/')
-      let dirLength = dirArr.length
-      let path = '', showLength = 3
+      const dirArr = dir.split('/')
+      const dirLength = dirArr.length
+      const showLength = 3
+      let path = ''
       if (dirLength <= showLength) {
         for (let i = 0; i < dirLength; i++) {
           if (dirArr[i] !== '') {
-            let obj = {}
-            obj.name = dirArr[i]
-            path += '/' + dirArr[i]
-            obj.path = path
+            const obj = {
+              name: dirArr[i],
+              path: `${path}/${dirArr[i]}`
+            }
             this.breadcrumb.push(obj)
+            path = obj.path
           }
         }
       } else {
         this.breadcrumb.push({ name: '...', path: 'null' })
-        let prefixPath = ''
-        for (let i = 1; i < dirLength - showLength; i++) {
-          prefixPath += '/' + dirArr[i]
-        }
+        const prefixPath = `/${dirArr.slice(1, dirLength - showLength).join('/')}`
         for (let i = dirLength - showLength; i < dirLength; i++) {
-          path += '/' + dirArr[i]
-          this.breadcrumb.push({ name: dirArr[i], path: prefixPath + path })
+          path += `/${dirArr[i]}`
+          this.breadcrumb.push({ name: dirArr[i], path: `${prefixPath}${path}` })
         }
       }
     },
