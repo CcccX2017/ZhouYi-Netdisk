@@ -64,12 +64,25 @@
           >
             重命名
           </el-button>
-          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-document-copy"
-                     @click.native="openCopyOrMove('复制到')">
+          <el-button
+            type="primary"
+            plain
+            class="plain-btn"
+            size="small"
+            icon="el-icon-document-copy"
+            @click.native="openCopyOrMove('复制到')"
+          >
             复制
           </el-button>
-          <el-button type="primary" plain class="plain-btn" size="small" icon="el-icon-rank" round
-                     @click.native="openCopyOrMove('移动到')">
+          <el-button
+            type="primary"
+            plain
+            class="plain-btn"
+            size="small"
+            icon="el-icon-rank"
+            round
+            @click.native="openCopyOrMove('移动到')"
+          >
             移动
           </el-button>
         </el-button-group>
@@ -377,8 +390,8 @@ import { Loading } from 'element-ui'
 import bus from '@/utils/bus.js'
 import CreateFolder from '@/components/dialogComponents/CreateFolder'
 import RenameCom from '@/components/dialogComponents/Rename'
-import CopyOrMove from "@/components/dialogComponents/CopyOrMove";
-import { generateBreadcrumb  } from '@/utils/breadcrumb.js'
+import CopyOrMove from '@/components/dialogComponents/CopyOrMove'
+import { generateBreadcrumb } from '@/utils/breadcrumb.js'
 
 export default {
   name: 'AllFile',
@@ -458,9 +471,9 @@ export default {
     },
   },
   methods: {
-    openCopyOrMove(title){
-      this.copyOrMoveVisibleTitle = title;
-      this.copyOrMoveVisible = true;
+    openCopyOrMove(title) {
+      this.copyOrMoveVisibleTitle = title
+      this.copyOrMoveVisible = true
     },
     resetCheckedList() {
       this.checkedFileName = ''
@@ -626,18 +639,25 @@ export default {
     },
     // 封装面包屑导航路径
     assembleDir(dir) {
-      this.breadcrumb = generateBreadcrumb(dir, 3);
+      this.breadcrumb = generateBreadcrumb(dir, 3)
     },
     // 点击非复选框区域单选
     checkOne(obj) {
       if (this.checkedList.indexOf(obj.id) === -1) {
         this.checkedList = [obj.id]
         if (obj.isDir === 1) {
-          this.checkList.folderIds.push(obj.id)
+          this.checkList.folderIds = [obj.id]
+          this.checkList.fileIds = []
         } else {
-          this.checkList.fileIds.push(obj.id)
+          this.checkList.fileIds = [obj.id]
+          this.checkList.folderIds = []
         }
         this.checkedFileName = obj.name
+      } else {
+        this.checkedList = []
+        this.checkList.folderIds = []
+        this.checkList.fileIds = []
+        this.checkedFileName = ''
       }
     },
     // 点击复选框多选
@@ -892,7 +912,8 @@ export default {
       }
     }
 
-    .plain-btn.is-plain, .uploaderBtn {
+    .plain-btn.is-plain,
+    .uploaderBtn {
       font-weight: 700;
     }
   }

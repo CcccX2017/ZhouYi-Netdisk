@@ -14,6 +14,7 @@ import cn.codex.netdisk.service.IFoldersService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -138,17 +140,19 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
      * 第一次重命名
      */
     private ServerResponse<?> firstRename(Long folderId, FileRenameDto dto) {
-        // 判断文件夹名称是否重复，重复则重新命名
+        // 判断文件夹名称是否重复，重复则提示用户存在重名文件
         Long count = foldersMapper.selectCount(new QueryWrapper<Folders>().eq(Folders.FOLDER_NAME, dto.getNewName()).eq(Folders.DIR, dto.getDir()).eq(Folders.CREATOR, SecurityUtil.getUsername()).ne(Folders.FOLDER_ID, folderId));
         if (count != null && count > 0) {
             // 存在重名文件，提示用户是否保留两者
             return ServerResponse.createByErrorCodeMessage(ResponseCode.FOLDER_NAME_REPEAT.getCode(),
                     ResponseCode.FOLDER_NAME_REPEAT.getDesc());
         }
+
         // 不存在重名文件夹，重命名文件夹
         Folders folders = new Folders();
         folders.setFolderId(folderId);
         folders.setFolderName(dto.getNewName());
+
         return foldersMapper.updateById(folders) > 0
                 ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
                 : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
@@ -168,7 +172,7 @@ public class FoldersServiceImpl extends ServiceImpl<FoldersMapper, Folders> impl
             folders.setFolderName(dto.getNewName() + "(" + count + ")");
 
             return foldersMapper.updateById(folders) > 0
-                    ? ServerResponse.createBySuccessMessage(ReturnMessage.RENAME_SUCCESS)
+                    ? ServerResponse.createBySuccess(ReturnMessage.RENAME_SUCCESS, folders.getFolderName())
                     : ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);
         } catch (Exception e) {
             return ServerResponse.createByErrorMessage(ReturnMessage.RENAME_ERROR);

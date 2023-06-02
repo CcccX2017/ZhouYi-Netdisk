@@ -11,11 +11,15 @@ import cn.codex.netdisk.common.utils.SecurityUtil;
 import cn.codex.netdisk.model.dtos.FileRenameDto;
 import cn.codex.netdisk.model.dtos.FolderAndFileQueryDto;
 import cn.codex.netdisk.model.dtos.PageResult;
+import cn.codex.netdisk.model.entity.Files;
+import cn.codex.netdisk.model.entity.Folders;
 import cn.codex.netdisk.model.vo.FolderAndFileVo;
 import cn.codex.netdisk.service.IFileAndFolderService;
 import cn.codex.netdisk.service.IFilesService;
 import cn.codex.netdisk.service.IFoldersService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.google.common.base.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +132,7 @@ public class FileAndFolderController {
 
     @ApiOperation(value = "重命名")
     @PutMapping("/{id}/{isDir}")
+    @Transactional(rollbackFor = Exception.class)
     public ServerResponse rename(@PathVariable Long id,
                                  @PathVariable Integer isDir,
                                  @RequestBody FileRenameDto dto) {
@@ -150,7 +156,22 @@ public class FileAndFolderController {
         }
 
         if (isDir == 1) {
-            return foldersService.rename(id, dto);
+            ServerResponse renameResponse = foldersService.rename(id, dto);
+            if (renameResponse.isSuccess()) {
+                String oldName = dto.getOldName();
+                String newName = dto.getNewName();
+                if (Const.NEW_COPY.equals(dto.getType())) {
+                    // 如果是第二次重命名，说明名称有重复，需要获取新的文件夹
+                    newName = ((String) renameResponse.getData());
+                }
+                String oldDir = dto.getDir() + "/" + oldName;
+                String newDir = dto.getDir() + "/" + newName;
+                // 更新子目录
+                updateChildFolders(oldDir, newDir);
+                // 更新子文件
+                updateChildFiles(oldDir, newDir);
+            }
+            return renameResponse;
         }
 
         if (isDir == 0) {
@@ -162,8 +183,52 @@ public class FileAndFolderController {
 
     @ApiOperation(value = "根据后缀名获取图标")
     @GetMapping("/{extension}")
-    public ServerResponse getIcon(@PathVariable String extension){
+    public ServerResponse getIcon(@PathVariable String extension) {
         String fileIcon = FileUtil.getFileIcon(extension);
         return ServerResponse.createBySuccess(fileIcon);
+    }
+
+    /**
+     * 批量更新子文件的路径
+     *
+     * @param oldDir 旧目录路径
+     * @param newDir 新目录路径
+     */
+    private void updateChildFiles(String oldDir, String newDir) {
+        // 批量更新文件路径 tb_files
+        List<Files> childFiles = filesService.list(new QueryWrapper<Files>()
+                .likeRight(Files.DIR, oldDir)
+                .select(Files.FILE_ID, Files.DIR));
+        if (!childFiles.isEmpty()) {
+            childFiles.forEach(childFile -> {
+                String childDir = childFile.getDir().replaceFirst(oldDir, newDir);
+                childFile.setDir(childDir);
+            });
+
+            filesService.updateBatchById(childFiles);
+        }
+    }
+
+    /**
+     * 批量更新子目录的路径
+     *
+     * @param oldDir 旧目录路径
+     * @param newDir 新目录路径
+     * @return 更新是否成功
+     */
+    private void updateChildFolders(String oldDir, String newDir) {
+        // 重命名成功，更新子目录
+        List<Folders> childFolders = foldersService.list(new QueryWrapper<Folders>()
+                .likeRight(Folders.DIR, oldDir)
+                .select(Folders.FOLDER_ID, Folders.DIR));
+        // 批量更新所有子目录的路径。
+        if (!childFolders.isEmpty()) {
+            // 更新子文件夹的所在目录
+            childFolders.forEach(childFolder -> {
+                String childDir = childFolder.getDir().replaceFirst(oldDir, newDir);
+                childFolder.setDir(childDir);
+            });
+            foldersService.updateBatchById(childFolders);
+        }
     }
 }

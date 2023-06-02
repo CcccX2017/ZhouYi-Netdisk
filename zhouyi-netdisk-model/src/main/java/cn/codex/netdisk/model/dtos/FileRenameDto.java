@@ -19,6 +19,9 @@ import java.io.Serializable;
 public class FileRenameDto implements Serializable {
     private static final long serialVersionUID = 2311730775632078533L;
 
+    @ApiModelProperty(value = "原文件名")
+    private String oldName;
+
     @ApiModelProperty(value = "新文件名")
     private String newName;
 

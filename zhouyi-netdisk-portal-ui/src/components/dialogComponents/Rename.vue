@@ -31,6 +31,7 @@ export default {
     return {
       renameForm: {
         fileName: '',
+        oldName: ''
       },
       renameRules: {
         fileName: [
@@ -70,6 +71,7 @@ export default {
         this.$refs.renameForm.resetFields()
       }
       this.renameForm.fileName = this.checkedFileName
+      this.renameForm.oldName = this.checkedFileName
       this.$nextTick(() => {
         let el = this.$refs.renameInput.$el.children[0]
         el.select()
@@ -85,6 +87,7 @@ export default {
         if (valid) {
           let param = {
             newName: this.renameForm.fileName,
+            oldName: this.renameForm.oldName,
             dir: this.dir,
           }
 
@@ -151,4 +154,6 @@ export default {
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less" scoped>
+
+</style>
