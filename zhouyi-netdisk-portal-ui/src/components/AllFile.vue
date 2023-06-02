@@ -378,6 +378,7 @@ import bus from '@/utils/bus.js'
 import CreateFolder from '@/components/dialogComponents/CreateFolder'
 import RenameCom from '@/components/dialogComponents/Rename'
 import CopyOrMove from "@/components/dialogComponents/CopyOrMove";
+import { generateBreadcrumb  } from '@/utils/breadcrumb.js'
 
 export default {
   name: 'AllFile',
@@ -625,30 +626,7 @@ export default {
     },
     // 封装面包屑导航路径
     assembleDir(dir) {
-      this.breadcrumb = []
-      const dirArr = dir.split('/')
-      const dirLength = dirArr.length
-      const showLength = 3
-      let path = ''
-      if (dirLength <= showLength) {
-        for (let i = 0; i < dirLength; i++) {
-          if (dirArr[i] !== '') {
-            const obj = {
-              name: dirArr[i],
-              path: `${path}/${dirArr[i]}`
-            }
-            this.breadcrumb.push(obj)
-            path = obj.path
-          }
-        }
-      } else {
-        this.breadcrumb.push({ name: '...', path: 'null' })
-        const prefixPath = `/${dirArr.slice(1, dirLength - showLength).join('/')}`
-        for (let i = dirLength - showLength; i < dirLength; i++) {
-          path += `/${dirArr[i]}`
-          this.breadcrumb.push({ name: dirArr[i], path: `${prefixPath}${path}` })
-        }
-      }
+      this.breadcrumb = generateBreadcrumb(dir, 3);
     },
     // 点击非复选框区域单选
     checkOne(obj) {
