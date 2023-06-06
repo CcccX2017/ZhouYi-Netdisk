@@ -96,7 +96,7 @@ a {
 }
 
 .dialog-radius {
-  border-radius: 14px;
+  border-radius: 14px !important;
 }
 .no-padding {
   .el-dialog__body {

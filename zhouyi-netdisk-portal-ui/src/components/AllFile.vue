@@ -173,9 +173,7 @@
                 返回上一级
               </el-link>
               <span
-                style="color: #c5d8f3;padding: 0 3px;vertical-align: middle;"
-              >
-                |
+                  style="display: inline-block; color: #c4d8f4;margin: 0 4px;vertical-align: middle; font-size: 12px">&#124;
               </span>
             </li>
             <li>
@@ -381,6 +379,7 @@
     <CopyOrMove
       :title="copyOrMoveVisibleTitle"
       :visible.sync="copyOrMoveVisible"
+      v-if="copyOrMoveVisible"
     ></CopyOrMove>
   </div>
 </template>
@@ -391,7 +390,7 @@ import bus from '@/utils/bus.js'
 import CreateFolder from '@/components/dialogComponents/CreateFolder'
 import RenameCom from '@/components/dialogComponents/Rename'
 import CopyOrMove from '@/components/dialogComponents/CopyOrMove'
-import { generateBreadcrumb } from '@/utils/breadcrumb.js'
+import { generateBreadcrumb, breadcrumbFilter, directoryFilter } from '@/utils/breadcrumb.js'
 
 export default {
   name: 'AllFile',
@@ -540,9 +539,7 @@ export default {
           this.deleteRequest('/portal/list/', this.checkList).then((resp) => {
             if (resp) {
               this.resetQueryParam()
-              this.checkedList = []
-              this.checkList.fileIds = []
-              this.checkList.folderIds = []
+              this.resetCheckedList()
               this.getList()
             }
           })
@@ -562,7 +559,7 @@ export default {
         if (index === 0) {
           this.queryParam.dir = '/'
         } else {
-          this.queryParam.dir = this.queryParam.dir.substr(0, index)
+          this.queryParam.dir = this.queryParam.dir.substring(0, index)
         }
       }
       this.assembleDir(this.queryParam.dir)
@@ -822,43 +819,8 @@ export default {
     },
   },
   filters: {
-    breadcrumbFilter: function(val, deep) {
-      if (!val) return ''
-      if (deep === 1) {
-        if (val.length > 30) {
-          return val.substring(0, 30) + '...'
-        }
-        return val
-      }
-
-      if (deep === 2) {
-        if (val.length > 20) {
-          return val.substring(0, 10) + '...'
-        }
-        return val
-      }
-
-      if (deep === 3) {
-        if (val.length > 15) {
-          return val.substring(0, 8) + '...'
-        }
-        return val
-      }
-
-      if (deep > 3) {
-        if (val.length > 10) {
-          return val.substring(0, 5) + '...'
-        }
-        return val
-      }
-    },
-    directoryFilter: function(val) {
-      if (val.length > 15) {
-        return val.substring(0, 15) + '...'
-      }
-
-      return val
-    },
+    breadcrumbFilter: breadcrumbFilter,
+    directoryFilter: directoryFilter
   },
 }
 </script>
@@ -1057,7 +1019,7 @@ export default {
         .breadcrumbTxtSpan {
           font-size: 12px;
           vertical-align: middle;
-          color: #666;
+          color: #afb3bf;
         }
       }
     }

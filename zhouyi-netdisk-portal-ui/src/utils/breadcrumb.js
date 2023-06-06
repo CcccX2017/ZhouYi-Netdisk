@@ -46,3 +46,49 @@ export function generateBreadcrumb(dir, showLength) {
 
   return breadcrumb;
 }
+
+/**
+ * 面包屑文字长度过滤器
+ *
+ * @param {string} val - 需要过滤的字符串
+ * @param {number} deep - 面包屑的深度
+ * @return {string} - 过滤后的字符串
+ */
+export function breadcrumbFilter(val, deep) {
+  if (!val) return ''
+  if (deep === 1) {
+    if (val.length > 30) {
+      return val.substring(0, 30) + '...'
+    }
+    return val
+  }
+
+  if (deep === 2) {
+    if (val.length > 20) {
+      return val.substring(0, 10) + '...'
+    }
+    return val
+  }
+
+  if (deep === 3) {
+    if (val.length > 15) {
+      return val.substring(0, 8) + '...'
+    }
+    return val
+  }
+
+  if (deep > 3) {
+    if (val.length > 10) {
+      return val.substring(0, 5) + '...'
+    }
+    return val
+  }
+}
+
+export function directoryFilter(val) {
+  if (val.length > 15) {
+    return val.substring(0, 15) + '...'
+  }
+
+  return val
+}
